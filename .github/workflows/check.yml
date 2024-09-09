@@ -1,0 +1,34 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc libcunit1 libcunit1-doc libcunit1-dev clang-format
+
+    - name: Lint code with clang-format
+      run: |
+        clang-format --dry-run --Werror lab.c
+
+    - name: Compile code
+      run: |
+        gcc -o lab lab.c
+        gcc -o test_lab test_lab.c -lcunit
+
+    - name: Run code
+      run: ./lab
+
+    - name: Run tests
+      run: ./test_lab
