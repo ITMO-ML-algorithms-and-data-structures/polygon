@@ -24,11 +24,11 @@ jobs:
 
     - name: Compile code
       run: |
-        gcc -o lab lab.c
+        gcc -o program main.c
         gcc -o test_lab test_lab.c -lcunit
 
     - name: Run code
-      run: ./lab
+      run: ./program
 
     - name: Run tests
       run: ./test_lab
