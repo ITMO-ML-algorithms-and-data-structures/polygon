@@ -1,0 +1,57 @@
+#include<iostream>
+using namespace std;
+
+
+//  НАЙТИ КОЛИЧЕСТВО ПАР В МАССИВЕ,
+//  ГДЕ ПЕРВОЕ ЧИСЛО БОЛЬШЕ ВТОРОГО
+
+
+//  ВАРИАНТ 7 MIDDLE+
+
+
+int main(){
+    //MAS IN
+    int n;
+    cout<<"Put size of mas there : ";
+    cin>>n;
+    int mas[n];
+    cout<<"Put your nums to mas"<<endl;
+    for (int i = 0; i<n ; i++){
+        cin>>mas[i];
+    }
+    
+    //MAS OUT (test )
+    cout<<"mas: ";
+    for (int i = 0; i<n ; i++){
+        cout<<mas[i]<<" ";
+    }
+    cout<<endl;
+    
+    
+    
+    
+    int count;
+    for (int i = 0; i<n; i++){
+        for (int j = i ; j<n ; j++){
+            if (i!=j){
+                cout<<mas[i]<<" "<<mas[j]<<" "; //test cout 
+                if (mas[i] > mas[j] or mas[j]>mas[i]){
+                    cout<<"yes";
+                    count++;
+                }
+                cout<<endl;
+            }
+        }
+    }
+    
+    
+    
+    cout<<endl<<count;
+    
+    return 0;
+}
+
+//  НАЙТИ КОЛИЧЕСТВО ПАР В МАССИВЕ,
+//  ГДЕ ПЕРВОЕ ЧИСЛО БОЛЬШЕ ВТОРОГО
+
+//  ВАРИАНТ 7 MIDDLE+
