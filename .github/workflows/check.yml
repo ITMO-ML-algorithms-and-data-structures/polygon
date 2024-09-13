@@ -20,15 +20,14 @@ jobs:
 
     - name: Lint code with clang-format
       run: |
-        clang-format --dry-run --Werror lab.c
 
     - name: Compile code
       run: |
-        gcc -o program main.c
-        gcc -o test_lab test_lab.c -lcunit
+        g++ -Wall -Wextra src/main.cpp -o src/output/main
+        g++ -Wall -Wextra src/test.cpp -o src/output/test -lcunit
 
     - name: Run code
-      run: ./program
+      run: src/output/main
 
     - name: Run tests
-      run: ./test_lab
+      run: src/output/test

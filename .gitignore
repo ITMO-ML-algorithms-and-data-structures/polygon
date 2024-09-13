@@ -1,0 +1,6 @@
+.vscode/
+imgs
+src/build
+src/output
+src/main.dSYM
+*.txt
