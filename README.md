@@ -32,7 +32,7 @@ git branch 2_dunaev_maxim
 ```
 (переключиться можно так, а вообще читайте доку, смотрите видосики)   
 ```bash
-git swtich 2_dunaev_maxim 
+git switch 2_dunaev_maxim 
 ```
 6. Создаём PR  
 ![alt text](./imgs/create_pull_request.png)
