@@ -16,10 +16,3 @@ int main() {
 	std::cout << kol;
 	return 0;
 }
-
-#include <iostream>
-
-int main() {
-	int i = 0;
-	for(int t = 0 )
-}
