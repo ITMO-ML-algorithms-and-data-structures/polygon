@@ -1,0 +1,31 @@
+#include <iostream>
+#include <map>
+#include <list>
+
+
+using namespace std;
+
+int main() {
+    map<int, int> dict;
+    list <int> l;
+    l={1,2,3,4,1,2,2,2,3};
+    for (int n : l)
+        if (dict.count(n)==1) 
+        {
+            dict[n]+=1;
+        }
+        else {
+            dict.insert(make_pair(n, 1));
+        }
+    int s=0;
+    for (auto [first, second] : dict)
+    {
+        if (second >=2)
+        {
+            s+=first;
+        }
+    }
+    cout <<s;
+
+    return 0;
+}
