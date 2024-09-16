@@ -1,12 +1,13 @@
 ﻿#include <iostream>
 #include <vector>
 #include <algorithm>
+
 using namespace std;
 
 int main()
 {
     int s;
-    cout << "Enter seeking number:";
+    cout << "Enter the number you are looking for:";
     cin >> s;
     int len = 52;
     cout << "Enter amount of numbers in vector:";
