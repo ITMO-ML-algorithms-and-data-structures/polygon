@@ -1,6 +1,5 @@
 #include <stdio.h>
-
-using namespace std;
+#include <string.h>
 // задача: посчитать пары скобочек 
 int counter(const char *brackets) {
     int total, l_b; // счетчики l_b - считает левые скобки
@@ -14,15 +13,14 @@ int counter(const char *brackets) {
             l_b -= 1;
         }
     }
-    return total;
+     return total;
 }
-
 
 int main() {
 
-    char[] brackets = "()((()))()))("; // тестовая строка
+    char[6] brackets = "()()))"; // тестовая строка
 
-    printf(counter(brackets));
+    printf("%d", counter(brackets));
     return 0;
 
 }

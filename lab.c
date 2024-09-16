@@ -1,28 +1,26 @@
 #include <stdio.h>
-
-using namespace std;
+#include <string.h>
 // задача: посчитать пары скобочек 
 int counter(const char *brackets) {
     int total, l_b; // счетчики l_b - считает левые скобки
     l_b = 0;
     total = 0; // Итоговое число пар
     for (int i=0; i<sizeof(brackets); i++) {
-        if (bracket == '(')
+        if (brackets[i] == '(')
             l_b++;
-        else if (bracket == ')' && l_b > 0) {
+        else if (brackets[i] == ')' && l_b > 0) {
             total++;
             l_b -= 1;
         }
     }
-    return total;
+     return total;
 }
-
 
 int main() {
 
-    char[] brackets = "()((()))()))("; // тестовая строка
+    char brackets[6] = "()()))"; // тестовая строка
 
-    printf(counter(brackets));
+    printf("%d",counter(brackets));
     return 0;
 
 }
