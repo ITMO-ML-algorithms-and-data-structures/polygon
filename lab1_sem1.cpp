@@ -1,6 +1,6 @@
-﻿#include <iostream>
+﻿#include <algorithm>
+#include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -15,14 +15,15 @@ int main()
     vector<int> numbers(len);
     vector<pair<int, int>> pairs;
     cout << "Enter numbers:" << endl;
-    for (int i = 0; i < len; i++){
+    for (int i = 0; i < len; i++)
+    {
         cin >> numbers[i];
     }
     sort(numbers.begin(), numbers.end());
 
-    for (int i = 0; i < len-1; i++)
+    for (int i = 0; i < len - 1; i++)
     {
-        for (int j = i + 1; j < len; j++) 
+        for (int j = i + 1; j < len; j++)
         {
             if (s == (numbers[i] + numbers[j]) and numbers[i] != numbers[i + 1])
             {
@@ -31,8 +32,8 @@ int main()
         }
     }
 
-    for (int i = 0; i < pairs.size(); i++) {
+    for (int i = 0; i < pairs.size(); i++)
+    {
         cout << pairs[i].first << " " << pairs[i].second << endl;
     }
-
 }
