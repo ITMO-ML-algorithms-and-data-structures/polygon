@@ -1,0 +1,86 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+using namespace std;
+// Условие задачи: найти все подмассивы-палиндромы
+/*
+10
+1 0 1 0 1 0 1 0 0 0 
+входные данные
+*/
+void printPal(vector<int> &m, int l, int r) // функция вывода подмассивов
+{
+    cout << "[ ";
+    for (int i = l; i <= r; i++)
+    {
+        cout << m[i] << " ";
+    }
+    cout << "]" << endl;
+}
+int checkEvenNumberedPal(vector<int> &m)
+{ // Палиндромы чётной длины
+    int l = 0;
+    int r = 1;
+    int n = m.size();
+    int cnt = 0;
+    for (int x = 1; x < n; x++)
+    {
+        r = x;
+        l = r - 1;
+        while (r <= n)
+        {
+            if (l < 0 || m[l] != m[r])
+            {
+                break;
+            }
+            if (m[l] == m[r])
+            {
+                cnt++;
+                cout << "Я здесь! " << l << " " << r << " " << x << " ";
+                printPal(m, l, r);
+            }
+            l--;
+            r++;
+        }
+    }
+    return cnt;
+}
+int main()
+{
+    int n = 10;
+   // cin >> n;
+    vector<int> m(n, 0);
+    m = {1, 0, 1, 0, 1, 0, 1, 0, 0 ,0 };
+    int cnt = n;
+    // раскомментировать, если нужен динамический ввод
+  /*  for (int i = 0; i < n; i++)
+    {
+        cin >> m[i];
+        printPal(m, i, i);
+    }
+  */
+    int l = 0, r = 1;
+    cnt += checkEvenNumberedPal(m);
+    // сначала считаем подмассивы палиндромов
+    // чётной длины
+
+    // ниже код для палиндромов нечётной длины
+    for (int x = 1; x < n; x++)
+    {
+        l = x - 1;
+        r = x + 1;
+       
+        while (m[r] == m[l])
+        {
+            cnt++;
+            printPal(m, l, r);
+            r++;
+            l--;
+            if (l < 0 || r >= n)
+            {
+                break;
+            }
+        }
+    }
+    cout << cnt;
+}
