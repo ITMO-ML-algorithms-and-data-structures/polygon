@@ -1,0 +1,22 @@
+//Вариант 2, middle, найти минимум в массиве
+#include <iostream>
+
+using namespace std;
+
+int main() {
+
+    int numbers[10] = {5, -3, 81, -7, 19, 47, -38, 99, 105, -6};
+
+    int minimum = 999999999;
+
+    for (int i = 0; i < 10; i++) {
+
+        if (numbers[i] < minimum) {
+            minimum = numbers[i];
+        }
+    }
+
+    cout << minimum << endl;
+
+    return 0;
+}
