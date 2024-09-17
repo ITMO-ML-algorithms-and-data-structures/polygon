@@ -6,15 +6,18 @@ using namespace std;
 
 int main()
 {
-    int s;
+    int s, len;
+
     cout << "Enter the number you are looking for:";
     cin >> s;
-    int len = 52;
-    cout << "Enter amount of numbers in vector:";
     cin >> len;
+    cout << "Enter amount of numbers in vector:";
+
     vector<int> numbers(len);
     vector<pair<int, int>> pairs;
+
     cout << "Enter numbers:" << endl;
+
     for (int i = 0; i < len; i++)
     {
         cin >> numbers[i];
