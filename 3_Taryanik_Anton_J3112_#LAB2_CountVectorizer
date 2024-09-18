@@ -1,0 +1,114 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <map>
+#include <vector>
+using namespace std;
+map<string, int> wordX; 
+// второй эл-т пары хранит только позиции слов по X
+
+struct Sentence
+{
+    map<string, int> wordCount;
+    // второй эл-т пары хранит количество слов в тексте предложения
+   
+    void fillWordsCount(vector<string>& vec)
+    {
+        for(string str: vec)
+        {
+            if(wordCount.find(str) == wordCount.end())
+            {
+                // если нет найденного слова - добавляем его в словарь
+                wordCount[str] = 1;
+            }
+            else
+            {
+                wordCount[str]++;
+                // есл слово есть - увеличиваем его счётчик в предложении
+            }
+            // или wordCount[str]++, но код выше надёжней
+        }
+        for(auto par: wordCount)
+        {
+            string word = par.first;
+            // заносим все слова в глобальный словарь
+            if(wordX.find(word) == wordX.end())
+            {
+                wordX[word] = wordX.size();
+            }
+        }
+    }
+};
+vector<string> alg(string s)
+{ 
+    // алгоритм разбиения строки с разделителем "пробел"
+    vector<string> res;
+    string str = "";
+    for(char c: s)
+    {
+        if(c != ' ')
+        {
+            str += c;
+        }
+        else
+        {
+            res.push_back(str);
+            str = "";
+        }
+    }
+    res.push_back(str);
+    return res;
+}
+int main()
+{
+    int size = 1e4;
+    fstream fs;
+    fs.open("C:\\Users\\Huawei\\Desktop\\dataset.txt", fstream::in);
+    // в 68 строку подставьте вашу ссылку на файл
+    vector<string> arr(size);
+    vector<Sentence> sentences;
+    // в sentences будут храниться "предложения", состоящие из "слов"
+    // при желании можно избавиться от структуры Sentence
+    // но в силу того, что при изначальной реализации структура была написана
+    // было принято решение оставить часть логики в структуре
+    for(int i = 0; i < arr.size(); i++)
+    {
+        getline(fs, arr[i], '\n');
+        vector<string> s = alg(arr[i]);
+        // Шаг 1: разбиваем строку на подстроки (см 78 строку)
+
+        Sentence sentence;
+        sentence.fillWordsCount(s);
+
+        sentences.push_back(sentence);
+        // Шаг 2: сохраняем "слова" (см 84 строку)
+    }
+    vector<vector<int>> ans(arr.size(), vector<int>(wordX.size(), 0));
+    // ans - вектор с ответом
+    for(int i = 0; i < sentences.size(); i++)
+    {
+        Sentence sentence = sentences[i];
+       
+        for(auto _pair : sentence.wordCount)
+        {
+            string word = _pair.first;
+            int count = _pair.second;
+            int idx = wordX[word];
+            // логика следующая: wordX хранит координату x для каждого "слова" в CountVectoraizer
+            // перебираем каждое "предложение" по "словам" и счётчик количества "слов" подставляем в x координату CountVectoraizer
+            // i - номер строки 
+            ans[i][idx] = count;
+        }
+    }
+    
+    for(int i = 0; i < ans.size(); i++)
+    {
+        for(int j = 0; j < ans[i].size(); j++)
+        {
+            cout << ans[i][j] << " ";
+        }
+        cout << '\n';
+    }
+    fs.close();
+}
+
