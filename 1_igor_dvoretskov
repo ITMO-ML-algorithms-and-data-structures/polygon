@@ -1,0 +1,22 @@
+#include <iostream>
+
+using namespace std;
+
+int findN(int N, int* arr, int lenOfArray){
+    for(int cur = 0; cur < lenOfArray; ++cur){
+        if(arr[cur] == N){
+            return cur;
+        }
+    }
+    
+    return -1;
+}
+
+int main(){
+    int N = 56; 
+    int array[] = {-1, 2, -3, 4, -5};
+
+    int foundN = findN(N, array, sizeof(array) / sizeof(array[0]));
+    cout << foundN << endl;
+    return foundN;
+}
