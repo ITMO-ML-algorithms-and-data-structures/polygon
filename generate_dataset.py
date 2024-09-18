@@ -2,8 +2,8 @@
 Вывод справки
 python generate_dataset.py --help
 
-Генерация датасета с разделителем запятая:
-python generate_dataset.py --mode text --num-rows 1000 --delimiter ',' --output-file dataset.csv
+Генерация датасета с разделителем запятая и пробелами:
+python generate_dataset.py --mode text --num-rows 1000 --delimiter ',' --enter 1 --output-file dataset.csv
 
 Генерация числового датасета с разделителем табуляция (\t):
 python generate_dataset.py --mode numeric --min-value 1 --max-value 100 --num-rows 500 --delimiter '\t' --output-file numbers.tsv
@@ -20,9 +20,16 @@ NULL_PROBA = 0.1
 WRITE_ROW_LIMIT = 1e4
 MAX_NUM_ROWS = int(1e9)  # Максимальное значение для num_rows
 
-def generate_random_string(length, char_set=string.ascii_lowercase):
+def generate_random_string(length,enter, char_set=string.ascii_lowercase):
     """Генератор случайных строк из заданного набора символов."""
-    return ''.join(random.choices(char_set, k=length))
+    st=''.join(random.choices(char_set, k=length))
+    if enter=='0':
+        return st
+    i=random.randint(1,length)
+    while i!=length:
+        st=st[:i]+' '+st[i:]
+        i=random.randint(i,length)
+    return st
 
 def generate_random_numbers(size, min_val, max_val, include_null=False, null_probability=NULL_PROBA):
     """Генератор числовых данных с возможностью добавления пропусков (null)."""
@@ -32,10 +39,10 @@ def generate_random_numbers(size, min_val, max_val, include_null=False, null_pro
         else:
             yield random.randint(min_val, max_val)
 
-def generate_text_dataset(num_rows, max_length, char_set):
+def generate_text_dataset(num_rows, max_length,enter, char_set):
     """Генератор текстового датасета."""
     for _ in range(num_rows):
-        yield generate_random_string(random.randint(1, max_length), char_set)
+            yield generate_random_string(random.randint(1, max_length),enter, char_set) 
 
 def save_dataset_to_file(filename, data_gen, delimiter, row_limit=WRITE_ROW_LIMIT):
     """Сохраняет датасет в файл с выбранным разделителем. Если строк больше row_limit, то запись построчная."""
@@ -60,6 +67,8 @@ def main():
                         help="Количество строк или чисел для генерации (макс. 1e9).")
     parser.add_argument('--charset', choices=['default', 'alphanumeric', 'alphanumeric_ru'], default='default',
                         help="Набор символов для генерации строк.")
+    parser.add_argument('--enter', choices=['1','0'], default='0',
+                        help="Наличие пробелов (для векторизатора).")
     
     # Для числовых данных
     parser.add_argument('--min-value', type=int, default=0, help="Минимальное значение для чисел.")
@@ -96,7 +105,7 @@ def main():
         elif args.charset == 'alphanumeric_ru':
             char_set = string.ascii_letters + string.digits + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
 
-        dataset_gen = generate_text_dataset(args.num_rows, args.max_length, char_set)
+        dataset_gen = generate_text_dataset(args.num_rows, args.max_length, args.enter, char_set)
     
     elif args.mode == 'numeric':
         dataset_gen = generate_random_numbers(args.num_rows, args.min_value, args.max_value, args.include_null)
