@@ -62,9 +62,15 @@ vector<string> alg(string s)
 int main()
 {
     int size = 1e4;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    // ускорение ввода-вывода
+    ofstream out;
+    out.open("C:\\Users\\Huawei\\Desktop\\output.txt");
+    // в 69 строку подставьте вашу ссылку на выходной файл
     fstream fs;
     fs.open("C:\\Users\\Huawei\\Desktop\\dataset.txt", fstream::in);
-    // в 68 строку подставьте вашу ссылку на файл
+    // в 73 строку подставьте вашу ссылку на файл данных
     vector<string> arr(size);
     vector<Sentence> sentences;
     // в sentences будут храниться "предложения", состоящие из "слов"
@@ -75,13 +81,13 @@ int main()
     {
         getline(fs, arr[i], '\n');
         vector<string> s = alg(arr[i]);
-        // Шаг 1: разбиваем строку на подстроки (см 78 строку)
+        // Шаг 1: разбиваем строку на подстроки
 
         Sentence sentence;
         sentence.fillWordsCount(s);
 
         sentences.push_back(sentence);
-        // Шаг 2: сохраняем "слова" (см 84 строку)
+        // Шаг 2: сохраняем "слова"
     }
     vector<vector<int>> ans(arr.size(), vector<int>(wordX.size(), 0));
     // ans - вектор с ответом
@@ -105,10 +111,11 @@ int main()
     {
         for(int j = 0; j < ans[i].size(); j++)
         {
-            cout << ans[i][j] << " ";
+            out << ans[i][j] << " ";
         }
-        cout << '\n';
+        out << '\n';
     }
+    out.close();
     fs.close();
 }
 
