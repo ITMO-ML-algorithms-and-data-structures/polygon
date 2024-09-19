@@ -2,24 +2,45 @@
 #include <set>
 #include <fstream>
 #include <vector>
-
+#include <sstream>
+#include <string>
 using namespace std;
 
-int main() {
-    ifstream file("test2.txt", ios_base::in);
+
+void read_file(const char* filename, std::set<unsigned long long>& uniqueValues) {
+    ifstream file(filename, ios_base::in);
 
     if (!file.is_open()) {
-        cerr << "Ошибка открытия файла!" << endl;
-        return 1; // Возврат кода ошибки
+        std::cerr << "fail ne otkrilsya((" << std::endl;
+        return;
+    }
+    std::string line;
+
+    while (getline(file, line)) {
+        for (size_t i = 0; i < line.length(); ++i) {
+            if (line[i] == ',') {
+             line = line.replace(i, 1, "");
+            }
+        }
+        std::istringstream ss(line);
+        unsigned long long number;
+        while (ss >> number) {
+            uniqueValues.insert(number);
+        }
     }
 
-    set<unsigned long long> uniqueValues;
+    file.close();
+}
 
+
+
+
+int main() {
+
+    std::set<unsigned long long> uniqueValues;
     unsigned long long value;
+    read_file("test2.txt", uniqueValues);
 
-    while (file >> value) {
-        uniqueValues.insert(value);
-    }
 
     vector<unsigned long long> result;
 
@@ -27,9 +48,13 @@ int main() {
         result.push_back(*it);
     }
 
-    for (const auto& value : result) {
-        cout << value << ' ';
+    for (int i = 0; i<result.size();i++){
+        if (i < result.size()-1){
+            cout << result[i] << ", ";
+        }
+        else{
+            cout << result[i];
+        }
     }
-
     return 0;
 }
