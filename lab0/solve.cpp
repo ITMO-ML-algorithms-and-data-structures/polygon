@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <cmath>
 
 using namespace std;
 
@@ -33,7 +32,7 @@ vector<int> eratosthenes(int n) {
     return primes;
 }
 
-bool is_prime(int num, const vector<int>& primes) {
+bool in_primes(int num, const vector<int>& primes) {
     for (int prime : primes) {
         if (prime == num) {
             return true;
@@ -48,14 +47,14 @@ void find_even_occurrence_primes(const vector<int>& nums) {
     map<int, int> prime_count;
 
     for (int num : nums) {
-        if (is_prime(num, primes)) {
+        if (in_primes(num, primes)) {
             prime_count[num]++;
         }
     }
 
     for (const pair<int, int>& pair : prime_count) {
         if (pair.second % 2 == 0) {
-            cout << pair.first << " - " << pair.second << " раз\n";
+            cout << pair.first << " - " << pair.second << "\n";
         }
     }
 }
