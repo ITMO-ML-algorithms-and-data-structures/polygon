@@ -5,32 +5,32 @@
 
 using namespace std;
 
-void DeleteDuplicates(vector<int>& vec) {
+void DeleteDuplicates(vector<int>& array) {
     // Сортировка, могу объяснить работу
-    sort(vec.begin(), vec.end());
+    sort(array.begin(), array.end());
 
     // Само удаление дубликатов
-    auto last = unique(vec.begin(), vec.end());
+    auto last = unique(array.begin(), array.end());
 
     // Изеняет размер вектора, чтобы убрать неопределенные элементы
-    vec.erase(last, vec.end());
+    array.erase(last, array.end());
 }
 
 vector<int> ReadVectorFromFile(const string& filename) {
     
     ifstream inputFile(filename);
-    vector<int> vec; 
-    // cout << sizeof(vec); 24b
+    vector<int> array; 
+    // cout << sizeof(array); 24b
     int number;
     char tab;
     //    cout << sizeof(number) << " " << sizeof(tab); number = 4, tab = 1
     while (inputFile >> number) {
-        vec.push_back(number);
+        array.push_back(number);
         inputFile >> tab;  // Как-то убирает табы GPT
     }
-    // cout << sizeof(vec); 24 bytes
+    // cout << sizeof(array); 24 bytes
     inputFile.close();
-    return vec;
+    return array;
 }
 
 int main() {
@@ -38,17 +38,17 @@ int main() {
     string filename = "numbers.txt";
     //cout << sizeof(filename); 32b
 
-    vector<int> vec = ReadVectorFromFile(filename);
-    // cout << sizeof(vec); 24b
+    vector<int> array = ReadVectorFromFile(filename);
+    // cout << sizeof(array); 24b
 
-    DeleteDuplicates(vec);
+    DeleteDuplicates(array);
 
     
-    for (int i = 0; i < vec.size(); i++) {
+    for (int i = 0; i < array.size(); i++) {
         cout << i << " ";
     }
     cout << endl;
-    // cout << sizeof(vec); 24 bytes
+    // cout << sizeof(array); 24 bytes
 
     return 0;
 }
