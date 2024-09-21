@@ -12,22 +12,23 @@ void DeleteDuplicates(vector<int>& vec) {
     // Само удаление дубликатов
     auto last = unique(vec.begin(), vec.end());
 
-    // Иеняет размер вектора, чтобы убрать неопределенные элементы
+    // Изеняет размер вектора, чтобы убрать неопределенные элементы
     vec.erase(last, vec.end());
 }
 
 vector<int> ReadVectorFromFile(const string& filename) {
     
     ifstream inputFile(filename);
-    vector<int> vec;
+    vector<int> vec; 
+    // cout << sizeof(vec); 24b
     int number;
     char tab;
-
+    //    cout << sizeof(number) << " " << sizeof(tab); number = 4, tab = 1
     while (inputFile >> number) {
         vec.push_back(number);
         inputFile >> tab;  // Как-то убирает табы GPT
     }
-    // cout << sizeof(vec); 240 bytes
+    // cout << sizeof(vec); 24 bytes
     inputFile.close();
     return vec;
 }
@@ -35,8 +36,10 @@ vector<int> ReadVectorFromFile(const string& filename) {
 int main() {
     
     string filename = "numbers.txt";
+    //cout << sizeof(filename); 32b
 
     vector<int> vec = ReadVectorFromFile(filename);
+    // cout << sizeof(vec); 24b
 
     DeleteDuplicates(vec);
 
