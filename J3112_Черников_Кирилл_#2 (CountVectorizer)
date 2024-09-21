@@ -9,9 +9,11 @@ int main() {
         "Hellow world !",
         "Hellow dear world",
         "dear",
-        "world"
-    };//32 bites
-    map < string, list < int >> label_encoding;// 48 bites
+        "world me",
+        "me"
+    };//32*count_strs bites
+    
+    map < string, list < int >> label_encoding;// 48*count_unic_words  bites
     short int i = 0; //2 bites (т.к. ограничение по кол-ву строк 10000, а ограничение short int 32767)
     short int count_word = 0; //2 bites (ограничение на кол-во уникальных слов 100) 
     for (string str: strings) {// 32 bites
@@ -23,13 +25,13 @@ int main() {
             }
             else {
                 list<int>les={i};//32 bite  
-                label_encoding.insert(make_pair(word, les));
+                label_encoding.insert(make_pair(word, les));// +48 bites per pair
                 count_word+=1;
             }
         }
         i += 1;
     }
-    vector<vector<int>> matrix(i, vector<int>(count_word));// 25 bites (использую вектора, т.к. изначально нужно заполнить всю матрицу нулями )
+    vector<vector<int>> matrix(i, vector<int>(count_word));// 24*num_strs bites (использую вектора, т.к. изначально нужно заполнить всю матрицу нулями )
     i=0;
     for (auto[key , hash]: label_encoding) { //32+24 bites
         for (short int num_str: hash) {//24*2 bites
@@ -37,7 +39,7 @@ int main() {
         }
         i+=1;
     }
-    //Это просто вывод, не уверен, что нужно тут память считать
+    //Тут просто вывод, не уверен, что нужно считать память 
     for (auto &row : matrix)
     {
         for (auto &column : row)
@@ -46,7 +48,7 @@ int main() {
         }
         cout << endl;
     }
-    //На выходе имеем 32+48+2+2+32+382+32+32+25+32+24+24*2=691 bites
+    //На выходе имеем 32*num_strs+48*count_unic_words+2+2+32+382+32+32+24*num_strs+32+24+24*2=56 num_strs bites+ 48*count_unic_words +586 bites
     //Максимальная память расходуется в строчке создания stringstream, но это необходимо для разделения строки на слова
 
 }
