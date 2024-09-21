@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <cmath>
 #include <vector>
 using namespace std;
 map<string, int> wordX; 
@@ -39,6 +40,7 @@ struct Sentence
         }
     }
 };
+long long unsigned int maxStringSize = 0;
 vector<string> alg(string s)
 { 
     // алгоритм разбиения строки с разделителем "пробел"
@@ -57,11 +59,14 @@ vector<string> alg(string s)
         }
     }
     res.push_back(str);
+    maxStringSize = max(maxStringSize, sizeof(res) * res.size());
     return res;
 }
+
 int main()
 {
     int size = 1e4;
+    cout << "Размер size: "  << sizeof(size) << endl; // 4
     ios::sync_with_stdio(0);
     cin.tie(0);
     // ускорение ввода-вывода
@@ -70,6 +75,8 @@ int main()
     // в 69 строку подставьте вашу ссылку на выходной файл
     fstream fs;
     fs.open("C:\\Users\\Huawei\\Desktop\\dataset.txt", fstream::in);
+    cout << "Размер fs: "  << sizeof(fs) << endl; // 496
+    cout << "Размер out: "  << sizeof(out) << endl; // 480
     // в 73 строку подставьте вашу ссылку на файл данных
     vector<string> arr(size);
     vector<Sentence> sentences;
@@ -89,6 +96,8 @@ int main()
         sentences.push_back(sentence);
         // Шаг 2: сохраняем "слова"
     }
+    cout << "Размер arr: "  << sizeof(arr) * size << endl; // 240000
+    cout << "Размер sentences: "  << sizeof(sentences) * size << endl; // 240000
     vector<vector<int>> ans(arr.size(), vector<int>(wordX.size(), 0));
     // ans - вектор с ответом
     for(int i = 0; i < sentences.size(); i++)
@@ -106,7 +115,7 @@ int main()
             ans[i][idx] = count;
         }
     }
-    
+    cout << "Размер ans: "  << sizeof(ans) * size << endl; // 240000
     for(int i = 0; i < ans.size(); i++)
     {
         for(int j = 0; j < ans[i].size(); j++)
@@ -115,7 +124,22 @@ int main()
         }
         out << '\n';
     }
+    cout << "Размер out на выходе: "  << sizeof(out) << endl; // 480
+    cout << "Размер максимально длинной строки: "  << sizeof(maxStringSize) << endl; // 8
+    cout << "Размер wordX: "  << sizeof(wordX) * wordX.size() << endl; // 1481088
+
     out.close();
     fs.close();
+    /*
+    Конечный вывод в консоль:
+    Размер size: 4
+    Размер fs: 496
+    Размер out: 480
+    Размер arr: 240000
+    Размер sentences: 240000
+    Размер ans: 240000
+    Размер out на выходе: 480
+    Размер максимально длинной строки: 8
+    Размер wordX: 1481088
+*/
 }
-
