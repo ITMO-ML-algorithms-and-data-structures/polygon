@@ -9,7 +9,7 @@ void DeleteDuplicates(vector<int>& vec) {
     // Сортировка, могу объяснить работу
     sort(vec.begin(), vec.end());
 
-    // Само удаление дупликатов
+    // Само удаление дубликатов
     auto last = unique(vec.begin(), vec.end());
 
     // Иеняет размер вектора, чтобы убрать неопределенные элементы
