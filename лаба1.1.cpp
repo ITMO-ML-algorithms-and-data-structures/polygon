@@ -1,0 +1,38 @@
+﻿#include <iostream>
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    int size, size2, i;
+    bool found;
+    std::cout << "введите количество элементов массива от 0 до 100 : ";
+    std::cin >> size;
+    size2 = 0;
+    int* arr1 = new int[size];
+    int* arr2 = new int[size];
+    if (size < 100) {
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                std::cout << "введите элемент массива: ";
+                std::cin >> arr1[i];
+            }
+            for (int i = 0; i < size; i++) {
+                found = false;
+                for (int j = 0; j < i; j++) {
+                    if ((arr1[i]) == (arr1[j])){
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    arr2[size2] = arr1[i];
+                    size2 += 1;
+                }
+            }
+            std::cout << "массив без повторения значений: ";
+            for (int j = 0; j < size2; j++) {
+                std::cout << arr2[j], "/n";
+            }
+            return 0;
+        }
+    }
+}
