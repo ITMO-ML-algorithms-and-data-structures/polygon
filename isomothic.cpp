@@ -35,9 +35,10 @@ bool isIsomorphic(std::string string1, std::string string2) {
         if (index_string1[string1[i]] != index_string2[string2[i]]) {
             return false;  // Если индексы не совпадают, то строки не изоморфны
         }
-
-        index_string1[string1[i]] = i + 1;  // Переходи на следующий элемент (прибавляем к текущему индексу еще один)
-        index_string2[string2[i]] = i + 1;  // Переходи на следующий элемент (прибавляем к текущему индексу еще один)
+        
+        // Обновляем индекс символа в хэш-мапе для обоих строчек
+        index_string1[string1[i]] = i + 1; 
+        index_string2[string2[i]] = i + 1; 
     }
 
     return true;  // Строки изоморфны
