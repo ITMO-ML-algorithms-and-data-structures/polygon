@@ -19,16 +19,16 @@ int main(int argc, char* argv[]) {  // В функцию main передаетс
     int size;
     file >> size;  // Ввод размера массива
 
-    unordered_set<int> ans;  // Хеш таблица, которая отсекает дублирующиеся варианты
+    unordered_set<long long> ans;  // Хеш таблица, которая отсекает дублирующиеся варианты
 
     for (int i = 0; i < size; i++) {
-        int elem;
+        long long elem;
         file >> elem;  // Ввод очередного элемента массива
 
         ans.insert(elem);  // Добавление в хеш таблицу (Вычисляется хеш значение элемента и добавляется в соответствующую ячейку)
     }
     
-    for (int elem : ans) {
+    for (long long elem : ans) {
         cout << elem << ' ';  // Вывод элементов
     } cout << '\n';
 
