@@ -18,7 +18,7 @@
 // Output: true (true, ибо индекс f(1) можно заменить на f(2))
 
 bool isIsomorphic(std::string string1, std::string string2) {
-    // 8 + 8 + 8 + N = 24 + N байт, для двух 2 * (24 + N) = 48 + 2N байт, ссылкой, потому что иначе не влезет 1е9
+    // 8 + 8 + 8 + N = 24 + N байт, для двух 2 * (24 + N) = 48 + 2N байт
     if (string1.length() != string2.length()) {
         return false;  // Если длины не равны, значит строки не изоморфны
     }
