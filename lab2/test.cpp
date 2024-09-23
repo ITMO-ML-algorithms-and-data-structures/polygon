@@ -27,26 +27,23 @@ using namespace std;
     } while (false)
 
 void solve(std::istream & in = std::cin, std::ostream & out = std::cout) {
-    vector<string>names;
-    string input;
+
+    string input; //24 bytes
+
+    unordered_map<string, int>reId; //24(string) + 4(int) = 28*amount of unique strings bytes
+
+    int8_t lastId = 1; // 1 byte
 
     while (in >> input) {
-        names.push_back(input);
-    }
-
-    unordered_map<string, int>reId;
-
-    int8_t lastId = 1;
-
-    for (int i = 0; i < names.size(); i++) {
-        if (reId.find(names[i]) == reId.end()) {
-            reId[names[i]] = lastId;
-            lastId++;
+        if (reId.find(input) == reId.end()) { //check whether there's already an ID for string
+            reId[input] = lastId; //add string to string-->ID map
+            lastId++; //update new ID for next string to come
         }
 
-        out << reId[names[i]] << ' ';
-
+        out << reId[input] << ' ';
     }
+
+    //Result = 28*unq_strings + 25 bytes total used
 
     //in >> t;
     //out << t;
