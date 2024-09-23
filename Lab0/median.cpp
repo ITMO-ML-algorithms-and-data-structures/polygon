@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "../doctest.h"
+#include "../Source/doctest.h"
 
 // Найти медиану массива (middle +)
 
