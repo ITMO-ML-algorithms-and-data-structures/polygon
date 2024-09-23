@@ -1,59 +1,57 @@
+// Объявление необходимых заголовков
 #include <iostream>
 #include <set>
 #include <fstream>
 #include <vector>
 #include <sstream>
 #include <string>
+#include <unordered_set>
 using namespace std;
 
-
-void read_file(const char* filename, std::set<unsigned long long>& uniqueValues) {
-    ifstream file(filename, ios_base::in);
-
-    if (!file.is_open()) {
-        std::cerr << "fail ne otkrilsya((" << std::endl;
+// читаем файл + добавляем чиселки в мн-во
+void read_file(const char* filename, unordered_set<unsigned long long>& uniqueValues) {
+    ifstream file(filename, ios_base::in); // открываем файл для чтения
+    
+    if (!file.is_open()) { // проверяем на успешное открытие файла
+        cerr << "fail ne otkrilsya((" << endl;
         return;
     }
-    std::string line;
 
-    while (getline(file, line)) {
-        for (size_t i = 0; i < line.length(); ++i) {
+    string line; // переменная для хранения одной строки файла (ее вес неизвестен тк варьируется от входного файлика)
+    
+    while (getline(file, line)) { // читаем строки
+        for (size_t i = 0; i < line.length(); ++i) { // удаляю все запятые за (O(n*k), k=колво линий, n = длина каждой строки)
             if (line[i] == ',') {
-             line = line.replace(i, 1, "");
+                line = line.replace(i, 1, ""); // убираем запятую за O(line.lenght())
             }
         }
-        std::istringstream ss(line);
-        unsigned long long number;
-        while (ss >> number) {
-            uniqueValues.insert(number);
+
+        istringstream ss(line); 
+        unsigned long long number; // 8bite
+
+        while (ss >> number) { // 
+            uniqueValues.insert(number); // O(1)
         }
     }
 
-    file.close();
+    file.close(); 
 }
 
-
-
-
 int main() {
+    unordered_set<unsigned long long> uniqueValues; // мнво чиселок
+    read_file("test2.txt", uniqueValues); // чтение файла и заполнение множества
 
-    std::set<unsigned long long> uniqueValues;
-    unsigned long long value;
-    read_file("test2.txt", uniqueValues);
+    vector<unsigned long long> result; // массив вывод
 
-
-    vector<unsigned long long> result;
-
-    for (auto it = uniqueValues.begin(); it != uniqueValues.end(); ++it) {
-        result.push_back(*it);
+    for (auto it = uniqueValues.begin(); it != uniqueValues.end(); ++it) { // заполняем массив за O(n)
+        result.push_back(*it); // O(1)
     }
 
-    for (int i = 0; i<result.size();i++){
-        if (i < result.size()-1){
-            cout << result[i] << ", ";
-        }
-        else{
-            cout << result[i];
+    for (int i = 0; i<result.size();i++) { // O(n), где n = result.size()
+        if (i < result.size()-1) {
+            cout << result[i] << ", "; //O(1)
+        } else {
+            cout << result[i]; //O(1)
         }
     }
     return 0;
