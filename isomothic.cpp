@@ -22,7 +22,7 @@ bool isIsomorphic(std::string string1, std::string string2) {
     if (string1.length() != string2.length()) {
         return false;  // Если длины не равны, значит строки не изоморфны
     }
-    // 8 байт (размер ссылки) + 8 байт (указатель) + 8 байт (длина) + 8 байт (емкость) + N байт (массив символов).
+  
 
     std::unordered_map<char, long long int> index_string1;  // Хранит индексы символов первой строки
     std::unordered_map<char, long long int> index_string2;  // Хранит индексы символов второй строки
