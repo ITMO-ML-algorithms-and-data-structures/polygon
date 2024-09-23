@@ -39,7 +39,7 @@ void read_file(const char* filename, unordered_set<unsigned long long>& uniqueVa
 
 int main() {
     unordered_set<unsigned long long> uniqueValues; // мнво чиселок
-    read_file("test2.txt", uniqueValues); // чтение файла и заполнение множества
+    read_file("test.txt", uniqueValues); // чтение файла и заполнение множества
 
     vector<unsigned long long> result; // массив вывод
 
