@@ -1,0 +1,52 @@
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+using namespace std;
+
+vector<int> LabelEncoder(vector<string> arr) {
+  map<string, int> data_encoder; // 48 байт + n * 24 байт
+  vector<int> result = {}; // 24 байт + size * 4 байт
+    
+  int index = 0; // 4 байт
+
+  for (string label : arr) {
+    if (data_encoder.find(label) == data_encoder.end()) {
+      data_encoder[label] = index;
+      index++;
+    }
+
+    result.push_back(data_encoder[label]);
+  }
+
+  return result;
+}
+
+int main() {
+  vector<string> tests = { "test_1e3.txt", "test_1e9.txt" };
+  for (string test : tests) { 
+    ifstream file(test);
+
+    int size = 0; // 4 байт
+    file >> size;
+
+    vector<string> arr = {}; // 24 байт + size * 32 байт
+    string item = ""; // 32 байт
+    for (int i = 0; i < size; i++) {
+      file >> item;
+      arr.push_back(item);
+    }
+
+    vector<int> result = LabelEncoder(arr); // 24 байт + size * 4 байт
+
+    for (int i = 0; i < size; i++) {
+      cout << result[i] << " ";
+    }
+
+    cout << "\n\n\n\n";
+  }
+  
+
+  return 0;
+}
