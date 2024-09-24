@@ -1,0 +1,34 @@
+//Найти количество элементов массива, которые больше среднего арифметического массива 3 variant Middle+
+#include <iostream>
+
+int main(){
+    int mas[] = {4, 10, 2, 1, 12, 1, 0, 13};
+    int size = sizeof(mas) / sizeof(mas[0]);   //переменная для определения размера массива
+
+    float sum = 0;  //переменная для суммы чисел массива
+
+
+
+    for (int i = 0; i < size; i++){
+        sum += mas[i];
+
+    };
+
+    float average = sum / size; //переменная для среднего арифметического массива
+
+    std::cout << "Среднее арифметическое в массиве " << average << std::endl;
+
+
+
+    int count_good_numbers = 0; //переменная для подсчета чисел, подходящих под условие
+
+    for (int i = 0; i < size; i++){
+        if (mas[i] > average){
+            count_good_numbers++;
+        }
+    };
+
+    std::cout << "Количество чисел, больших среднего арифметического массива: " << count_good_numbers << std::endl;
+
+    return 0;
+}
