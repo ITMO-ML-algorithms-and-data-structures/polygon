@@ -5,11 +5,10 @@
 #include <vector>
 #include <sstream>
 #include <string>
-#include <unordered_set>
 using namespace std;
 
 // читаем файл + добавляем чиселки в мн-во
-void read_file(const char* filename, unordered_set<unsigned long long>& uniqueValues) {
+void read_file(const char* filename, set<unsigned long long>& uniqueValues) {
     ifstream file(filename, ios_base::in); // открываем файл для чтения
     
     if (!file.is_open()) { // проверяем на успешное открытие файла
@@ -38,7 +37,7 @@ void read_file(const char* filename, unordered_set<unsigned long long>& uniqueVa
 }
 
 int main() {
-    unordered_set<unsigned long long> uniqueValues; // мнво чиселок
+    set<unsigned long long> uniqueValues; // мнво чиселок
     read_file("test.txt", uniqueValues); // чтение файла и заполнение множества
 
     vector<unsigned long long> result; // массив вывод
