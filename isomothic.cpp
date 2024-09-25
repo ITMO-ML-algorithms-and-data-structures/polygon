@@ -49,16 +49,16 @@ int main(int argc, char* argv[]) { // в функции мейн указаны 
     
     std::ifstream file(argv[1]);  // Открываем файл с данными.
 
-    std::string line;  // Переменная для хранения считанной строки из файла (8 + 8 + 8 + N = 24 + N байт)
+    std::string txtstring;  // Переменная для хранения считанной строки из файла (8 + 8 + 8 + N = 24 + N байт)
 
     // Считываем строки из файла
-    while (std::getline(file, line)) {
-        long long int indexofspace = line.find(' ');  // Ищем индекс пробела
+    while (std::getline(file, txtstring)) {
+        long long int indexofspace = txtstring.find(' ');  // Ищем индекс пробела
         // по памяти 8 байт
 
-        if (indexofspace < line.length()) {  // Проверяем, найден ли пробел, если найден, то
-            std::string s = line.substr(0, indexofspace);  // Первая строка будет по индексам от 0 до индекса пробела
-            std::string s2 = line.substr(indexofspace + 1);  // Вторая строка будет по индексам от индекса пробела + 1 до конца
+        if (indexofspace < txtstring.length()) {  // Проверяем, найден ли пробел, если найден, то
+            std::string s = txtstring.substr(0, indexofspace);  // Первая строка будет по индексам от 0 до индекса пробела
+            std::string s2 = txtstring.substr(indexofspace + 1);  // Вторая строка будет по индексам от индекса пробела + 1 до конца
 
             // Проверка на изоморфизм и вывод результата
             if (isIsomorphic(s, s2)) {
@@ -78,5 +78,5 @@ int main(int argc, char* argv[]) { // в функции мейн указаны 
 // (1 * M + 8 * N)*2 байт для двух хэш-таблиц
 // 8 байт для локальной переменной i
 // 8 байт для локальной переменной indexofspace
-// 24 + N байт для переменной line
+// 24 + N байт для переменной txtstring
 // Всего: 88 + 19N + 2M байт.
