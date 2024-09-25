@@ -2,7 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
-
+using namespace std;
 int main() {
     // первый массив
     std::vector<std::string> arr_perv = {"Orange", "Red", "Green", "Orange"};
