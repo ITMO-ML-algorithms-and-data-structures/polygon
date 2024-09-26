@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+ int arr[] = { 1, 2 , 3 , 89, 28, -90, -100, 78, 67, 10 };
+ int n = sizeof(arr) / sizeof(arr[0]);
+
+ int sum = 0;
+
+ for (int i = 0; i < n; i++) {
+ if (arr[i] > 0) {
+ sum += arr[i];
+       }
+    }
+
+ cout << "summa vpolozitelnix chisel: " << sum << endl;
+
+    return 0;
+}
