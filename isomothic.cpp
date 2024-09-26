@@ -24,24 +24,32 @@ bool isIsomorphic(std::string string1, std::string string2) {
     }
   
 
-    std::unordered_map<char, long long int> index_string1;  // Хранит индексы символов первой строки
-    std::unordered_map<char, long long int> index_string2;  // Хранит индексы символов второй строки
-    // Я не знаю, надо ли считать память хэш-таблицы, но по идее это будет 1 * M + 8 * N байт, где M - количество ключей(индексов), а N - количество элементов(значений)
-    
+    std::unordered_map<char, char> indexstring1; // Сопоставления индексов из string1 в string2 (1 * M + 8 * N байт), M - ключи, N - значения
+    std::unordered_map<char, char> indexstring2; // Сопоставления индексов из string2 в string1 (1 * M + 8 * N байт), M - ключи, N - значения
 
-    // Проходим по каждому символу строки для сравнения индексов элементов (наверное, это можно было сделать при помощи find из мапы за О(1))
+    // Проходим по каждому символу строки для сравнения индексов элементов 
     for (long long int i = 0; i < string1.length(); i++) { // 8 байт (локальная видимость)
         // Сравниваем индексы символов
-        if (index_string1[string1[i]] != index_string2[string2[i]]) {
-            return false;  // Если индексы не совпадают, то строки не изоморфны
+        char symbol1 = string1[i]; // 1 байт (локальная видимость)
+        char symbol2 = string2[i]; // 1 байт (локальная видимость)
+        // Проверяем, есть ли уже сопоставление для symbol1:
+         if (indexstring1.count(symbol1)) {
+            // Если есть, проверяем, соответствует ли оно symbol2
+            if (indexstring1[symbol1] != symbol2) { 
+                return false; 
+            }
+        } else {
+            // Проверяем, есть ли уже сопоставление для symbol2:
+            if (indexstring2.count(symbol2)) { 
+                return false; 
+            }
+            // Добавляем соответствие, если проверки пройдены
+            indexstring1[symbol1] = symbol2;
+            indexstring2[symbol2] = symbol1;
         }
-        
-        // Обновляем индекс символа в хэш-мапе для обоих строчек
-        index_string1[string1[i]] = i + 1; 
-        index_string2[string2[i]] = i + 1; 
     }
 
-    return true;  // Строки изоморфны
+    return true;
 }
 
 int main(int argc, char* argv[]) { // в функции мейн указаны аргументы командной строки для передачи txt файла
@@ -57,11 +65,11 @@ int main(int argc, char* argv[]) { // в функции мейн указаны 
         // по памяти 8 байт
 
         if (indexofspace < txtstring.length()) {  // Проверяем, найден ли пробел, если найден, то
-            std::string s = txtstring.substr(0, indexofspace);  // Первая строка будет по индексам от 0 до индекса пробела
-            std::string s2 = txtstring.substr(indexofspace + 1);  // Вторая строка будет по индексам от индекса пробела + 1 до конца
+            std::string str1 = txtstring.substr(0, indexofspace);  // Первая строка будет по индексам от 0 до индекса пробела
+            std::string str2 = txtstring.substr(indexofspace + 1);  // Вторая строка будет по индексам от индекса пробела + 1 до конца
 
             // Проверка на изоморфизм и вывод результата
-            if (isIsomorphic(s, s2)) {
+            if (isIsomorphic(str1, str2)) {
                 std::cout << "true\n";
             } else {
                 std::cout << "false\n";
@@ -75,8 +83,10 @@ int main(int argc, char* argv[]) { // в функции мейн указаны 
 
 // Общий объём используемой памяти:
 // 48 + 2N байт для строк string1 и string2
-// (1 * M + 8 * N)*2 байт для двух хэш-таблиц
+// (1 * M + 8 * N)*2 байт для  хэш-таблиц
+// 1 байт для symbol1
+// 1 байт для symbol2
 // 8 байт для локальной переменной i
 // 8 байт для локальной переменной indexofspace
 // 24 + N байт для переменной txtstring
-// Всего: 88 + 19N + 2M байт.
+// Всего: 90 + 19N + 2M байт.
