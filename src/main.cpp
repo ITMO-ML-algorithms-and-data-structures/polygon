@@ -1,50 +1,85 @@
 #include <iostream>
-#include <stack>
+#include <vector>
+#include <string>
+#include <unordered_set>
 
-using namespace std;
+// докинем условия
+#define MAX_LINES 10000
+#define MAX_LINE_LENGTH 100
+#define MAX_UNIQUE_WORDS 100
+#define MAX_WORD_LENGTH 100
+
+// немного утилов
+std::vector<std::string> splitLine(const std::string& line) {
+    std::vector<std::string> splitLines;
+    std::string currentLine;
+
+    for (char c : line) {
+        if (c == ' ') { 
+            if (!currentLine.empty()) {
+                splitLines.push_back(currentLine);
+                currentLine.clear();
+            }
+        } else currentLine += c;
+    }
+
+    if (!currentLine.empty()) splitLines.push_back(currentLine);
+    return splitLines;
+}
 
 int main() {
+    std::cout << "size=? >";
+    short int size;
+    std::cin >> size; // не будем устраивать доп проверки на не-интовое значение
 
-    std::string input;
-    std::cout << "int pls >";
-    std::cin >> input;
-    bool isValid = true;
+    if (size > MAX_LINES) {
+        std::cout << "бро в меня столько не вместится (по условиям задачи)" << std::endl;
+        return 1;
+    }
+    std::cin.ignore(); // фиксим прикол с переносом строки
+    
+    std::vector<std::vector<std::string>> arr;
 
-    /**
-     * базированная задачка, генштабное решение
-     *
-     * создаем стек ->
-     * добавляем туда открывающие символы
-     * если встречаем закрывающий - смотрим, совпадает ли он с последним открытым.
-     * совпадает ? (ну тип лежит скобочка `{` а мы встретили `}`) тогда удаляем их и считаем что они закрыты
-     * нет ? гг строка инвалид
-     */
-    std::stack<char> st;
-    int size = input.size();
-        for (int i = 0; i < size; i++) { // avg foreach enj, компилятор постоянно просит -std=c++11
-            char ch = input[i]; 
+    for (int i = 0; i < size; i++) {
+        std::cout << "line " << i + 1 << " >";
+        std::string inputLine;
+        std::getline(std::cin, inputLine);
+        
+        if (inputLine.length() >= MAX_LINE_LENGTH) {
+            std::cout << "бро в меня столько не вместится (по условиям задачи)" << std::endl;
+            return 1;
+        }
+        arr.push_back(splitLine(inputLine));
+    }
 
-            if (ch == '(' || ch == '[' || ch == '{') {
-                st.push(ch); // push = добавить сверху
-            } else { // да, по синтаксису плюсов/шарпов и че там скобка открывающая тело конструкции должно быть на следующей строке, но мне после джавы+гошки+коклина так больше нравится
-                if (st.empty()) {isValid = false; break;} // ну тип получили элемент закрывающий строку, а открывающего в стеке нет
+    // вот тут стартуем алгоритм ===========
 
-                else {
-                    char top = st.top();
-                    if ((ch==')' && top=='(') // вот тут смотрим, совпадают ли строчки
-                        || (ch=='}' && top=='{')
-                        || (ch==']' && top=='[')) {
-                            st.pop(); // скобки сошлись, попаем их
-                        }
-                    else {isValid = false; break;}
-                    
+    // залетим как уважаемые люди через set
+    std::unordered_set<std::string> vocab;
+    for (const auto& line : arr) { // ну авто и авто че бубнить то
+        for (const auto& word : line) {
+            vocab.insert(word);
+        }
+    }
+
+    std::vector<std::string> vecVocab(vocab.begin(), vocab.end());
+    vocab.clear(); // я больше не хочу с тобой играть
+
+   for (const auto& lineWords : arr) {
+        // развернул цикл в обратную сторону что бы пример совпадал. как сделал - загуглил :/
+        for (auto vocabIter = vecVocab.rbegin(); vocabIter != vecVocab.rend(); ++vocabIter) { 
+            const std::string& vocabWord = *vocabIter;
+            bool found = false;
+            for (const auto& word : lineWords) {
+                if (vocabWord == word) {
+                    found = true;
+                    break;
                 }
             }
-    } 
-
-    if (isValid) {
-        std::cout << "valid\n"; return 0;
-    } else {
-        std::cout << "invalid\n"; return -1;
+            std::cout << (found ? "1" : "0") << " ";
+        }
+        std::cout << std::endl;
     }
+
+    return 0;
 }
