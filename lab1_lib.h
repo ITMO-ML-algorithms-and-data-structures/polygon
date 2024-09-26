@@ -1,6 +1,9 @@
-#ifndef LAB1_LIB_H
-#define LAB1_LIB_H
+//Ксения Автономова 26.09.2024
+//Библиотека функций
 
-int CalcResult(int* numbersSet, size_t numbersSize);
+#include <vector>
 
-#endif
+using namespace std;
+
+//Функция поиска количества пар чисел в массиве, где первое больше второго.
+int CalcLab1Result(vector<int> numbers);

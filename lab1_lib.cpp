@@ -1,17 +1,16 @@
-#include <iostream.h>
 #include "lab1_lib.h"
 
-int CalcResult(int* numbersSet, size_t numbersSize) {
+int CalcLab1Result(vector<int> numbers) {
     int result = 0;
+    int numbersSize = numbers.size();
 
     for (int i = 0; i < numbersSize; i++) {
         for (int j = 0; j < numbersSize; j++) {
             if (i != j) {
-                int numberI = numbersSet[i];
-                int numberJ = numbersSet[j];
+                int numberI = numbers[i];
+                int numberJ = numbers[j];
 
                 if (numberI > numberJ) {
-                    std::cout << numberI << ":" << numberJ << "\n";
                     result++;
                 }
             }
