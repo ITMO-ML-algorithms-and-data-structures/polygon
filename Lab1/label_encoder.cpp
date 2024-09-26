@@ -3,35 +3,31 @@
 #include <vector>
 #include <unordered_map>
 
-// Необходимые библиотеки для тестирующего фреймворка
+// Необходимо для тестирующего фреймворка
 // #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 // #include "../Source/doctest.h"
 
-std::vector<short> label_encoder(const std::string& path) {
+std::vector<short> label_encoder(const std::string& path) {    // Функция принимает один аргумент - путь до файла
 
-    std::vector<short> encoded;
+    std::vector<short> encoded;    // Создаем массив для вывода
 
-    std::ifstream file;
+    std::ifstream file;    // Создаем переменную для нашего файла
     file.open(path);    // Открываем файл
 
-    std::vector<std::string> words;
-    std::unordered_map<std::string, short> hash_table;
-    std::string inp;
-    while (file >> inp)
-        words.push_back(inp);
-    int size = words.size();
-    int next_value = 1;
+    std::unordered_map<std::string, short> hash_table;    // Создаем хеш-таблицу
+    std::string inp;    // Создаем переменную для хранения считанных из файла "слов"
+    int next_value = 1;    // Переменная для хранения номера первый раз встреченного "слова"
 
-    for (size_t i = 0; i < size; i++) {
+    while (file >> inp) {    // Пока в файле еще есть "слова":
 
-        if (!hash_table.contains(words[i]))
-            hash_table[words[i]] = next_value++;
+        if (!hash_table.contains(inp))    // Проверяем, не встречали ли мы это "слово" раньше
+            hash_table[inp] = next_value++;    // Если нет, то присваиваем ему номер и увеличиваем переменную next_value на 1
 
-        encoded.push_back(hash_table[words[i]]);
+        encoded.push_back(hash_table[inp]);    // Добавляем номер текущего слова в выходной массив
 
     }
 
-    return encoded;
+    return encoded;    // Возвращаем итоговый массив
 
 }
 
@@ -61,12 +57,11 @@ std::vector<short> label_encoder(const std::string& path) {
 
 int main() {
 
-    std::string path;
+    std::string path;    // Создаем переменную для хранения пути к файлу
     std::cin >> path;    // Получаем на вход путь до файла и сохраняем его в path
 
-    std::vector<short> encoded = label_encoder(path);
+    std::vector<short> encoded = label_encoder(path);    // Получаем итоговый массив для нашего файла
 
-    for (short i : encoded)
-        std::cout << i << " ";
+    // ...
 
 }
