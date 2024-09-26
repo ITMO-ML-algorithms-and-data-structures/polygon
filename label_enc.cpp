@@ -12,24 +12,19 @@ vector<int> label_encoder (string path) {
     ifstream file(path);
 
     string line;
-    int u_element_number = 0;
-    unordered_map<string, int> label_enc;
-    vector<string> mas_word;
-
+    int unique_index = 0;
+    unordered_map<string, int> label_map;
+    vector<int> label;
     if (getline(file, line)) {
         istringstream stream(line);
         string word;
         while (stream >> word) {
-            mas_word.push_back(word);
+            if (not label_map.contains(word)) {
+                label_map[word] = unique_index + 1;
+                unique_index++;
+            }
+            label.push_back(label_map[word]);
         }
-    }
-    vector<int> label(mas_word.size());
-    for (int i = 0; i < mas_word.size(); i++) {
-        if (not label_enc.contains(mas_word[i])) {
-            label_enc[mas_word[i]] = u_element_number + 1;
-            u_element_number++;
-        }
-        label[i] = label_enc[mas_word[i]];
     }
 
     file.close();
@@ -37,7 +32,7 @@ vector<int> label_encoder (string path) {
 }
 
 int main() {
-    vector<int> label = label_encoder("test_dir/test_3.txt");
+    vector<int> label = label_encoder("test_dir/test_4.txt");
     for (int i = 0; i < label.size(); i++) {
         cout <<label[i] << ", ";
     }
