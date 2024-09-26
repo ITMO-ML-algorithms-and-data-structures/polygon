@@ -24,8 +24,8 @@ bool isIsomorphic(std::string string1, std::string string2) {
     }
   
 
-    std::unordered_map<char, char> indexstring1; // Сопоставления индексов из string1 в string2 (1 * M + 8 * N байт), M - ключи, N - значения
-    std::unordered_map<char, char> indexstring2; // Сопоставления индексов из string2 в string1 (1 * M + 8 * N байт), M - ключи, N - значения
+    std::unordered_map<char, long long int> indexstring1; // Сопоставления индексов из string1 в string2 (1 * M + 8 * N байт), M - ключи, N - значения
+    std::unordered_map<char, long long int> indexstring2; // Сопоставления индексов из string2 в string1 (1 * M + 8 * N байт), M - ключи, N - значения
 
     // Проходим по каждому символу строки для сравнения индексов элементов 
     for (long long int i = 0; i < string1.length(); i++) { // 8 байт (локальная видимость)
