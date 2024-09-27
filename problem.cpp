@@ -6,7 +6,6 @@ int primeNum(int c) {
     for (int j = 2; j < c; j++) {
         if (c % j == 0) {
             return 0;
-            break;
         }
     }
     return 1;
