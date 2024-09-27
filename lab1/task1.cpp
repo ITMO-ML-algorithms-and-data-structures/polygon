@@ -28,7 +28,7 @@ bool isomorphString(const string& string1,const string& string2){
 }
 
 int main(){
-    // system("python3 generate_dataset.py --mode text --max-length 10000 --num-rows 2 --min-unique 2 --charset alphanumeric --output-file test.txt --delimiter '\n'")
+    // system("python3 generate_dataset.py --mode text --max-length 10000 --num-rows 2 --min-unique 2 --charset alphanumeric --output-file task1.txt --delimiter '\n'")
     string inputstring1, inputstring2;
     ifstream in("test.txt"); // Вход две строки из файла test.txt
     in >> inputstring1 >> inputstring2;
