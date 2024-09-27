@@ -2,91 +2,100 @@
 #include <unordered_map>
 #include <fstream>
 #include <string>
+#include <cassert>
 
 // Определить являются ли 2 строки изоморфными
-// Асимптотическая сложность этого алгоритма O(N), так как алгоритм проходит один раз по всей строке для записи индексов.
-// По памяти O(N), где N - длина строк.
 // Функция возвращает true - если строки изоморфны, false - нет
 
-// Tests: input: egg add
-// Output: true (true, ибо индекс f(g) можно заменить на f(d))
-
-// Tests: input: foo bar
-// Output: false (false, ибо индекс f(o) можно заменить на f(a))
-
-// Tests: input: 12 21
-// Output: true (true, ибо индекс f(1) можно заменить на f(2))
-
-bool isIsomorphic(std::string string1, std::string string2) {
-    // 8 + 8 + 8 + N = 24 + N байт, для двух 2 * (24 + N) = 48 + 2N байт
+bool isIsomorphic(const std::string &string1, const std::string &string2) { // передаем строчки по ссылке, значит не создаем их
+    // Если длины не равны, значит строки не изоморфны
     if (string1.length() != string2.length()) {
-        return false;  // Если длины не равны, значит строки не изоморфны
+        return false;
     }
-  
 
-    std::unordered_map<char, long long int> indexstring1; // Сопоставления индексов из string1 в string2 (1 * M + 8 * N байт), M - ключи, N - значения
-    std::unordered_map<char, long long int> indexstring2; // Сопоставления индексов из string2 в string1 (1 * M + 8 * N байт), M - ключи, N - значения
+    // Оценка памяти для хеш-таблиц:
+    // map_s1_to_s2: (1 * M + 8 * N) * N байта (M - количество уникальных ключей, N - количество уникальных символов)
+    // map_s2_to_s1: (1 * M + 8 * N) * N байта (M - количество уникальных ключей, N - количество уникальных символов)
+    // Для двух: (M*N + 8 * N^2) * 2 байта
+    std::unordered_map<char, int> map_s1_to_s2; // Сопоставления индексов из string1 в string2
+    std::unordered_map<char, int> map_s2_to_s1; // Сопоставления индексов из string2 в string1
 
-    // Проходим по каждому символу строки для сравнения индексов элементов 
-    for (long long int i = 0; i < string1.length(); i++) { // 8 байт (локальная видимость)
-        // Сравниваем индексы символов
-        char symbol1 = string1[i]; // 1 байт (локальная видимость)
-        char symbol2 = string2[i]; // 1 байт (локальная видимость)
+    // Проходим по каждому символу строки для сравнения индексов элементов
+    for (int i = 0; i < string1.length(); i++) { // 4 байта (локальная)
+        char symbol1 = string1[i]; // 1 байт (локальная)
+        char symbol2 = string2[i]; // 1 байт (локальная)
+
         // Проверяем, есть ли уже сопоставление для symbol1:
-         if (indexstring1.count(symbol1)) {
+        if (map_s1_to_s2.count(symbol1)) {
             // Если есть, проверяем, соответствует ли оно symbol2
-            if (indexstring1[symbol1] != symbol2) { 
-                return false; 
+            if (map_s1_to_s2[symbol1] != symbol2) {
+                return false;
             }
         } else {
             // Проверяем, есть ли уже сопоставление для symbol2:
-            if (indexstring2.count(symbol2)) { 
-                return false; 
+            if (map_s2_to_s1.count(symbol2)) {
+                return false;
             }
             // Добавляем соответствие, если проверки пройдены
-            indexstring1[symbol1] = symbol2;
-            indexstring2[symbol2] = symbol1;
+            map_s1_to_s2[symbol1] = symbol2;
+            map_s2_to_s1[symbol2] = symbol1;
         }
     }
 
     return true;
 }
 
-int main(int argc, char* argv[]) { // в функции мейн указаны аргументы командной строки для передачи txt файла
-    // argc - количество аргументов, argv - сами аргументы
-    
-    std::ifstream file(argv[1]);  // Открываем файл с данными.
+// Функция для тестирования
+void Tests() {
+    assert(isIsomorphic("egg", "add") == true);
+    assert(isIsomorphic("foo", "bar") == false);
+    assert(isIsomorphic("paper", "title") == true);
+    assert(isIsomorphic("123", "321") == true);
+    assert(isIsomorphic("1234567890", "0987654321") == true);
+    assert(isIsomorphic("123123", "321321") == true);
+    assert(isIsomorphic("abc", "xyz") == true);
+    assert(isIsomorphic("ab", "aa") == false);
+    assert(isIsomorphic("abab", "cdcd") == true);
+    assert(isIsomorphic("abab", "cddc") == false);
+    assert(isIsomorphic("paperpaperpaper", "paperpaperpaper") == true);
+    assert(isIsomorphic("appleapple", "alivealive") == false);
+    assert(isIsomorphic("AbnerAbner", "AbneyAbney") == true);
+    assert(isIsomorphic("egg1234567890", "add0987654321") == true);
+    assert(isIsomorphic("foo1234567890", "bar0987654321") == false);
+    assert(isIsomorphic("abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdea",
+                        "bcdefbcdefbcdefbcdefbcdefbcdefbcdefbcdefbcdefb") == true);
+    assert(isIsomorphic("12345678901234567890123456789012345678901234567890",
+                        "09876543210987654321098765432109876543210987654321") == true);
+    std::cout << "All tests passed!\n";
+}
 
-    std::string txtstring;  // Переменная для хранения считанной строки из файла (8 + 8 + 8 + N = 24 + N байт)
+int main() {
+    Tests();
 
-    // Считываем строки из файла
-    while (std::getline(file, txtstring)) {
-        long long int indexofspace = txtstring.find(' ');  // Ищем индекс пробела
-        // по памяти 8 байт
+    // Открываем файл с данными
+    std::ifstream inputFile("C:\\ITMO-ML-algorithms-and-data-structures\\polygon\\input.txt");
+    std::ofstream outputFile("C:\\ITMO-ML-algorithms-and-data-structures\\polygon\\output.txt");
 
-        if (indexofspace < txtstring.length()) {  // Проверяем, найден ли пробел, если найден, то
-            std::string str1 = txtstring.substr(0, indexofspace);  // Первая строка будет по индексам от 0 до индекса пробела
-            std::string str2 = txtstring.substr(indexofspace + 1);  // Вторая строка будет по индексам от индекса пробела + 1 до конца
+    // Оценка памяти для строк:
+    // str1 и str2: 32 * 2 байта = 64 байта для двух строк
+    std::string str1, str2; // 32 * 2 байта = 64 для двух строк
 
-            // Проверка на изоморфизм и вывод результата
-            if (isIsomorphic(str1, str2)) {
-                std::cout << "true\n";
-            } else {
-                std::cout << "false\n";
-            }
+    // В цикле мы читаем строки из файла и проверяем их на изоморфизм
+    while (std::getline(inputFile, str1, ' ') && std::getline(inputFile, str2)) {
+        if (isIsomorphic(str1, str2)) {
+            outputFile << "true\n";
+        } else {
+            outputFile << "false\n";
         }
     }
 
-    file.close();  // Закрываем файл
+    inputFile.close();
+    outputFile.close();
+
+    // Общая оценка использования памяти:
+    // В функции isIsomorphic: (M*N + 8 * N^2) * 2 байта для хранения хэш-таблиц, где M - ключи, N - значения
+    // Локальные переменные : 4 + 1 + 1 = 6 байт
+    // В main: 64 байта (память для str1 и str2)
+    // Общая память:  (M*N + 8 * N^2) * 2 + 64 байта
     return 0;
 }
-
-// Общий объём используемой памяти:
-// 48 + 2N байт для строк string1 и string2
-// (1 * M + 8 * N)*2 байт для  хэш-таблиц
-// 1 байт для symbol1
-// 1 байт для symbol2
-// 8 байт для локальной переменной i
-// 8 байт для локальной переменной indexofspace
-// 24 + N байт для переменной txtstring
-// Всего: 90 + 19N + 2M байт.
