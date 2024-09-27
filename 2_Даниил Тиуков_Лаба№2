@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+int main() {
+    
+    std::vector < std:: string > input_data = { "orange", "red", "green", "orange" };
+
+    std::vector < std::string> input_data_test1 = { "orange", "red", "green", "orange","orange","green","violet"};
+
+    std::vector <std::string> input_data_test2 = {"0","1","0","-",""};
+
+    std::vector<int> output_data;
+
+
+
+    for (int i = 0; i < input_data.size(); i++) {
+        std::cout << std::count(input_data.begin(), input_data.end(), input_data[i]) << " ";//Цикл пробегает по массиву и считает кол-во каждых элементов, заменяя этот элемент его кол-вом в массиве.
+    }
+    std::cout << std::endl;
+    for (int i = 0; i < input_data_test1.size(); i++) {
+        std::cout << std::count(input_data_test1.begin(), input_data_test1.end(), input_data_test1[i]) << " ";// тест 1
+    }
+    std::cout << std::endl;
+    for (int i = 0; i < input_data_test2.size(); i++) {
+        std::cout << std::count(input_data_test2.begin(), input_data_test2.end(), input_data_test2[i]) << " ";// тест 2
+
+    }
+    return 0;
+}
