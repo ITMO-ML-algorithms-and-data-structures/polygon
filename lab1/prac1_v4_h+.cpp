@@ -1,6 +1,5 @@
 #include <vector>
 #include <iostream>
-#include <sstream>
 #include <string>
 using namespace std;
 
@@ -15,29 +14,29 @@ using namespace std;
 
 
 int main(){
-    vector<int> A;
-    string a;
-    stringstream aa;
-    getline(cin, a);
-    aa << a;
-    if (a != ""){
-        // ввод массива
-        while (aa >> a) A.push_back(stoi(a));
-        vector<int> A1(size(A) + 1, 0);
+    vector<int> initial_arr;
+    int buffer;
+    
+    // ввод массива, конец ввода - любой char
+    while (cin >> buffer) initial_arr.push_back(buffer);
+
+    if (initial_arr.size() != 0){
+        vector<int> pref_sum_arr(size(initial_arr) + 1, 0);
 
         // создание префсумм 
-        for (int i = 0; i < size(A); i++){
-            A1[i + 1] = A[i] + A1[i];
+        for (int i = 0; i < size(initial_arr); i++){
+            pref_sum_arr[i + 1] = initial_arr[i] + pref_sum_arr[i];
         }
         
         //поддержание минимального слева + поиск наибольшей разницы
-        int minelem = A1[0], ans = A1[1];
-        for (int i = 1; i < size(A) + 1; i ++ ){
-            minelem = min(A1[i], minelem);
-            ans = max(ans, A1[i] - minelem);
+        int minelem = pref_sum_arr[0], answer = pref_sum_arr[1];
+        
+        for (int i = 1; i < size(initial_arr) + 1; i ++ ){
+            minelem = min(pref_sum_arr[i], minelem);
+            answer = max(answer, pref_sum_arr[i] - minelem);
         }
 
-        cout << ans;
+        cout << answer;
     }
     else cout << "error";
 }
