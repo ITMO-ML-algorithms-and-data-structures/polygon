@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+
+void Count_Enters(std::vector<std::string>& arr) {
+    std::unordered_map<std::string, int> hesh_enter;
+
+    for (auto& value : arr) {
+        hesh_enter[value]++;
+    }
+
+    for (int i = 0; i < arr.size(); i++) {
+        arr[i] = std::to_string(hesh_enter[arr[i]]);
+    }
+}
+
+int main() {
+    std::vector<std::string> arr = {"Orange", "Red", "Green", "Orange", "Orange", "Red"};
+    Count_Enters(arr);
+
+    std::cout << "[";
+    for (int i = 0; i < arr.size(); i++) {
+        std::cout << arr[i];
+        if (i < arr.size() - 1)
+            std::cout << ", ";
+    }
+    std::cout << "]";
+}
