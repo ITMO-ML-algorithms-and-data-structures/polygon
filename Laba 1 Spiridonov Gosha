@@ -1,0 +1,37 @@
+#include <iostream>
+#include <cmath>
+
+bool pch(int n) {
+    if (n <= 1) {
+        return false;
+    }
+    for (int i = 2; i <= sqrt(n); i++) {
+        if (n % i == 0) {
+            return false;
+        }
+    }
+    return true;
+} //функция проверки на простое число
+
+int main() {
+    int num=0, sum=0, nel; //num количество подмассивов, sum сумма элементов подмассива, nel количество элементов массива
+    int** arr = new int*[num]; //создание двумерного массива
+    std::cout << "Введите количество подмассивов: ";
+    std::cin >> num;
+    int cpp = 0; // сколько подмассивов с суммой элементов - проствм числои
+    for (int i = 0; i < num; ++i) {
+        std::cout << "Введите количество элементов в подмассиве " << i + 1 << ": ";
+        std::cin >> nel;
+        arr[i] = new int[nel];
+        std::cout << "Введите элементы подмассива " << i + 1 << ": ";
+        for (int j = 0; j < nel; ++j) {
+            std::cin >> arr[i][j];
+            sum += arr[i][j];
+        }
+
+        if (pch(sum)) {
+            cpp+=1; //прибавляет один, если сумма простите число
+        }
+    }
+    std::cout << "Количество подмассивов с суммой элементов, являющейся простым числом: " << cpp << std::endl;
+}
