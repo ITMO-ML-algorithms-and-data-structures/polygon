@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+
+using namespace std;
+
+vector<int> remove_duplicates(int arr[], int size){
+  //На вход 4 * size  + 4 байт
+  unordered_set<int> seen_set; //неупорядоченное множество уже встретившихся значений
+  vector<int> unique; //вектор для уникальных значений 
+
+
+  for (int i = 0; i < size; i++){
+    //+4 байта - объявление цикла
+    if (seen_set.count(arr[i]) == 0){ //если число не встречалось в множестве(проверка на вхождение)
+      unique.push_back(arr[i]); //добавление элемента в уникальный вектор 4 байта
+      seen_set.insert(arr[i]); //добавление элемента в множество уже встретившихся чисел 
+    }
+  }
+
+  return unique; 
+  //на выходе получилось, что множество занимает 40 + i * 4 байт, вектор занимает 24 + i * 4
+}
+
+
+
+
+int main(){
+  int mas[] = {1, 2, 4, 4, 6, 7, 8, 8}; //массив + 8 * 4 = 32 байта
+  int size = sizeof(mas) / sizeof(mas[0]); //размер массива  + 4 байта
+
+  vector<int> unique_mas = remove_duplicates(mas, size); //применение функции удаления дубликатов к массиву
+  // + (24 + 32) байта
+
+  cout << "Исходный массив: ";
+  for (int i : mas) {
+    cout << i << " ";
+  }
+
+
+  cout << endl;
+
+  cout << "Массив без дубликатов: ";
+  for (int i : unique_mas) {
+    cout << i << " ";
+  }
+  cout << endl;
+
+  return 0;
+
+  //в итоге программа заняла 32(массив) + 4(размер массива) + 4(цикл) + (40 + 8 * 4) + (24 + 8 * 4) + 
+  // +4(цикл для вывода) + 4(еще один цикл) = 176 байт
+}
