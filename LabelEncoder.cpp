@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include <vector>
 #include <sstream>
 #include <fstream>
 
@@ -10,12 +9,9 @@
 void label_encoder(const std::string& path) {
     // Мы ссылаемся на объекты в памяти, поэтому бесплатно
     
-    std::string str; // 32
+    std::string str; // 32 байта
 
     std::unordered_map<std::string, int> label_map; // 56 байт
-
-    // Задаем вектор для закодированных значений
-    std::vector<int> encoded_labels; // 24 байт
 
     // Объявляем индекс для кодирования каждой метки данных
     short int index = 1; // 2 байта (По условию уникальных значений < 100)
@@ -48,7 +44,7 @@ int main() {
     // Передаем в label_encoder() путь к входному файлу
     label_encoder("input.txt");
 
-    // На выходе имеем (24 + N * avg) + 56 + 24 + 2 + ((avg + 2) * n) + (24 + 2 * n) байт 
+    // На выходе имеем 32 + 56 + 2 + 32 + (avg + 2) * n байт 
     
     return 0;
 }
