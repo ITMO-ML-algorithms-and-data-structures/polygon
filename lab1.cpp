@@ -7,21 +7,30 @@
 //что не может соответствовать единственному «r» в другой строке."
 #include <iostream>
 #include <map>
+#include <string>
 using namespace std;
-int main()
-{   
-    string str1,str2,flag = "true"; 
-    cin>>str1>>str2; //2n * 1байт
+bool areIsomorphic(string strglobal)//2n * 1байт
+{
+    int len = strglobal.size();
+    if(len % 2 == 1) {
+        return false;
+    }
+    int lenstr = len / 2;
+    map<char, char> ch2;
     map<char, char> ch;//(sizeof(A) + sizeof(B) + sizeof(_Rb_tree_node_base)) * N + sizeof(_Rb_tree)
-    for(int i = 0; i < a.size();i++){//проходим каждый элемент в str1,2
-        if(ch.count(a[i]) == 0){     //создаём связь str1[i] c str2[i]
-            ch[a[i]] = b[i];
+    for(int i = 0; i < len/2;i++){//проходим каждый элемент в str1,2
+        if(ch.count(strglobal[i]) == 0){     //создаём связь str1[i] c str2[i]
+            ch[strglobal[i]] = strglobal[i + lenstr];
         }
-        if(ch[a[i]] != b[i]){        //проверяем связь если она создана
-            f = "false";                    //и не совпадает заканчиваем цикл
-            break;
+        if(ch[strglobal[i]] != strglobal[i + lenstr]){        //проверяем связь если она создана
+            return false;
+        }
+        if(ch2.count(strglobal[i + lenstr]) == 0){     //создаём связь str2[i] c str1[i]
+            ch2[strglobal[i + lenstr]] = strglobal[i];
+        }
+        if(ch2[strglobal[i + lenstr]] != strglobal[i]){        //проверяем связь если она создана
+            return false;
         }
     }
-    cout << f;
-    return 0;
+    return true;
 }
