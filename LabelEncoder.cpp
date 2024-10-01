@@ -8,18 +8,21 @@
 
 void label_encoder(const std::string& path) {
     // Мы ссылаемся на объекты в памяти, поэтому бесплатно
-    
-    std::string str; // 32 байта
 
+    // Создаем хэш-таблицу
     std::unordered_map<std::string, int> label_map; // 56 байт
 
     // Объявляем индекс для кодирования каждой метки данных
     short int index = 1; // 2 байта (По условию уникальных значений < 100)
 
+    std::string str; // 32 байта
+
     // Открываем файл из path
     std::ifstream File(path);
 
+    // Считываем значения из файла в строку и проверяем все ли ок
     if (getline(File, str)) {
+
         // Создаем поток для чтения данных
         std::istringstream inputs(str);
 
@@ -33,9 +36,11 @@ void label_encoder(const std::string& path) {
 
                 ++index;
             }
-            std::cout << label_map[word];
+            std::cout << label_map[word] << " ";
         }
-    }    
+    } else {
+        std::cout << "Something went wrong! Check path." << '\n';
+    }
 }
 
 int main() {
