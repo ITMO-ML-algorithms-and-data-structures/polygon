@@ -1,0 +1,35 @@
+
+//Есть массив, нужно подсчитать кол-во уникальных значений и заменить каждое значение кол-вом
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+using namespace std;
+
+int main() {
+    int n;//4 байта
+    cout << "Введите количество строк:" << endl;
+    cin >> n;
+
+    vector<string> arr(n);  //24 + n(32 * l), где l - длина строки, а n - количество строк
+    unordered_map<string, int> hash_table;  // n(32 + l + 4 + 32) , где l - строка
+
+    cout << "Введите строки:" << endl;
+    for (int i = 0; i < n; i++) { // 4 байта
+        cin >> arr[i];  //
+        hash_table[arr[i]]++;  //
+    }
+
+    for (int i = 0; i < n; i++) { // 4 байта
+        arr[i] = to_string(hash_table[arr[i]]);  //
+    }
+
+    cout << "Получившийся массив:" << endl;
+    for (int i = 0; i < n; i++) { // 4 байта
+        cout << arr[i] << endl;  //
+    }
+    return 0;
+}
+// итого: 4(переменная n) + 24(вектор) + n(32 + l)(строки в векторе) + n(68 + l)(хеш-
+//таблица) + 4(переменная i), где n - количество строк и l - длина строки
