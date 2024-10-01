@@ -1,0 +1,38 @@
+#include <iostream>
+#include <map>
+#include <string>
+#include <fstream>
+#include <sstream>
+
+using namespace std;
+
+
+
+int main() {
+    map<string, int> dict;// 24*N байт
+    string Line; //32 байт
+
+    ifstream file("dataset_alina.txt");//576 байт
+    while (getline(file, Line)) {
+        stringstream words_dilim1(Line);//382 байт
+        string word;//32 байт
+        vector<string> words;//24 байт
+        while ( words_dilim1 >> word) {
+            if (dict.count(word)==1)
+            {
+                dict[word]+=1;
+            }
+            else{
+                dict.insert(make_pair(word,1));//+24 за каждую пару
+            }
+            words.push_back(word);//+24
+        }
+
+        for (string word:words) {
+            cout<<dict[word]<<",";
+        }
+    }
+    //48*N+1054 байт
+    file.close();
+    return 0;
+}
