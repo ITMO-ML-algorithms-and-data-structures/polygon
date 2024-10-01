@@ -1,0 +1,50 @@
+// есть массив, нужно посчитать кол-во уникальных значений и заменить каждое значение кол-вом
+
+#include <fstream>
+#include <iostream> 
+#include <unordered_map>
+#include <string>
+#include <vector>
+using namespace std;
+
+
+int main(){
+          
+
+    ifstream inputFile("data.lab2.py");    //открываем файл 
+    if (!inputFile.is_open()){
+        cout << "Ошибка, не удалось открыть файл" << endl;
+        return 1;
+    }
+
+
+    vector <string> arr;    //создаем вектор для хранения
+    string line;       
+
+
+    while (getline(inputFile, line)){    //считываем строки из файла
+        arr.push_back(line);        //добавляем каждую строчку в вектор
+    }
+      
+    inputFile.close(); 
+
+
+    unordered_map<string, int> countMap;     //O(1)       
+                                                       //подсчет количества вхождений строк
+    for (const auto& str : arr){        //O(n)
+        countMap[str]++;
+    }
+
+    for (string& str : arr){       //O(n)       //замена строк на количество их вхождений 
+        str = to_string(countMap[str]);
+    }
+
+    for (const auto& str : arr){    //O(n)
+        cout << str << endl;    
+    }
+
+    return 0; 
+}
+
+
+// 4 + 200 + 200 = 404 байта 
