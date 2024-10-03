@@ -29,7 +29,7 @@ void test() {
         std::cout << "Test 1 failed!";
     }
 
-    // 2 test similar words
+    // 3 test
     arr = {"Red", "Red", "Red", "Red"};
     ans = label_encoder(arr);
 
