@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+#include <map>
+
+
+using namespace std;
+int main() {
+	int size;
+	cin >> size;
+	vector<string> mas(size);
+	map<string, int> count_el;
+	for (int i = 0; i < size; i++) {
+		cin >> mas[i];
+	}
+
+
+	map<string, int> data;
+	vector<int> res = {};
+	for (string item : mas) {
+		if (data.find(item) == data.end()) {
+			data[item] = 1;
+		}
+		else {
+			data[item]++;
+		}
+	}
+
+	for (int i = 0; i < size; i++) {
+		res.push_back(data[mas[i]]);
+	}
+
+	for (int i = 0; i < size; i++) {
+		cout << res[i] << " ";
+	}
+
+	return 0;
+}
