@@ -1,0 +1,18 @@
+#include <iostream>
+int main() {
+    int arr[] = {1, 5, 3, 8, 2, 7};
+    int size = 6;
+    int sum_arr = 0;
+    int count = 0;
+    for (int i = 0; i < size; i++) {
+        sum_arr += arr[i];
+    }
+    double m_ar_arr = static_cast<double>(sum_arr) / size;
+    for (int i = 0; i < size; i++) {
+        if (arr[i] > m_ar_arr) {
+            count++;
+        }
+    }
+    std::cout << count;
+    return 0;
+}
