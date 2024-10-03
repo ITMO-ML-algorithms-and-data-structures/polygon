@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int findMinimum(const std::vector<int>& arr) {
+    if (arr.empty()) {
+        throw std::invalid_argument("Массив не должен быть пустым");
+    }
+    int minimum = arr[0];
+    for (const int& num : arr) {
+        if (num < minimum) {
+            minimum = num;
+        }
+    }
+    return minimum;
+}
+
+int main() {
+    std::vector<int> array = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+    
+    try {
+        int minimum_value = findMinimum(array);
+        std::cout << "Минимальное значение в массиве: " << minimum_value << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << e.what() << std::endl;
+    }
+
+    
+    return 0;
+}
