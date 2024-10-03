@@ -1,27 +1,23 @@
 using namespace std;
 #include <iostream>
+#include <set>
 #include <vector>
+#include <fstream>
+#include <string>
 
-int main()
-{
-  int n = 6;
-  vector<int> vec(n);
-  int sum = 0;
+set<long long> mass;
+vector<int> vec;
 
-  cin >> n;
-
-  for (int i = 0; i < n; i++)
-  {
-    cin >> vec[i];
-  }
-
-  for (int i = 0; i < n; i++)
-  {
-    if (vec[i] % 3 == 0)
-    {
-      sum = sum + vec[i];
+int main() {
+    ifstream file("numbers1.txt");
+    string line;
+    while (getline(file, line)) {
+        long long m = stoll(line);
+        mass.insert(m);
     }
-  }
 
-  cout << sum;
+    vec.assign(mass.begin(), mass.end());
+    for (long long i : vec) {
+        cout << i << ", ";
+    }
 }
