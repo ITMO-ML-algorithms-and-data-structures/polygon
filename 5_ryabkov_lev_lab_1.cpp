@@ -4,7 +4,7 @@ int main() {
     std::cout << " n: "; 
     std::cin >> n;
     int s[n];
-git 
+
     for (int i = 0; i < n; i++) 
     {
         std::cin >> s[i];
