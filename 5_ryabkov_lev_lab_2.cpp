@@ -6,8 +6,8 @@
 using namespace std;
 
 
-std::unordered_set<short int> viewed; 
-std::list<short int> out_list;
+unordered_set<short int> viewed; 
+list<short int> out_list;
 
 int main() {
 
@@ -30,15 +30,15 @@ int main() {
         }
     }
 
-    std::vector<short int> out(out_list.begin(), out_list.end());
-    std::cout << "новый массив: ";
+    vector<short int> out(out_list.begin(), out_list.end());
+    cout << "новый массив: ";
 
     for (size_t i = 0; i < out.size(); ++i)
     {
-    std::cout << out[i] << " "; 
+    cout << out[i] << " "; 
     }
 
-    std::cout << std::endl;
+    cout << endl;
     return 0;
 }
 
