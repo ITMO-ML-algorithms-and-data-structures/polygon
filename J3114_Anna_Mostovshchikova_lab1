@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+
+	int nums[10];
+	int counter = 0;
+
+	for (int i = 0; i < 10; i++) {
+		cout << "Enter number " << i+1 << ": ";
+		cin >> nums[i];
+	}
+
+
+	for (int i = 0; i < 10; i++) {
+		if (nums[i] > 0){
+			counter += 1;
+		}
+	}
+
+    cout << counter << endl;
+
+    return 0;
+}
