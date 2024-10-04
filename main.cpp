@@ -53,8 +53,8 @@ bool isomorph(string str, int len) {
 
 // Простые тесты на работоспособность программы + на взаимодействие с кириллицей
 void test() {
-	string tests[] = { "foo bar" , "bar foo", "paper title" , "арег гера" };
-	int right_answers[] = { 0, 0, 1, 1 };
+	string tests[] = { "odd egg", "jar marck", "train lococ", "paper title", "foo bar", "bar foo", "??? !!!", "000 115", "-==+ door" };
+	int right_answers[] = { 1, 0, 0, 1, 0, 0, 1, 0, 1 };
 	for (int i = 0; i < size(tests); i++) {
 		assert(isomorph(tests[i], size(tests[i])) == right_answers[i]);
 	}
