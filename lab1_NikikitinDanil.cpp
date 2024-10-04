@@ -10,15 +10,15 @@ int main()
     len = 0;
 
     max_k = 0;
-    for (int i = 0; i < v.size(); i++) {
-        if (v[i] % 2 == 0) {
+    for (int i = 0; i < arr.size(); i++) {
+        if (arr[i] % 2 == 0) {
             len = len + 1;
             max_len = max(max_len, len);
         }
         else {
-            k = 0;
+            len = 0;
         }
     }
-    cout << max_k;
+    cout << max_len;
 
 }
