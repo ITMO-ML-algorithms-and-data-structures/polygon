@@ -1,0 +1,3 @@
+C:/Users/timof/Documents/cpplabs/polygon/cmake-build-debug/CMakeFiles/polygon.dir
+C:/Users/timof/Documents/cpplabs/polygon/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/timof/Documents/cpplabs/polygon/cmake-build-debug/CMakeFiles/rebuild_cache.dir
