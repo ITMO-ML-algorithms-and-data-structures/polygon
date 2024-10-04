@@ -15,7 +15,7 @@ using namespace std;
 
 vector<string> readCSV(const string& filename) {
     // Прочитать строки из таблицы .csv
-    // На вход 24 + 12 (примерно) байт
+    // На вход 32 байта
     ifstream file(filename);
     string line; // + 24 байта
     vector<string> data;
@@ -36,7 +36,7 @@ vector<string> readCSV(const string& filename) {
 
     file.close();
 
-    // 24 + 12 + 24 + 50 * N + 24 * N + 24 * N * M = 24 * N * M + 74 * N + 60 байт,
+    // 32 + 24 + 50 * N + 24 * N + 24 * N * M = 24 * N * M + 74 * N + 56 байт,
     // где N - количество строк в таблице, M - количество символов в строке
 
     return data;
@@ -140,15 +140,40 @@ void test() {
     //     cout << endl;
     // }
 
-    //unordered_map<string, list<int>> vec_table3 = {"a", "b", "c", "ab", "bc", "aabbcc"};
+    unordered_map<string, list<int>> vec_table3;
+
+    vec_table3["a"] = {0, 0, 1};
+    vec_table3["b"] = {1, 0, 0};
+    vec_table3["c"] = {0, 1, 0};
+    vec_table3["a b"] = {1, 0, 1};
+    vec_table3["b c"] = {1, 1, 0};
+    vec_table3["a a b b c c"] = {2, 2, 2};
+
     unordered_map<string, list<int>> vec_table3_processed = vectorize("dataset3.csv");
 
-    for (auto& pair : vec_table3_processed) {
-        cout << pair.first << "     ";
-        for (auto& value : pair.second)
-            cout << value << " ";
-        cout << endl;
-    }
+    // for (auto& pair : vec_table3_processed) {
+    //     cout << pair.first << "     ";
+    //     for (auto& value : pair.second)
+    //         cout << value << " ";
+    //     cout << endl;
+    // }
+
+    assert(vec_table3 == vec_table3_processed);
+
+    unordered_map<string, list<int>> vec_table4;
+
+    vec_table4[" "] = {1};
+    vec_table4["  "] = {2};
+    vec_table4["   "] = {3};
+
+    unordered_map<string, list<int>> vec_table4_processed = vectorize("dataset4.csv");
+
+    // for (auto& pair : vec_table4_processed) {
+    //     cout << pair.first << "     ";
+    //     for (auto& value : pair.second)
+    //         cout << value << " ";
+    //     cout << endl;
+    // }
 
     cout << "test completed!" << endl;
 }
