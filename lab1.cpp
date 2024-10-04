@@ -113,7 +113,7 @@ std::pair<std::vector<std::string>, short> proc_txt(std::string path) {
 
 int main(){
 	std::pair <std::vector<std::string>, short> inp;
-	inp = proc_txt("C:\\Leonid\\ITMO\\АЛГиСД\\home_dir_labs\\lab2\\test1.txt");
+	inp = proc_txt("dataset.txt");
 	std::vector<std::vector<short>> res;
 	res = count_vectorizer(inp.first, inp.second);
 	for (int i = 0; i < res.size(); i++)
