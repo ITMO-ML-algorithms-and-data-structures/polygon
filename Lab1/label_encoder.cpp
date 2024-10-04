@@ -4,19 +4,25 @@
 #include <unordered_map>
 
 // Необходимо для тестирующего фреймворка
-// #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-// #include "../Source/doctest.h"
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "../Source/doctest.h"
 
-std::vector<short> label_encoder(const std::string& path) {    // Функция принимает один аргумент - путь до файла
 
-    std::vector<short> encoded;    // Создаем массив для вывода
+// Сложность алгоритма - o(n), где n - количество строк в файле
+// память - 24 + n + 56 + m + s * 1 + 488 + 1 + k = 
+// = 569 + n + m + s + k байт, где n - кол-во строк в файле,
+// m - кол-во уникальных строк в файле, s - сумма длин уникальных строк в файле, k - длина самой длинной строки в файле
+std::vector<unsigned char> label_encoder(const std::string& path) {    // Функция принимает один аргумент - путь до файла
 
-    std::ifstream file;    // Создаем переменную для нашего файла
+    std::vector<unsigned char> encoded;    // Создаем массив для вывода, память - (24 + n * 1) = n + 24 байт, где n - кол-во строк в файле
+
+    std::ifstream file;    // Создаем переменную для нашего файла, память - 488 байт
     file.open(path);    // Открываем файл
 
-    std::unordered_map<std::string, short> hash_table;    // Создаем хеш-таблицу
-    std::string inp;    // Создаем переменную для хранения считанных из файла "слов"
-    int next_value = 1;    // Переменная для хранения номера первый раз встреченного "слова"
+    std::unordered_map<std::string, unsigned char> hash_table;    // Создаем хеш-таблицу, память - (56 + m + s) = 56 + m + s,
+                                                                  // где m - кол-во уникальных строк, s - сумма длин уникальных строк
+    std::string inp;    // Создаем переменную для хранения считанных из файла "слов", память - (k), где K - кол-во эл-тов строки
+    unsigned char next_value = 1;    // Переменная для хранения номера первый раз встреченного "слова", память - (1)
 
     while (file >> inp) {    // Пока в файле еще есть "слова":
 
@@ -33,35 +39,23 @@ std::vector<short> label_encoder(const std::string& path) {    // Функция
 
 // Немного юнит тестов
 
-/*TEST_CASE("testing the label_encoder function") {
+TEST_CASE("testing the label_encoder function") {
 
     std::string
-        path1 = "Tests/test1.csv",
-        path2 = "Tests/test2.csv",
-        path3 = "Tests/test3.csv";
+        path1 = "Tests/test_label_encoder_1.txt",
+        path2 = "Tests/test_label_encoder_2.txt",
+        path3 = "Tests/test_label_encoder_3.txt";
 
-    std::vector<short>
-        res1 {1, 1, 2, 3, 4, 5, 5, 1, 1, 4},
-        res2 {1, 2, 3, 4, 5, 4, 5, 5, 3, 6},
-        res3 {1, 2, 2, 3, 2, 1, 2, 1, 3, 2, 2, 3, 1, 2, 3};
+    std::vector<unsigned char>
+        res_path1 = {},
+        res_path2(441, 1),
+        res_path3;
 
-    bool b1 = label_encoder(path1) == res1,
-        b2 = label_encoder(path2) == res2,
-        b3 = label_encoder(path3) == res3;
+    for (size_t i = 1; i <= 100; i++)
+        res_path3.push_back(i);
 
-    CHECK(b1);
-    CHECK(b2);
-    CHECK(b3);
-
-}*/
-
-int main() {
-
-    std::string path;    // Создаем переменную для хранения пути к файлу
-    std::cin >> path;    // Получаем на вход путь до файла и сохраняем его в path
-
-    std::vector<short> encoded = label_encoder(path);    // Получаем итоговый массив для нашего файла
-
-    // ...
+    CHECK(label_encoder(path1) == res_path1);
+    CHECK(label_encoder(path2) == res_path2);
+    CHECK(label_encoder(path3) == res_path3);
 
 }
