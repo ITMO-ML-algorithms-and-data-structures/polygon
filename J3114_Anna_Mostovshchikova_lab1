@@ -8,8 +8,8 @@ int main()
 	int nums[10];
 	int counter = 0;
 
-	for (int i = 1; i < 11; i++) {
-		cout << "Enter number " << i << ": ";
+	for (int i = 0; i < 10; i++) {
+		cout << "Enter number " << i+1 << ": ";
 		cin >> nums[i];
 	}
 
