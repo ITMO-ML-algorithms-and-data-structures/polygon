@@ -8,6 +8,7 @@ using namespace std;
 
 
 bool isomorph(string str, int len) {
+	// на вход берем строку 40 байт и int 4 байта
 	//создаём словари для выстраивания взамосвязи между буквами слов в обе стороны
 	// (буквам первого слова - буквы второго, а буквам второго - буквы первого)
 	unordered_map<char, char> hashTable_straight, hashTable_back; // + 80 * 2 байт
@@ -37,7 +38,7 @@ bool isomorph(string str, int len) {
 			hashTable_straight[a[k]] = b[k];
 			hashTable_back[b[k]] = a[k];
 		}
-		// пытаемся сконвертировать исходные слова друг в дуга
+		// пытаемся сконвертировать исходные слова друг в друга
 		for (int j = 0; j < len2; j++) {
 			// + 4 байта
 			result_straight += hashTable_straight[a[j]];
@@ -48,6 +49,8 @@ bool isomorph(string str, int len) {
 		else return false;
 	}
 	else return false;
+
+	// 40 + 4 + 80 + 80 + 40 + 40 + 1 + 4 + 40 + 40 = 369 байт
 }
 
 
