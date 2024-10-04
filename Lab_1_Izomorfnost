@@ -1,0 +1,45 @@
+using namespace std;
+#include <iostream>
+#include <string>
+#include<map>
+int main()
+{	
+	setlocale(LC_ALL, "Russian");
+	map<char, char> dictionary;
+	map<char, char> dictionaryr;
+	string l1 = " ", l2, k, p; //Каждая переменная по 1 байту
+	cout << "Введите первое слово"; 
+	cin >> l1; // O(1)
+	cout << "Введите второе слово";
+	cin >> l2; //O(1)
+
+	while (l1.size() != l2.size()) //O(n)
+	{
+		cout << "Введите равное количество символов в каждой строке, иначе изоморфизм не будет достигаться автоматически\n";
+		cout << "Введите первое слово";
+		cin >> l1;
+		cout << "Введите второе слово";
+		cin >> l2;
+	}
+	//Записываем значения в словарик	
+	for (int i = 0; i < l1.size(); i++) //O(n)
+	{
+		dictionary[l2[i]] = l1[i]; //O(1)
+		dictionaryr[l1[i]] = l2[i]; //O(1)
+	}
+	//записываем значения словарика в строковые переменные
+	for (int i = 0; i < l1.size(); i++) //O(n)
+	{
+		k = k + dictionary[l2[i]]; //O(1)
+		p = p + dictionaryr[l1[i]]; // O(1)
+	}
+	//Проверяем совпадение строк и значения словариков
+	if (k == l1 && p == l2) //O(n)
+	{
+		cout << "True";
+	}
+	else
+	{
+		cout << "False";
+	}
+}
