@@ -1,0 +1,5 @@
+*.json
+*.csv
+*.txt
+*.exe
+testing.py
