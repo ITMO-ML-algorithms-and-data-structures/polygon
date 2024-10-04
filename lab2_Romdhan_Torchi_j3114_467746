@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+
+using namespace std;
+
+vector<int> countOccurrences(const vector<string>& words) {
+    // Hash map to count occurrences of each word
+    unordered_map<string, int> counter;
+
+    // Count occurrences of each word in the array
+    for (const auto& word : words) {
+        counter[word]++;
+
+        // Ensure no word has more than 127 occurrences
+        if (counter[word] > 127) {
+            cerr << "Error: The word \"" << word << "\" exceeds 127 occurrences." << endl;
+            exit(1);  // Terminate the program if constraint is violated
+        }
+    }
+
+    // Create the result vector with the corresponding occurrences
+    vector<int> result;
+    result.reserve(words.size());  // Reserve space to avoid reallocation
+
+    for (const auto& word : words) {
+        result.push_back(counter[word]);  // Replace each word with its occurrence count
+    }
+
+    return result;
+}
+
+int main() {
+    int size;
+
+    // Ask for the size of the array
+    cout << "Enter the size of the array (up to 1e9): ";
+    cin >> size;
+
+    // Check if the size is valid
+    if (size < 1 || size > 1e9) {
+        cerr << "Error: Array size must be between 1 and 1e9." << endl;
+        return 1;
+    }
+
+    // Create an array of strings
+    vector<string> words(size);
+
+    // Ask the user to input each word
+    cout << "Enter the words (each word can be up to 1000 characters long):" << endl;
+    for (int i = 0; i < size; ++i) {
+        cin >> words[i];
+
+        // Check if the word length exceeds 1000 characters
+        if (words[i].length() > 1000) {
+            cerr << "Error: The word \"" << words[i] << "\" exceeds 1000 characters." << endl;
+            return 1;
+        }
+    }
+
+    // Get the array with occurrence counts
+    vector<int> result = countOccurrences(words);
+
+    // Display the result
+    cout << "Result with the number of occurrences:" << endl;
+    for (int count : result) {
+        cout << count << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
