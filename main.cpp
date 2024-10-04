@@ -7,9 +7,9 @@
 using namespace std;
 
 // Функция для обработки строк со значениями
-vector<int> processLine(string_view line, unordered_map<string_view, int>& labels, int& index) {
-    vector<int> result;
-    size_t start = 0, end;
+vector<int> processLine(string_view line, unordered_map<string_view, int> &labels, int &index) {
+    vector<int> result; // Вектор, хранящий индексы меток (размер вектора: 16 байт)
+    size_t start = 0, end; // Два размера типа size_t: 8 байт * 2 = 16 байт
 
     // разделяем строку по ","
     while ((end = line.find(',', start)) != string::npos) {
@@ -18,9 +18,10 @@ vector<int> processLine(string_view line, unordered_map<string_view, int>& label
 
         // проверяем вхождение нашей строки в map лейблов, если нет, то добавляем и присваиваем новый индекс
         if (!labels.contains(curString)) {
+            // Если метки нет, добавляем новую метку
             labels[curString] = index++;
         }
-        result.push_back(labels[curString]);
+        result.push_back(labels[curString]); // Добавляем индекс метки в результат (4 байта на каждый int)
         start = end + 1;
     }
     // тот же самый код, только для самой последней строки с запятой
@@ -34,9 +35,10 @@ vector<int> processLine(string_view line, unordered_map<string_view, int>& label
 }
 
 // Фукнция для вывода полученного списка из лэйблов
-void printVector(const vector<int>& vec) {
+void printVector(const vector<int> &vec) {
     cout << "[";
     for (size_t i = 0; i < vec.size(); i++) {
+        // Проходим по вектору (4 байта на каждый элемент)
         cout << vec[i];
         if (i != vec.size() - 1) {
             cout << ", ";
@@ -46,11 +48,12 @@ void printVector(const vector<int>& vec) {
 }
 
 // Функция для чтения файла
-void readFileAndProcess(const string& filename) {
-    string line;
-    unordered_map<string_view, int> labels; // string_view чтобы избежать копирование данных
-    vector<int> labelsVector; // наш вектор полученных лэйблов
-    int index = 0;
+void readFileAndProcess(const string &filename) {
+    string line; // Строка для чтения из файла: базовое использование 16 байт + динамическая память для данных
+    unordered_map<string_view, int> labels;
+    // string_view чтобы избежать копирование данных
+    vector<int> labelsVector; // наш вектор полученных лэйблов (базовые 16 байт)
+    int index = 0; // Индекс для присвоения меткам: 4 байта
 
     fstream file(filename, fstream::in);
     // читаем файл построчно
