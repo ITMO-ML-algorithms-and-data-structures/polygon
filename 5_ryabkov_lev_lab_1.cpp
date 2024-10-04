@@ -3,19 +3,18 @@ int main() {
     int n;
     std::cout << " n: "; 
     std::cin >> n;
-    int s[n];
+    short int s[n];
 
-    for (int i = 0; i < n; i++) 
+    for (short int i = 0; i < n; i++) 
     {
         std::cin >> s[i];
     }
-    int counter = 0; 
-    for (int i = 0; i < n; i++){ 
+    short int counter = 0; 
+    for (short int i = 0; i < n; i++){ 
         if (s[i] %3  == 0) 
         {
             counter = counter + 1;
         }
         }
         std::cout << "ответ "  << counter; 
-
-    }
+        std::cout << std::endl;
