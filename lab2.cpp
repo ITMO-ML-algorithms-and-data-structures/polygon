@@ -140,7 +140,7 @@ void test6() // одно слово повторяется 2 раза, друг�
     }
     else
     {
-        std::cout << "Test 6 failed" << " ";
+        std::cout << "Test 6 failed" << "  ";
         for (int i = 0; i < size; i++)
         {
             std::cout << ans[i] << " ";
