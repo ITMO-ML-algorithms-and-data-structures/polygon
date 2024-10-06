@@ -1,0 +1,78 @@
+#include <iostream> // ввод и вывод
+#include <unordered_set> // для использования множеств
+#include <vector> // динамический массив
+#include <sstream> // создание из строк потоки
+
+
+int unik_el() {
+    std::string input; // строка для ввода N + 1 + 24 байт, где N - кол-во символов
+    std::getline(std::cin, input); // считывание всей строки, игнорируя пробелы
+    std::stringstream potok(input); // создание потока для извлечения значений из введенной строки также N+1+24
+    unsigned short number; // переменная для временного хранения текущего числа с потока 2 байта
+
+    std::unordered_set<unsigned short> hash_table; // создание хэш-таблицы (2 + 16) * M байт, где M - количество эл. в хэш-таблице
+    std::vector<unsigned short> result; // создание результативного вектора 2 * U + 24 байта, где U - количество элементов в результате
+
+    // проверяем каждое число из потока, до тех пор, пока он не закончится
+    while (potok >> number) {
+        if (hash_table.find(number) == hash_table.end()) { // если его нет в хэш-таблице
+            hash_table.insert(number); // то добавляем его в хэш-таблицу
+            result.push_back(number); // а также добавляем в результативный массив
+        }
+    }
+
+    // выводим результат
+    for (int i = 0; i < result.size(); ++i) {
+        std::cout << result[i] << " ";
+    }
+
+    return 0; // завершение программы
+}
+// (2×(N+24+1))+2+((2+16)×M)+ (2×U+24) байт в итоге
+
+
+int main() {
+    // Тест 1: Все числа уникальные от 0 до 10
+    std::istringstream test1("0 1 2 3 4 5 6 7 8 9 10");
+    std::cin.rdbuf(test1.rdbuf());
+    std::cout << "Test 1: ";
+    unik_el(); // Ожидаемый вывод: 0 1 2 3 4 5 6 7 8 9 10
+    std::cout << std::endl;
+
+    // Тест 2: Повторяющиеся числа
+    std::istringstream test2("5 6 7 5 6 8 9 10");
+    std::cin.rdbuf(test2.rdbuf());
+    std::cout << "Test 2: ";
+    unik_el(); // Ожидаемый вывод: 5 6 7 8 9 10
+    std::cout << std::endl;
+
+    // Тест 3: Пустой ввод
+    std::istringstream test3("");
+    std::cin.rdbuf(test3.rdbuf());
+    std::cout << "Test 3: ";
+    unik_el(); // Ожидаемый вывод: (ничего, просто пустая строка)
+    std::cout << std::endl;
+
+    // Тест 4: Смешанные уникальные и повторяющиеся числа
+    std::istringstream test4("02 30 20 40 50 30 60");
+    std::cin.rdbuf(test4.rdbuf());
+    std::cout << "Test 4: ";
+    unik_el(); // Ожидаемый вывод: 20 30 40 50 60
+    std::cout << std::endl;
+
+    // Тест 5: Все значения от 0 до 10
+    std::istringstream test5("0 1 2 3 4 5 6 7 8 9 10 0 1 2");
+    std::cin.rdbuf(test5.rdbuf());
+    std::cout << "Test 5: ";
+    unik_el(); // Ожидаемый вывод: 0 1 2 3 4 5 6 7 8 9 10
+    std::cout << std::endl;
+
+    // Тест 6: Значения в диапазоне от 10000 до 10005 с повторами
+    std::istringstream test6("10000 10001 10002 10000 10003 10004 10005 10002");
+    std::cin.rdbuf(test6.rdbuf());
+    std::cout << "Test 6: ";
+    unik_el(); // Ожидаемый вывод: 10000 10001 10002 10003 10004 10005
+    std::cout << std::endl;
+
+    return 0;
+}
