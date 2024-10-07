@@ -1,0 +1,35 @@
+//Есть массив, нужно подсчитать кол-во уникальных значений и заменить каждое значение кол-вом
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <fstream>
+using namespace std;
+
+int main() {
+    vector<string> arr;  //вектор чтобы хранить строки
+    unordered_map<string, int> hash_table;  
+    
+    ifstream inputFile("/Users/annabondarenko/PycharmProjects/pythonProject/random_words.txt");//открываем файл
+    string line;//считываем файл построчно
+    while (getline(inputFile, line)) {
+        arr.push_back(line);// Добавляем строку в вектор
+        hash_table[line]++; //увеличение счётчика для строки
+    }
+    inputFile.close();  // Закрываем файл
+
+       
+    for (size_t i = 0; i < arr.size(); ++i) {  // Замена каждой строки в массиве на количество её вхождений
+        arr[i] = to_string(hash_table[arr[i]]);  // Преобразуем количество вхождений в строку
+    }
+
+    for (size_t i = 0; i < arr.size(); ++i) {
+        std::cout << arr[i];
+        if (i != arr.size() - 1) {
+            std::cout << " ";  // Добавляем пробел между словами, кроме последнего
+        }
+    }
+  
+    return 0;
+}
