@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+#include <set>
+
+#include <fstream>
+#include <sstream>  
+#include <string>
+
+using namespace std;
+
+
+
+vector<int> stringToArray(const string& str) {
+    /**
+     * функция для преобразования строки из файла, где строка - это числа через запятую
+     * 
+     * на вход: строка из файла
+     * выход: вектор с целыми значениями
+    */
+    vector<int> result;  //24 + i * 4 байт
+    stringstream ss(str); //i(число элементов в строке) байт
+    string number; //24 байта
+    while (getline(ss, number, ',')) {
+        result.push_back(stoi(number)); // 4 * i
+    }
+    return result;
+    //24 байта + 4 байта * i(количество чисел)
+}
+
+
+
+
+
+vector<int> remove_duplicates(const vector<int>& vec) {
+    /**
+     * функция для удаления дубликатов из вектора с помощью множества(set)
+     * 
+     * на вход: вектор 
+     * выход: вектор без дублирующих значений
+    */
+    set<int> seen_set; //16-32 байта на элемент
+    vector<int> unique; //24 + i * 4
+    for (int i = 0; i < vec.size(); i++) {
+        if (seen_set.count(vec[i]) == 0) {
+            unique.push_back(vec[i]);
+            seen_set.insert(vec[i]);
+        }
+    }
+    return unique;
+    //16-32 байт * i
+}
+
+
+
+
+
+int main(){
+  ifstream file("random_size_dataset.csv"); //размер файла = 136 071 байт
+
+  if (!file.is_open()) {
+        cerr << "Ошибка открытия файла" << endl;
+        return 1;
+    }
+
+  string line; //24 + длина строки * 1 байт
+
+  int count = 0; //4 байта
+
+  while (getline(file, line)) {
+    if (line.empty()) {
+            continue;
+    }
+
+    else{
+
+    vector<int> mas = stringToArray(line);
+    int size = mas.size(); //4 байта
+    vector<int> unique_mas = remove_duplicates(mas); 
+
+    cout << "Массив без дубликатов: ";
+    for (int i : unique_mas) {
+      cout << i << " ";
+    }
+    cout << endl;
+
+    count++; //4 байта
+    if (count == 3){
+      break;
+    }
+
+    }
+  }
+
+    return 0;
+
+
+  //на выходе получаем 108 + 136 071 + 3*(i * 4) + i(число элементов в строке) байт +
+  // + (16-32 байта * количество элементов в множестве) + (24 + длина строки * 1 байт)
+}
