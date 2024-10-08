@@ -16,7 +16,7 @@ class LabelEncoder {
         // -----
         // https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector
         // -----
-        // ну тут может быть от +(1*24) до +(N*24), зависит от колва уникальных
+        // ну тут может быть от +(1*24) до +(N*24), зависит от колва уникальных, берем вернюю границу
         std::set<std::string> s(categories.begin(), categories.end());
         classes_.assign(s.begin(), s.end());
         std::sort(classes_.begin(), classes_.end());
@@ -57,4 +57,4 @@ class LabelEncoder {
 };
 
 // sum = N * (24 + N + 24 + 4 + 4 + 24 + 24 + 24 + 4) + 4 + 24 + 4 = 
-// = N^2 * 132 + 32 байт 
+// = N^2 + N * 132 + 32 байт 
