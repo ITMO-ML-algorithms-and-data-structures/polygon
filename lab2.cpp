@@ -10,11 +10,17 @@ using namespace std;
 vector<int> make_sample(vector<int>& in, int size) {
 	vector<int> out;
 	out.reserve(size); // Запрашивает, чтобы емкость была, по крайней мере, достаточной для содержания n элементов. Работает за O(n)
-	
-	sort(in.begin(), in.end()); // Для работы функции unique необходим отсортированный массив
-	in.resize(unique(in.begin(), in.end()) - in.begin()); // Убираем дубликаты
+
+	// Избавлямся от дубликатов для работы sample за O(n)
+	unordered_set<int> uniq;
+    for (int elem : in)
+        uniq.insert(elem);
+    in.clear();
+    in.reserve(uniq.size());
+    for (int elem : uniq)
+    	in.push_back(elem);
+
 	sample(in.begin(), in.end(), back_inserter(out), size, mt19937(time(0))); // Сэмплирование за O(n) c // генератором случайных чисел с начальным значением, основанным на текущем времени
-	
 	return out;
 }
 
