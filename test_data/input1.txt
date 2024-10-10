@@ -1,5 +1,6 @@
-4
-orange
-red
+5
 green
 orange
+green
+black
+black
