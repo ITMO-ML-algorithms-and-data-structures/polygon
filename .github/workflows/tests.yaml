@@ -1,0 +1,45 @@
+name: C++ CI
+
+on:
+  push:
+    branches:
+      - J3113_Konkova_Nina
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install g++
+      run: sudo apt-get install g++
+
+    - name: Compile C++ code
+      run: g++ main.cpp -o main
+
+    - name: Run the program with test input 1
+      run: |
+        cp test_data/input.txt input.txt
+        ./main > output.txt
+
+      name: Run the program with test input 2
+      run: |
+        cp test_data/input1.txt input.txt
+        ./main > output.txt
+        diff -q output.txt test_data/output1.txt
+
+    - name: Run the program with test input 3
+      run: |
+        cp test_data/input2.txt input.txt
+        ./main > output.txt
+        diff -q output.txt test_data/output2.txt
+
+        
+    - name: Compare output with expected result
+      run: diff -q output.txt test_data/output.txt
