@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +27,7 @@ jobs:
         cp test_data/input.txt input.txt
         ./main > output.txt
 
-      name: Run the program with test input 2
+    - name: Run the program with test input 2
       run: |
         cp test_data/input1.txt input.txt
         ./main > output.txt
@@ -40,6 +39,5 @@ jobs:
         ./main > output.txt
         diff -q output.txt test_data/output2.txt
 
-        
     - name: Compare output with expected result
       run: diff -q output.txt test_data/output.txt
