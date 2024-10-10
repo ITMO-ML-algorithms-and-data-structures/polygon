@@ -5,7 +5,7 @@
 #include <string>
 
 int main() {
-    std::ifstream InputFile("input.txt");
+    std::ifstream InputFile("input1.txt");
 
     int size; // +4 байта
     InputFile >> size;
