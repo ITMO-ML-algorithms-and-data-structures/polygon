@@ -37,3 +37,4 @@ int main() {
     // + n *((len(string1)+len(string2)+len(stringn))/n(с округл. вверх)+4)
     return 0;
 }
+
