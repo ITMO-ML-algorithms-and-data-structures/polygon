@@ -1,28 +1,28 @@
 #include "lab2_lib.h"
 
 bool IsIsomorphic(string str1, string str2) {
-    //на вход str1 и str2 - это последовательность символов, где каждый символ - 1 байт
+    //РЅР° РІС…РѕРґ str1 Рё str2 - СЌС‚Рѕ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃРёРјРІРѕР»РѕРІ, РіРґРµ РєР°Р¶РґС‹Р№ СЃРёРјРІРѕР» - 1 Р±Р°Р№С‚
 
-    //auto s1 = sizeof(str1); всегда 40 байт и не зависит от длины
-    //auto s2 = sizeof(str1); всегда 40 байт и не зависит от длины
+    //auto s1 = sizeof(str1); РІСЃРµРіРґР° 40 Р±Р°Р№С‚ Рё РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ РґР»РёРЅС‹
+    //auto s2 = sizeof(str1); РІСЃРµРіРґР° 40 Р±Р°Р№С‚ Рё РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ РґР»РёРЅС‹
 
-    unordered_map<char, char> map1;    //+80 байт
-    unordered_map<char, char> map2;    //+80 байт
+    unordered_map<char, char> map1;    //+80 Р±Р°Р№С‚
+    unordered_map<char, char> map2;    //+80 Р±Р°Р№С‚
 
-    //auto s3 = sizeof(map1); всегда 80 байт и при добавлении элементов не увеличивается
-    //auto s4 = sizeof(map2); всегда 80 байт и при добавлении элементов не увеличивается
+    //auto s3 = sizeof(map1); РІСЃРµРіРґР° 80 Р±Р°Р№С‚ Рё РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё СЌР»РµРјРµРЅС‚РѕРІ РЅРµ СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ
+    //auto s4 = sizeof(map2); РІСЃРµРіРґР° 80 Р±Р°Р№С‚ Рё РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё СЌР»РµРјРµРЅС‚РѕРІ РЅРµ СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ
 
 
-    size_t str1Length = str1.length(); //+8 байт    
-    size_t str2Length = str2.length(); //+8 байт
+    size_t str1Length = str1.length(); //+8 Р±Р°Р№С‚    
+    size_t str2Length = str2.length(); //+8 Р±Р°Р№С‚
 
     if (str1Length != str2Length) {
         return false;
     }
 
-    for (int i = 0; i < str1Length; ++i) { //+4 байт
-        char str1_char = str1[i]; //+1 байт
-        char str2_char = str2[i]; //+1 байт
+    for (int i = 0; i < str1Length; ++i) { //+4 Р±Р°Р№С‚
+        char str1_char = str1[i]; //+1 Р±Р°Р№С‚
+        char str2_char = str2[i]; //+1 Р±Р°Р№С‚
 
         if (map1[str1_char] && map1[str1_char] != str2_char)
             return false;
