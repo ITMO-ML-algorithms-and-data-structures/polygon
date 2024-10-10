@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+bool is_simple(int a) {
+    if (a <= 1) {
+        return false;
+    }
+
+    for (int i = 2; i <= sqrt(a); i++) {
+        if (a % i == 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int main() {
+    vector<vector<int>> st = {
+        { 1, 2 },
+        { 3, 3 },
+        { 1, -2, 3, 4, 5, 0 },
+        { 12, 43, 5 },
+        { 1, 2, 2, 900000000 },
+
+    };
+    vector<vector<int>> st_simple;
+    int sum_st;
+
+    for (int i = 0; i < st.size(); i++) {
+        sum_st = 0;
+        for (int j = 0; j < st[i].size(); j++) {
+            sum_st += st[i][j];
+        }
+
+        if (is_simple(sum_st)) {
+            st_simple.push_back(st[i]);
+        }
+    }
+
+    for (int i = 0; i < st_simple.size(); i++) {
+        for (int j = 0; j < st_simple[i].size(); j++) {
+            cout << st_simple[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+
+    return 0;
+}
+
