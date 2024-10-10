@@ -36,8 +36,6 @@ TEST(SampleTest, Test0) {
 	vector<int> in({1, 2, 3, 4});
 
 	vector<int> res = make_sample(in, size);
-	for (auto x : res)
-    	cout << x << ' ';
     EXPECT_TRUE(check_sample(res, size));
 }
 
@@ -46,8 +44,6 @@ TEST(SampleTest, Test1) {
 	vector<int> in({1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9, 9});
 
     vector<int> res = make_sample(in, size);
-    for (auto x : res)
-    	cout << x << ' ';
     EXPECT_TRUE(check_sample(res, size));
 }
 
@@ -56,8 +52,6 @@ TEST(SampleTest, Test2) {
 	vector<int> in({1, 2, 2, 3});
 
     vector<int> res = make_sample(in, 2);
-    for (auto x : res)
-    	cout << x << ' ';
     EXPECT_TRUE(check_sample(res, size));
 }
 
@@ -66,8 +60,6 @@ TEST(SampleTest, Test3) {
 	vector<int> in({1, 1, 2, 2, 3, 3, 3});
 
     vector<int> res = make_sample(in, size);
-    for (auto x : res)
-    	cout << x << ' ';
     EXPECT_TRUE(check_sample(res, size));
 }
 
