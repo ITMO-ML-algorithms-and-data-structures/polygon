@@ -1,5 +1,5 @@
 4
 orange
-red 
+red
 green
 orange
