@@ -5,7 +5,7 @@
 
 
 int main() {
-    std::ifstream file("../input_data/input_2.txt");
+    std::ifstream file("../input_data/input_2.txt"); // 160 байт
 
     LabelEncoder<std::string, int> encoder;
 
@@ -13,15 +13,15 @@ int main() {
         throw std::runtime_error("Failed to open input file");
     }
 
-    std::string line;
-    std::vector<int> classes;
+    std::string line; // 24 байт
+    std::vector<int> classes; // 24 байт
     while(std::getline(file, line)) {
         classes.push_back(encoder.fit_transform_by_one_label(line));
     }
 
     file.close();
 
-    std::ofstream output_file;
+    std::ofstream output_file; // 160 байт
 
     output_file.open("../output_data/output.txt");
 

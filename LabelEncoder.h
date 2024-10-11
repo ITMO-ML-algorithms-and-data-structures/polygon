@@ -9,9 +9,9 @@
 template<typename LabelType, typename ClassType>
 class LabelEncoder {
 private:
-    std::unordered_map<LabelType, ClassType> labels_to_classes;
-    std::unordered_map<ClassType, LabelType> classes_to_labels;
-    int class_count = 0;
+    std::unordered_map<LabelType, ClassType> labels_to_classes; // 48 байт
+    std::unordered_map<ClassType, LabelType> classes_to_labels; // 48 байт
+    int class_count = 0; // 4 байт
 public:
     LabelEncoder() = default;
 

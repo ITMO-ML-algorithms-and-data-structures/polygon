@@ -4,6 +4,7 @@
 template<typename LabelType, typename ClassType>
 void LabelEncoder<LabelType, ClassType>::fit(const std::vector<LabelType> &labels) {
     for (auto &label: labels) {
+        // 4 байта
         if (labels_to_classes.find(label) == labels_to_classes.end()) {
             labels_to_classes[label] = class_count;
             classes_to_labels[class_count] = label;
@@ -17,6 +18,7 @@ std::vector<ClassType> LabelEncoder<LabelType, ClassType>::transform(const std::
     std::vector<ClassType> output_classes;
 
     for (auto &label: labels) {
+        // размер указателя 4 байта
         output_classes.push_back(labels_to_classes[label]);
     }
 
@@ -31,9 +33,10 @@ std::vector<ClassType> LabelEncoder<LabelType, ClassType>::fit_transform(const s
 
 template<typename LabelType, typename ClassType>
 std::vector<LabelType> LabelEncoder<LabelType, ClassType>::inverse_transform(const std::vector<ClassType> &classes) {
-    std::vector<LabelType> output_labels;
+    std::vector<LabelType> output_labels; // 24 байта
 
     for (auto &current_class: classes) {
+        // размер указателя 4 байта
         output_labels.push_back(classes_to_labels[current_class]);
     }
 
