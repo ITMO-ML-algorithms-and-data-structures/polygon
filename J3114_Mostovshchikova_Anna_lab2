@@ -7,7 +7,7 @@ using namespace std;
 
 vector<short int> find_first_increased_array_(int N, short int arr[]) {
 
-    vector<short int> out(N)
+    vector<short int> out(N);
         bool is_finished = false;
     short int last_value = arr[0];
     out[0] = last_value;
@@ -57,6 +57,6 @@ int main()
     for (const int& unique_num : unique_nums) {
         cout << unique_num << " ";
     }
-
+    
     return 0;
 }
