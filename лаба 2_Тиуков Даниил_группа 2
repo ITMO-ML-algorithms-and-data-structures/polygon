@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+
+// Функция для подсчета количества вхождений элементов с использованием хэш-таблицы
+std::vector<int> count(const std::vector<std::string>& input_data) {
+    std::unordered_map<std::string, int> quantity_map;
+    std::vector<int> counts;
+
+    // Подсчет количества вхождений элементов
+    for (const std::string& item : input_data) {
+        quantity_map[item]++;
+    }
+
+    // Формирование вектора с результатами на основе quantity_map
+    for (const std::string& item : input_data) {
+        counts.push_back(quantity_map[item]);
+    }
+
+    return counts;
+
+}
+
+
+
+// Функция для тестирования
+void test(const std::vector<std::string>& input_data, const std::string& expected_output) {
+    std::vector<int> counts = count(input_data);
+
+    // Формируем строку результата
+    std::string result;
+    for (int count : counts) {
+        result += std::to_string(count) + " ";
+    }
+
+    // Удаляем последний пробел
+    if (!result.empty()) {
+        result.pop_back();
+    }
+
+    // Проверяем, соответствует ли результат ожиданиям
+    if (result == expected_output) {
+        std::cout << "Test passed: " << result << std::endl;
+    }
+    else {
+        std::cout << "Test failed!: expected: " << expected_output << ", got: " << result << std::endl;
+    }
+}
+
+int main() {
+    // Тест 1: Простые строки
+    test({ "apple", "apple", "banana", "cherry", "banana", "banana" }, "2 2 3 1 3 3");
+
+    // Тест 2: Все элементы одинаковые
+    test({ "kiwi", "kiwi", "kiwi", "kiwi" }, "4 4 4 4");
+
+    // Тест 3: Все элементы уникальные
+    test({ "pear", "grape", "mango", "peach", "" }, "1 1 1 1 1");
+
+    // Тест 4: Пустой вектор
+    test({}, "");
+
+    return 0;
+}
