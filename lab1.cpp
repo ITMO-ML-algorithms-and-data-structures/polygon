@@ -2,6 +2,7 @@
 #include<string>
 #include<map>
 #include<clocale>
+#include <cassert>
 
 bool check_str(std::string &s) {
     // проверка что в строке только допустимые символы
@@ -45,8 +46,29 @@ bool are_isomorphic(std::string &s1, std::string &s2) {
     return true;
 }
 
+void tests() {
+    std::string test_string1="abacaba", test_string2="abadaba";
+    assert((are_isomorphic(test_string1, test_string2) == true));
+    test_string1="cocacola";
+    test_string2="bobabola";
+    assert((are_isomorphic(test_string1, test_string2) == true));
+    test_string1="cocacola";
+    test_string2="bobobola";
+    assert((are_isomorphic(test_string1, test_string2) != true));
+    test_string1="cocacola";
+    test_string2="BoBabola";
+    assert((are_isomorphic(test_string1, test_string2) != true));
+    test_string1="CoCacola228";
+    test_string2="BoBabola337";
+    assert((are_isomorphic(test_string1, test_string2) == true));
+    std::cout << "all tests passed!\n";
+}
+
 int main() {
     setlocale(LC_CTYPE, "rus");
+
+    tests();
+
     int n=-1; // 4 байта
     std::string input_str1, input_str2; // пустые строки весят по 1 байту
     do {
@@ -54,7 +76,7 @@ int main() {
         std::cout << "Введите количество пар строк\n";
         // считываем кол-во пар пока оно не станет положительным
         std::cin >> n;
-    } while (n < 1);
+    } while (n < 0);
     for (int i=0; i < n ; i++) {
         // + 4 байта из за цикла
         do {
