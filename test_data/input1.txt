@@ -1,6 +1,0 @@
-5
-green
-orange
-green
-black
-black
