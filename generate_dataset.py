@@ -15,6 +15,8 @@ python generate_dataset.py --mode text --num-rows 10000 --min-unique 100 --max-l
 
 # Генерация числового датасета с пропусками (null) и минимальным количеством уникальных значений (разделитель новая строка):
 python generate_dataset.py --mode numeric --num-rows 2000 --min-unique 500 --min-value 10 --max-value 500 --include-null --delimiter \n --output-file dataset_with_nulls.txt
+
+python3 generate_dataset.py --mode text --max-length 10000 --num-rows 2 --charset alphanumeric --output-file test.csv --delimiter {';'}
 """
 
 import argparse
