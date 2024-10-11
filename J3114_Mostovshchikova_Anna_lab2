@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <unordered_map>
+
+using namespace std;
+
+int main()
+{
+
+    cout << "Enter numbers separated by spaces: " << endl;
+    string input_line;
+    getline(cin, input_line); 
+
+    istringstream input_stream(input_line);
+    vector<int> nums;
+    int num;
+
+    while (input_stream >> num) {
+        nums.push_back(num);
+    }
+
+    vector<int> unique_nums; 
+
+    unordered_map<int, int> num_count;
+
+    for (const int& num : nums) {
+        num_count[num]++;
+    }
+
+    for (const auto& pair : num_count) {
+        if (pair.second == 1) {
+            unique_nums.push_back(pair.first);
+        }
+    }
+
+    for (const int& unique_num : unique_nums) {
+        cout << unique_num << " ";
+    }
+    
+    vector<short int> find_first_increased_array_(int N, short int arr[]) {
+
+        vector<short int> out(N)
+            bool is_finished = false;
+        short int last_value = arr[0];
+        out[0] = last_value;
+
+        for (int i = 1; i < N && !is_ finished; i++) {
+            if (arr[i] > last_value) {
+                out[i] = arr[i];
+                last_value = arr[i];
+            }
+            else {
+                is_finished = true;
+            }
+        }
+
+        return out;
+    }
+    return 0;
+}
