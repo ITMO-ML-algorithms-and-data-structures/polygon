@@ -3,40 +3,65 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <cassert>
 
-int main() {
-    //Объявляем переменные для размера списка и для элементов самого списка
-    int size; //4 байта
-    std::string el; //X байт (1 символ 1 байт, X - длина строки)
-    //Объявляем вектор, в котором будем хранить список
-    std::vector<std::string> names; //24 байта + Y байт * X байт(Y - количество элементов)
+std::vector<int> mass_count(int size, std::vector<std::string> names) { //4 байта + 24 байта + Y байт * X байт(Y - количество элементов)
     std::unordered_map<std::string, int> counts; // 32 байта + Y байт * X байт
-    //Инпутим размер списка
-    std::cin >> size; //O(1)
-    //Проходимся циклом по всем переменным
-    for (int i = 0; i < size; i++) { //O(n)
-        std::cin >> el; //O(n) т. к. для каждого i-ого элемента
-        //Добавляем элемент в вектор
-        names.push_back(el); //O(n) аналогично верхнему
-        //Проверяем есть ли элемент в хэш таблице
-        if (counts.find(el) == counts.end()) { //O(n) ангалогично
-            //Если нет, добавляем
-            counts[el] = 1;
-        }
-        else {
-            //Если есть добавляем единичку, так как он повторился
-            counts[el]++;
-        }
+
+    //Считаем элементы с помощью хэш-таблицы
+    for (int i = 0; i < size; i++) {
+        counts[names[i]]++;
     }
-    //Снова проходимся по всем элементам, чтобы их вывести
-    for (int i = 0; i < size; i++) {//O(n)
-        //Выводим все элементы подставляя в качестве ключа хэш таблицы значение вектора
-        std::cout << counts[names[i]] << " "; //O(n) так как для каждого i-ого
+
+    //Создаем result и добавляем туда подсчитанные элементы
+    std::vector<int> result(size); //24 байта + Y байт * 4 байта(Y - количество элементов)
+    for (int i = 0; i < size; i++) {
+        result[i] = counts[names[i]];
     }
+    return result;
 }
 
-//Итого сложность: O(1) + O(n) + O(n) + O(n) + O(n) = O(n)
+void tests() {
+    if (mass_count(5, {"1", "2", "3", "1", "2"}) == std::vector<int>{2, 2, 1, 2, 2}) {
+        std::cout << "Test1 passed" << std::endl;
+    }else {
+        std::cout << "Test1 failed" << std::endl;
+    }
 
-//Итого память: 4 + X + 24 * Y * X + 32 * Y * X = X(4 + Y(24 + 32) = X(4 + 56Y = 4X + 56XY байт
+    if (mass_count(2, {"1", "2"}) == std::vector<int>{1, 1}) {
+        std::cout << "Test2 passed" << std::endl;
+    }else {
+        std::cout << "Test2 failed" << std::endl;
+    }
+
+    if (mass_count(2, {"1", "1"}) == std::vector<int>{2, 2}) {
+        std::cout << "Test3 passed" << std::endl;
+    }else {
+        std::cout << "Test3 failed" << std::endl;
+    }
+
+    if (mass_count(5, {"1", "1", "1", "1", "1"}) == std::vector<int>{5, 5, 5, 5, 5}) {
+        std::cout << "Test4 passed" << std::endl;
+    }else {
+        std::cout << "Test4 failed" << std::endl;
+    }
+
+    if (mass_count(5, {"1", "2", "3", "4", "5"}) == std::vector<int>{1, 1, 1, 1, 1}) {
+        std::cout << "Test5 passed" << std::endl;
+    }else {
+        std::cout << "Test5 failed" << std::endl;
+    }
+    std::vector<int> vec = {};
+    assert(mass_count(5, {}) == vec);
+}
+
+int main() {
+    tests();
+    return 0;
+}
+
+
+//Итого память: 4 байта + 24 байта + Y байт * X байт + 32 байта + Y байт * X байт + 24 байта + Y байт * 4 байта =
+// = 28 + XY + 32 + XY + 24 + 4Y = 84 + 2XY + 4Y байт
 //X - количество символов в строке
 //Y - количество элементов
