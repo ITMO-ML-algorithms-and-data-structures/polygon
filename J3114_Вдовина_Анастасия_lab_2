@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <fstream>
+
+using namespace std;
+
+bool isIsomorphicStr(const string& str1, const string& str2) {
+    if (str1.length() != str2.length()) return false;
+
+    map<char, char> mapping1; // 48 + 2n байт (в худшем случае)
+    map<char, char> mapping2; // 48 + 2n байт (в худшем случае)
+
+    for (int i = 0; i < str1.length(); i++) {
+        char char1 = str1[i]; // 1 байт
+        char char2 = str2[i]; // 1 байт
+
+        if (mapping1.find(char1) == mapping1.end() && mapping2.find(char2) == mapping2.end()) {
+            mapping1[char1] = char2;
+            mapping2[char2] = char1;
+        } else if (mapping1[char1] != char2 || mapping2[char2] != char1) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int main() {
+    ifstream inputFile("dataset.txt");
+    
+    string word1, word2;
+    while (inputFile >> word1 >> word2) {
+        cout << word1 << " и " << word2 << " - ";
+        if (isIsomorphicStr(word1, word2)) {
+            cout << "Изоморфные" << endl;
+        } else {
+            cout << "Не изоморфные" << endl;
+        }
+    }
+
+    inputFile.close();
+    return 0;
+}
