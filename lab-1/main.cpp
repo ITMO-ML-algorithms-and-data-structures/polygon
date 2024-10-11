@@ -16,7 +16,9 @@ int main() {
     std::vector<int> result;
 
     for (const int& value : arr) {
-        if (unique_elements.insert(value).second) {
+        if(unique_elements.find(value) != unique_elements.end())
+        {
+            unique_elements.insert(value);
             result.push_back(value);
         }
     }
