@@ -1,17 +1,36 @@
-#include <vector>
+#include <string>
 #include <iostream>
-#include "lab.cpp"
+#include <fstream>
+#include "LabelEncoder.h"
 
-typedef long long ll;
-
-using namespace std;
 
 int main() {
-    vector<ll> digits = {0, -45, 72, 13, 65, 23, -99, 0, 0, 1, 2, 5};
+    std::ifstream file("../input_data/input_2.txt");
 
-    pair<ll, ll> result = getMaxComposition(digits);
+    LabelEncoder<std::string, int> encoder;
 
-    cout << result.first << " " << result.second << endl;
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open input file");
+    }
 
-    return 0;
+    std::string line;
+    std::vector<int> classes;
+    while(std::getline(file, line)) {
+        classes.push_back(encoder.fit_transform_by_one_label(line));
+    }
+
+    file.close();
+
+    std::ofstream output_file;
+
+    output_file.open("../output_data/output.txt");
+
+    if (!output_file.is_open())
+        throw std::runtime_error("Failed to open output file");
+
+    for (auto i: classes) {
+        output_file << i << "\n";
+    }
+
+    file.close();
 }
