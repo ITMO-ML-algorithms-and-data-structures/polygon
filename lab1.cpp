@@ -4,7 +4,6 @@
 #include <string>
 #include <sstream>
 #include <cassert>
-#include <vector>
 
 
 //  проверка на изоморфность
@@ -86,7 +85,7 @@ int main() {
 
 
     // тест датасета
-    std::string filePath = "C:/Users/gelkk/Documents/GitHub/polygon1/dataset.txt";
+    std::string filePath = "./dataset.txt";
     bool result = checkIsomorphismFromFile(filePath);
     std::cout << (result ? "true" : "false") << std::endl;
     
