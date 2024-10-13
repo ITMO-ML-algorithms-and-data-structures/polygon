@@ -3,3 +3,5 @@
 /imgs
 generate_dataset.py
 *.exe
+*.py
+*.txt
