@@ -8,14 +8,15 @@ using namespace std;
 
 class CountVectorizer {
 public:
-    // —оздаем пол€ (хэш-таблицы) с парами ключ-значение: а) слово-индекс б) индекс-слово
+    // Creating maps with pairs word-index and index-word
+       
 
     unordered_map<string, int> word_index_map;
     unordered_map<int, string> index_word_map;
 
     /*
-    ѕишем функцию, берущую на вход вектор из строк, разбивающую каждую по пробелам
-    и добавл€ющую в хэш-таблицу уникальные значени€
+    Writing a function that breaks every string from a vector 
+    into separate parts and adds unique words to a map 
     */
 
     void breakAndAddUnique(const vector<string>& arr) {
@@ -36,8 +37,8 @@ public:
     }
 
     /*
-    ѕишем функцию, берущую на вход вектор из строк и преобразующую его в матрицу нулей n X m, 
-    где n -- кол-во строк в массиве, а m -- кол-во уникальных слов
+    Writing a function that takess a vector of strings and creates a n X m matrix, 
+    where n is the number of the strings in an array and m is the number of the unique words
     */
      vector<vector<int>> createMatrix(const vector<string>& arr) {
      vector<vector<int>> matrix(arr.size(), vector<int>(word_index_map.size(), 0));
@@ -56,7 +57,7 @@ public:
 
         return matrix;
     }
-    // ѕишем функцию, вывод€щую заполненную матрицу
+    // Writing a function that prints a filled matrix
     void printMatrix(const vector<vector<int>>& matrix) {
         for (const auto& row : matrix) {
             cout << "[";
