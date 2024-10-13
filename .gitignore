@@ -1,0 +1,7 @@
+/.vs
+/.vscode
+/imgs
+generate_dataset.py
+*.exe
+*.py
+*.txt
