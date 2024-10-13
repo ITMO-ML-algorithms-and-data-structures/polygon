@@ -1,0 +1,55 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    ifstream inputFile("c:\\Users\\Home\\Desktop\\labs.alg\\data.txt"); 
+    if (!inputFile.is_open()) {
+        cerr << "Ошибка, не удалось открыть файл" << endl;
+        return 1;
+    }
+
+    vector<string> arr;
+    string line;
+
+    while (getline(inputFile, line)) {
+        arr.push_back(line);
+    }
+
+    inputFile.close(); 
+
+    unordered_map<string, int> countMap;
+    for (const auto& str : arr) {
+        countMap[str]++;
+    }
+
+    
+
+    int maxCount = 0;
+    for (const auto& pair : countMap) {
+        maxCount = max(maxCount, pair.second); 
+    }
+
+    cout << maxCount << endl; 
+
+
+
+    vector<int> result;
+    for (const auto& str : arr) {
+        result.push_back(countMap[str]); 
+    }
+
+
+    cout << "Вектор с количеством повторений: ";
+    for (size_t i = 0; i < result.size(); ++i) {
+       cout << result[i] << (i == result.size() - 1 ? "" : ", "); 
+   }
+   cout << endl; 
+   return 0; 
+}
+
