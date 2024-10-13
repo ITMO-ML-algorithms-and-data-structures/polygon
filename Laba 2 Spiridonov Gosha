@@ -1,0 +1,66 @@
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include <cassert>
+#include <sys/resource.h> // для подсчёта памчти
+
+// считает повторения значений в массиве
+std::vector<int> numcases(const std::vector<std::string>& arr) {
+    std::unordered_map<std::string, int> nummap;
+    
+    // считает сколько раз каждый элемент
+    for (const auto& item : arr) {
+        nummap[item]++;
+    }
+
+    // выводит в массив-результат количество повторений ^_^ <3
+    std::vector<int> result;
+    for (const auto& item : arr) {
+        result.push_back(nummap[item]);
+    }
+
+    return result;
+}
+
+// сколько ушло памяти (в кб)
+void memory () {
+    struct rusage usage;
+    getrusage(RUSAGE_SELF, &usage);
+    std::cout << "Памяти ушло: " << usage.ru_maxrss << " килобайт" << std::endl;
+}
+
+void runtests() {
+    {
+        std::vector<std::string> arr = {"Orange", "Red", "Green", "Orange"};
+        std::vector<int> expected = {2, 1, 1, 2};
+        std::vector<int> result = numcases(arr);
+        assert(result == expected);
+        std::cout << "Тест пройден" << std::endl;
+        memory();
+    }
+
+    {
+        std::vector<std::string> arr = {"Lomo", "Pesochka", "Kronva", "Birzha"};
+        std::vector<int> expected = {1, 1, 1, 1};
+        std::vector<int> result = numcases(arr);
+        assert(result == expected);
+        std::cout << "Тест пройден" << std::endl;
+        memory();
+    }
+
+    {
+        std::vector<std::string> arr = {"Vladislav", "Vladislav", "Vladislav", "Vladislav"};
+        std::vector<int> expected = {4, 4, 4, 4};
+        std::vector<int> result = numcases(arr);
+        assert(result == expected);
+        std::cout << "Тест пройден" << std::endl;
+        memory();
+    }
+}
+
+int main() {
+    // запуск тестиков
+    runtests();
+    return 0;
+}
