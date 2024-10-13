@@ -4,16 +4,15 @@
 #include <unordered_map>
 #include <conio.h> // библиотека, необходимая для работы оператора _getch();
 #include <cassert>
-
+// функция подсчета частот слов в векторе
 std::string get_freq(std::vector<std::string> words) {
-    // На вход 
     if (words.size() == 0)
         return "";
-
+// заполнение хэш-таблицы словами и их частотами
     std::unordered_map<std::string, int> freqs;
     for (std::string word : words)
         ++freqs[word];
-
+// формирование вывода
     int i = 0;
     std::string result = "[";
     for (std::string word : words) {
@@ -42,7 +41,7 @@ int main()
     result = get_freq(empty);
     assert(result == "");
 
-    // ТЕСТ 4: проверка длинного слова
+    // ТЕСТ 4: проверка длинных слов в векторе
     std::string longStr = std::string(100, 'a');
     std::vector<std::string> long_words = {longStr, longStr};
     result = get_freq(long_words);
