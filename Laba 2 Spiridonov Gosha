@@ -23,11 +23,11 @@ std::vector<int> numcases(const std::vector<std::string>& arr) {
     return result;
 }
 
-// сколько ушло памяти (в кб)
+// сколько ушло памяти (в б)
 void memory () {
     struct rusage usage;
     getrusage(RUSAGE_SELF, &usage);
-    std::cout << "Памяти ушло: " << usage.ru_maxrss << " килобайт" << std::endl;
+    std::cout << "Памяти ушло: " << usage.ru_maxrss << " байт" << std::endl;
 }
 
 void runtests() {
