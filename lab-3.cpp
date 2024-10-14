@@ -13,73 +13,74 @@ using std::setprecision;
 using std::string;
 using std::vector;
 
-int findMax(const vector<int> &vec)
+int findMax(const vector<int> &vec) // O(n)
 {
     int maxValue = numeric_limits<int>::lowest();
 
-    for (int i = 0; i < vec.size(); i++)
+    for (int i = 0; i < vec.size(); i++) // O(n)
     {
         if (vec[i] > maxValue)
         {
             maxValue = vec[i];
         }
     }
-    return maxValue;
+    return maxValue; // O(1)
 }
 
-int findMin(const vector<int> &vec)
+int findMin(const vector<int> &vec) // O(n)
 {
     int minValue = numeric_limits<int>::max();
 
-    for (int i = 0; i < vec.size(); i++)
+    for (int i = 0; i < vec.size(); i++) // O(n)
     {
         if (vec[i] < minValue)
         {
             minValue = vec[i];
         }
     }
-    return minValue;
+    return minValue; // O(1)
 }
 
-void readVectorFromFile(vector<int> &vec, const string &filename)
+void readVectorFromFile(vector<int> &vec, const string &filename) // O(n)
 {
     ifstream file(filename);
     int value;
 
-    while (file >> value)
+    while (file >> value) // O(n)
     {
         vec.push_back(value);
     }
-    file.close();
+    file.close(); // O(1)
 }
 
-vector<float> minMaxScaler(vector<int> &vec)
+vector<float> minMaxScaler(vector<int> &vec) // O(n)
 {
-    int minValue = findMin(vec);
-    int maxValue = findMax(vec);
+    int minValue = findMin(vec); // O(n)
+    int maxValue = findMax(vec); // O(n)
 
-    vector<float> scaledVec(vec.size());
+    vector<float> scaledVec(vec.size()); // O(n)
 
-    for (int i = 0; i < vec.size(); i++)
+    for (int i = 0; i < vec.size(); i++) // O(n)
     {
-        scaledVec[i] = static_cast<float>(vec[i] - minValue) / (maxValue - minValue);
+        scaledVec[i] = static_cast<float>(vec[i] - minValue) / (maxValue - minValue); // O(1)
     }
 
-    return scaledVec;
+    return scaledVec; // O(1)
 }
 
 int main()
 {
 
-    vector<int> vec;
-    string filename = "numbers.txt";
+    vector<int> vec; // O(1)
+    string filename = "numbers.txt"; // O(1)
 
-    readVectorFromFile(vec, filename);
-    vector<float> scaledVec = minMaxScaler(vec);
+    readVectorFromFile(vec, filename); // O(n)
+    vector<float> scaledVec = minMaxScaler(vec); // O(n)
 
-    cout << scientific << setprecision(1);
-    for (int i = 0; i < 100; i++)
+    cout << scientific << setprecision(1); // O(1)
+    for (int i = 0; i < 10; i++) // O(n)
     {
-        cout << scaledVec[i] << " ";
+        cout << scaledVec[i] << "   "; // O(1)
     }
 }
+// ИТОГ O(n) complexity
