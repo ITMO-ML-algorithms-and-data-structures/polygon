@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+
+// Функция для подсчета вхождений строк в массиве и замены их на количество вхождений
+// k - максимальная длина строки n - кол-во строк m - кол-во уникальных строк 
+void Count_Enters(std::vector<std::string>& arr) {
+    std::unordered_map<std::string, int> hesh_enter;
+
+    for (auto value : arr) {
+        hesh_enter[value]++;
+    }// O(1) - увеличиваем счетчик для текущего значения
+
+    for (auto& value : arr) {
+        value = std::to_string(hesh_enter[value]); //O(k) - Замена текущего значения на количество вхождений
+    }
+}
+
+
+int main() {
+    std::vector<std::string> arr = { "Orange", "Red", "Green", "Orange", "Orange", "Red" };
+    Count_Enters(arr); // O(n) - Подсчет вхождений
+
+    std::cout << "["; // O(1) - Вывод начала массива
+    for (int i = 0; i < arr.size(); i++) {
+        std::cout << arr[i];        // O(k) - Вывод текущего элемента
+        if (i < arr.size() - 1)     // O(1) - Если это не последний элемент
+            std::cout << ", ";       // O(1) - Вывод запятой
+    }
+    std::cout << "]" << std::endl; // O(1) - Закрываем массив и переходим на новую строку
+
+}
+
+    // В худшем случае, когда все строки уникальны, m = n, и тогда память будет: O(n * k + n * k) = O(n * k)
+    // В лучшем случае (все строки одинаковые): m = 1, и тогда память хэш-таблицы будет O(k)
