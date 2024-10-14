@@ -9,17 +9,19 @@ std::string get_freq(std::vector<std::string> words) {
     if (words.size() == 0)
         return "";
 // заполнение хэш-таблицы словами и их частотами
-    std::unordered_map<std::string, int> freqs;
+    std::unordered_map<std::string, int> freqs; //(6+1)+(6+1)+(3+1)+(4+1) байта(ключи) ("+1"так как строка оканчивается терминальным символом) + 4*4 байта (int) = 39 байт
     for (std::string word : words)
-        ++freqs[word];
+        ++freqs[word]; 
 // формирование вывода
-    int i = 0;
-    std::string result = "[";
+    int i = 0; //4 байта
+    std::string result = "["; // 1 байт
     for (std::string word : words) {
-        result += std::to_string(freqs[word]);
+        result += std::to_string(freqs[word]); //+ 11 байт([2,1,2,1,2,2])
         result += ((++i < words.size()) ? "," : "]");
     }
     return result;
+    // На выходе: 39 + 4 + 1 + 11 + 29 = 84 байта
+
 }
 
 
@@ -27,7 +29,7 @@ int main()
 {
     std::string result;
     //ТЕСТ 1
-    std::vector<std::string> words = { "orange", "yellow", "orange", "red", "blue", "blue" }; //заполнение списка
+    std::vector<std::string> words = { "orange", "yellow", "orange", "red", "blue", "blue" }; //6+6+6+3+4+4 = 29 байт 
     result = get_freq(words);
     assert(result == "[2,1,2,1,2,2]");
 
