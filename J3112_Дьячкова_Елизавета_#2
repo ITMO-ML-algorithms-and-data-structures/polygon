@@ -1,0 +1,26 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+int main() {
+    ifstream file("num.txt"); 
+    int size; //4 байта 
+    file >> size;  
+    int arr[size]; // size * 4 байта
+    for (int i = 0; i < size; ++i) file >> arr[i]; 
+    file.close();
+    int tek = 0; // 4 байта 
+    bool used[101]; // 101 * 1 = 101 байт 
+    for (int i = 0; i <= 100; ++i) used[i] = 0; 
+    int k = 0; // 4 байта 
+    for (int i = 0; i < size; ++i) {
+        if (!used[arr[i]]) { 
+            used[arr[i]] = true; 
+            arr[k] = arr[i]; 
+            k += 1; 
+        } 
+    }
+    for (int i = 0; i < k; ++i) cout << arr[i] << ' '; 
+}
+// общий расчёт: 4 + 4 + size*4 + 101 + 4 = 12 + size*4 + 101
