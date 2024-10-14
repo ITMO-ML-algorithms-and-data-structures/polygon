@@ -1,26 +1,33 @@
-/******************************************************************************
-
-                              Online C++ Compiler.
-               Code, Compile, Run and Debug C++ program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-*******************************************************************************/
-
 #include <iostream>
+#include <unordered_map>
+#include <string>
 
-using namespace std;
+int main()
+{
+	std::unordered_map<std::string, int> frequencyMap; // счетчик числа вхождений строки
+	
+	// принимаем размер массива и сам массив
+	int size;
+	std::cin >> size;
+	std::vector<std::string> arr(size);
+	for (int i = 0; i < size; i++)
+		std::cin >> arr[i];
 
-int main(){
-    int const size = 11; 
-    int arrayofnumbers[size] = {-5,-4,-3,-2,-1, 0, 1, 2, 3, 4, 5 }; 
-    int count = 0; 
-    for (int i=0;i<size;i++){  
-        if(arrayofnumbers[i] < 0){ 
-            count +=1; 
+	// считаем количество вхождений каждой строки
+	for (int i = 0; i < size; i++)
+		frequencyMap[arr[i]]++;
 
-        }
+	// меняем значения в массиве на число вхождений согласно условию
+	for (int i = 0; i < size; i++)
+		arr[i] = std::to_string(frequencyMap[arr[i]]);
 
-    }
-    cout << count;
-    
+	/*
+	функция std::to_string принимает число целочисленного или вещественного типа и преобразует его в std::string
+	*/
+
+	// выводим ответ
+	for (int i = 0; i < size; i++)
+		std::cout << arr[i] << ' ';
+
+	return 0;
 }
