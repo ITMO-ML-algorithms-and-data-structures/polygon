@@ -72,7 +72,7 @@ int main()
 {
 
     vector<int> vec; // O(1)
-    string filename = "numbers.txt"; // O(1)
+    string filename = "numbers10.txt"; // O(1)
 
     readVectorFromFile(vec, filename); // O(n)
     vector<float> scaledVec = minMaxScaler(vec); // O(n)
