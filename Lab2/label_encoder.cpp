@@ -42,9 +42,9 @@ std::vector<unsigned char> label_encoder(const std::string& path) {    // Фун
 TEST_CASE("testing the label_encoder function") {
 
     std::string
-        path1 = "Tests/test_label_encoder_1.txt",
-        path2 = "Tests/test_label_encoder_2.txt",
-        path3 = "Tests/test_label_encoder_3.txt";
+        path1 = "Tests/label_encoder/test_label_encoder_1.txt",
+        path2 = "Tests/label_encoder/test_label_encoder_2.txt",
+        path3 = "Tests/label_encoder/test_label_encoder_3.txt";
 
     std::vector<unsigned char>
         res_path1 = {},
