@@ -1,11 +1,21 @@
+#include <iostream>
+#include <vector>
 #include "script.cpp"
-#include <string>
 
 using namespace std;
 
+
 int main() {
-    string greeting = "input.txt"; // 32 байта
-    string result = isostrings(greeting); // 32 байта
-    cout << result << endl;
+    vector<int> arr = {1,100,10,2,5,6,7,8};
+    int K = 5;
+
+    vector<int> result = sampleArray(arr, K);
+
+    cout << "Result: ";
+    for (int val : result) {
+        cout << val << " ";
+    }
+    cout << endl;
+
     return 0;
 }
