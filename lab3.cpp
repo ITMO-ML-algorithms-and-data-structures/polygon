@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <limits>
+#include <iomanip>
 
 using namespace std;
 
@@ -19,6 +20,8 @@ int main() {
         if (number > maxi) maxi = number;
     }
 
+    cout << scientific << setprecision(1);
+    
     for (float &num : numbers) {
         num = (num - mini) / (maxi - mini);
         cout << num << " ";
