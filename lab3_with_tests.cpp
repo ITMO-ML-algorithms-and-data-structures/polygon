@@ -6,6 +6,7 @@
 using std::cout;
 using std::vector;
 
+
 void tests(int x) {
     std::ofstream test;
     test.open("C:/Users/RaZoRis/Desktop/C++/polygon/test.txt");
