@@ -1,0 +1,3 @@
+C:/Users/Пользователь/CLionProjects/polygon/cmake-build-debug/CMakeFiles/polygon.dir
+C:/Users/Пользователь/CLionProjects/polygon/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Пользователь/CLionProjects/polygon/cmake-build-debug/CMakeFiles/rebuild_cache.dir
