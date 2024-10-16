@@ -1,31 +1,59 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include <string>
-#include <algorithm>
+
+// Функция для подсчета количества вхождений элементов
+std::vector<int> count(const std::vector<std::string>& input_data) {
+    // unordered_map занимает память для хранения строк и соответствующих целых чисел.
+    std::unordered_map<std::string, int> quantity_map;
+
+    // Вектор для хранения количества вхождений, его размер динамически изменяется.
+    std::vector<int> counts;
+
+    // Проход по входным данным: строки копируются в map, для каждой строки выделяется память.
+    for (const std::string& item : input_data) {
+        quantity_map[item]++;  // Память увеличивается для каждой новой строки.
+    }
+
+    // Вектор заполняется количеством вхождений, для каждого целого числа выделяется память.
+    for (const std::string& item : input_data) {
+        counts.push_back(quantity_map[item]);
+    }
+
+    return counts;
+}
+
+// Функция для тестирования
+void test(const std::vector<std::string>& input_data, const std::string& expected_output) {
+    // Получение вектора с результатами
+    std::vector<int> counts = count(input_data);
+
+    // Формирование строки результата (каждый элемент преобразуется в строку, что также использует память)
+    std::string result;
+    for (int count : counts) {
+        result += std::to_string(count) + " ";  // Память увеличивается для каждой новой строки.
+    }
+
+    // Удаление последнего пробела
+    if (!result.empty()) {
+        result.pop_back();  // Операции со строкой.
+    }
+
+    // Проверка результата
+    if (result == expected_output) {
+        std::cout << "Test passed: " << result << std::endl;
+    } else {
+        std::cout << "Test failed!: expected: " << expected_output << ", got: " << result << std::endl;
+    }
+}
 
 int main() {
-    
-    std::vector < std:: string > input_data = { "orange", "red", "green", "orange" };
+    // Тесты (каждый из них использует память для строк и вектора)
+    test({ "apple", "apple", "banana", "cherry", "banana", "banana" }, "2 2 3 1 3 3");
+    test({ "kiwi", "kiwi", "kiwi", "kiwi" }, "4 4 4 4");
+    test({ "pear", "grape", "mango", "peach", "" }, "1 1 1 1 1");
+    test({}, "");
 
-    std::vector < std::string> input_data_test1 = { "orange", "red", "green", "orange","orange","green","violet"};
-
-    std::vector <std::string> input_data_test2 = {"0","1","0","-",""};
-
-    std::vector<int> output_data;
-
-
-
-    for (int i = 0; i < input_data.size(); i++) {
-        std::cout << std::count(input_data.begin(), input_data.end(), input_data[i]) << " ";//Цикл пробегает по массиву и считает кол-во каждых элементов, заменяя этот элемент его кол-вом в массиве.
-    }
-    std::cout << std::endl;
-    for (int i = 0; i < input_data_test1.size(); i++) {
-        std::cout << std::count(input_data_test1.begin(), input_data_test1.end(), input_data_test1[i]) << " ";// тест 1
-    }
-    std::cout << std::endl;
-    for (int i = 0; i < input_data_test2.size(); i++) {
-        std::cout << std::count(input_data_test2.begin(), input_data_test2.end(), input_data_test2[i]) << " ";// тест 2
-
-    }
     return 0;
 }
