@@ -1,3 +1,5 @@
+//Перемешивание элементов массива hard. Tischenko Pavel J3112
+
 #include "pch.h"
 #include <iostream>
 #include <vector>
