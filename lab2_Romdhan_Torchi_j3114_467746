@@ -1,73 +1,82 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <string>
+#include <iostream>   // 0 bits
+#include <vector>     // 0 bits
+#include <unordered_map> // 0 bits
+#include <string>     // 0 bits
 
 using namespace std;
 
-vector<int> countOccurrences(const vector<string>& words) {
+vector<int> countoccurrences(const vector<string>& words) {
     // Hash map to count occurrences of each word
-    unordered_map<string, int> counter;
+    unordered_map<string, int> counter;  // 64 bits - memory allocation for the map
 
     // Count occurrences of each word in the array
-    for (const auto& word : words) {
-        counter[word]++;
+    for (const auto& word : words) {  // 32 bits per iteration - accessing the element
+        counter[word]++;  // 96 bits (64 for map access + 32 increment)
 
         // Ensure no word has more than 127 occurrences
-        if (counter[word] > 127) {
-            cerr << "Error: The word \"" << word << "\" exceeds 127 occurrences." << endl;
-            exit(1);  // Terminate the program if constraint is violated
+        if (counter[word] > 127) {  // 64 bits (comparison + access)
+            cerr << "Error: The word \"" << word << "\" exceeds 127 occurrences." << endl;  // 800 bits - printing the message
+            exit(1);  // 0 bits - terminating the program
         }
     }
 
-    // Create the result vector with the corresponding occurrences
-    vector<int> result;
-    result.reserve(words.size());  // Reserve space to avoid reallocation
+    // Create the result vector with corresponding occurrences
+    vector<int> result;  // 64 bits - memory allocation for the vector
+    result.reserve(words.size());  // N * 32 bits - reserve space
 
-    for (const auto& word : words) {
-        result.push_back(counter[word]);  // Replace each word with its occurrence count
+    for (const auto& word : words) {  // 32 bits per iteration - accessing the element
+        result.push_back(counter[word]);  // 64 bits (32 for access + 32 for push)
     }
 
-    return result;
+    return result;  // 0 bits - returning the result
 }
 
 int main() {
-    int size;
+    int size;  // 32 bits - memory allocation for the integer
 
     // Ask for the size of the array
-    cout << "Enter the size of the array (up to 1e9): ";
-    cin >> size;
+    cout << "Enter the size of the array (up to 1e9): ";  // 0 bits - printing
+    cin >> size;  // 32 bits - reading input
 
     // Check if the size is valid
-    if (size < 1 || size > 1e9) {
-        cerr << "Error: Array size must be between 1 and 1e9." << endl;
-        return 1;
+    if (size < 1 || size > 1e9) {  // 32 bits - comparison
+        cerr << "Error: Array size must be between 1 and 1e9." << endl;  // 512 bits - printing the message
+        return 1;  // 0 bits - terminating the program
     }
 
     // Create an array of strings
-    vector<string> words(size);
+    vector<string> words(size);  // N * 64 bits - memory allocation for strings
 
     // Ask the user to input each word
-    cout << "Enter the words (each word can be up to 1000 characters long):" << endl;
-    for (int i = 0; i < size; ++i) {
-        cin >> words[i];
+    cout << "Enter the words (each word can be up to 1000 characters long):" << endl;  // 0 bits - printing
+    for (int i = 0; i < size; ++i) {  // 32 bits per iteration
+        cin >> words[i];  // 8 * word length (bits) - reading input
 
         // Check if the word length exceeds 1000 characters
-        if (words[i].length() > 1000) {
-            cerr << "Error: The word \"" << words[i] << "\" exceeds 1000 characters." << endl;
-            return 1;
+        if (words[i].length() > 1000) {  // 32 bits - length check
+            cerr << "Error: The word \"" << words[i] << "\" exceeds 1000 characters." << endl;  // 800 bits - printing the message
+            return 1;  // 0 bits - terminating the program
         }
     }
 
     // Get the array with occurrence counts
-    vector<int> result = countOccurrences(words);
+    vector<int> result = countoccurrences(words);  // N * 32 bits - storing results
 
     // Display the result
-    cout << "Result with the number of occurrences:" << endl;
-    for (int count : result) {
-        cout << count << " ";
+    cout << "Result with the number of occurrences:" << endl;  // 0 bits - printing
+    for (int count : result) {  // 32 bits per iteration - accessing the element
+        cout << count << " ";  // 8 bits - printing an integer
     }
-    cout << endl;
+    cout << endl;  // 0 bits - new line
 
-    return 0;
+    return 0;  // 0 bits - end of the program
 }
+
+// Total bit usage calculation:
+// Initialization: 128 bits + N * 64 bits
+// Loop operations: N * 192 bits (main loop)
+// Comparisons: N * 64 bits
+// Error messages: 800 * M bits, where M is the number of errors displayed
+// Allocation for result: N * 32 bits
+// Displaying results: N * 40 bits
+// Final sum: 128 + N * 392 + 800 * M bits
