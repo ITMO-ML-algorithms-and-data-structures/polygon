@@ -1,0 +1,5 @@
+# ninja log v6
+0	241	1729193132705101247	CMakeFiles/polygon.dir/imgs/lab0.cpp.o	a5f95118388877e0
+4	42	1729194040076917801	build.ninja	c2e81bab40ddf49e
+1	615	1729194040087917906	CMakeFiles/polygon.dir/imgs/main.cpp.o	b5af2ce06064883a
+617	742	1729194040703923819	polygon	36adf0cb83da2225
