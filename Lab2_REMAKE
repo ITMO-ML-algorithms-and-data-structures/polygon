@@ -1,0 +1,112 @@
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <cassert>
+
+// Функция для подсчета вхождений строк в массиве и замены их на количество вхождений
+void Count_Enters(int size, const std::vector<std::string>& arr, std::vector<short>& res) {
+    std::unordered_map<std::string, int> hesh_enter; // Хэш-таблица для подсчета вхождений
+
+    // Подсчет вхождений строк
+    for (const auto& value : arr) {
+        hesh_enter[value]++; // Увеличиваем счетчик для текущей строки
+        // Время: O(1) для каждой вставки (в среднем случае)
+        // Итоговая сложность этого цикла: O(n), где n - количество строк в arr
+    }
+
+    res.resize(size); // Устанавливаем размер вектора результата
+    // Время: O(n) для выделения памяти для результата
+
+    // Заполнение вектора результата количеством вхождений
+    for (int i = 0; i < size; i++) {
+        res[i] = hesh_enter[arr[i]]; // Заменяем строку на количество её вхождений
+        // Время: O(1) на каждую итерацию, итоговая сложность: O(n)
+    }
+}
+
+void test() {
+    {
+        std::vector<std::string> arr = { "Яблоко", "Банан", "Груша", "Яблоко" };
+        std::vector<short> res;
+        Count_Enters(4, arr, res);
+        std::vector<short> expected = { 2, 1, 1, 2 };
+
+        assert(res == expected);
+    }
+    {
+        std::vector<std::string> arr = { "Апельсин", "Манго", "Киви", "Персик", "Ананас" };
+        std::vector<short> res;
+        Count_Enters(5, arr, res);
+        std::vector<short> expected = { 1, 1, 1, 1, 1 };
+
+        assert(res == expected);
+    }
+    {
+        std::vector<std::string> arr = { "Вишня", "Вишня", "Вишня" };
+        std::vector<short> res;
+        Count_Enters(3, arr, res);
+        std::vector<short> expected = { 3, 3, 3 };
+
+        assert(res == expected);
+    }
+    {
+        std::vector<std::string> arr = {};
+        std::vector<short> res;
+        Count_Enters(0, arr, res);
+        std::vector<short> expected = {}; // Пустой ввод
+
+        assert(res == expected);
+    }
+    {
+        std::vector<std::string> arr = { "Кубинский мандарин" };
+        std::vector<short> res;
+        Count_Enters(1, arr, res);
+        std::vector<short> expected = { 1 };
+
+        assert(res == expected);
+    }
+
+    std::cout << "Все тесты пройдены!" << "\n"; // Вывод сообщения о прохождении тестов
+}
+
+int main() {
+    setlocale(LC_ALL, "RU");
+    int size; // Количество фруктов
+    std::cout << "Введите количество фруктов: ";
+    std::cin >> size;
+
+    if (size < 0) {
+        std::cout << "Количество фруктов не может быть отрицательным!" << std::endl;
+        return 1; // Завершение программы с ошибкой
+    }
+
+    std::vector<short> res; // Вектор для хранения результатов
+    std::vector<std::string> arr(size); // Вектор строк для хранения введенных фруктов
+
+    // Считывание введенных фруктов
+    for (int i = 0; i < size; i++) {
+        std::cout << "Введите фрукт " << (i + 1) << ": ";
+        std::cin >> arr[i];
+        // Время: O(n) для считывания n строк
+    }
+
+    Count_Enters(size, arr, res); // Подсчет вхождений строк
+
+    // Вывод количества вхождений
+    std::cout << "Количество вхождений: ";
+    for (const auto& count : res) {
+        std::cout << count << " ";
+        // Время: O(n) для вывода n результатов
+    }
+    std::cout << "\n";
+
+    test(); // Запуск тестов
+
+    // Сложность алгоритма:
+    // - Худший случай: O(n) — все строки одинаковые, хэш-таблица вставляет строку один раз, подсчет для всех n строк.
+    // - Средний случай: O(n) — строки распределены равномерно, где повторяющиеся строки присутствуют.
+    // - Лучший случай: O(n) — все строки уникальны, хэш-таблица вставляет каждую строку.
+
+    return 0;
+}
