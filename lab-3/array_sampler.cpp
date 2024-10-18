@@ -39,13 +39,13 @@ void assertEqual(int* array, const int array_size, std::vector<int>& sample, int
     if (sample.size() != required_size) condition = false; // Checking size of sample
     
     for (int i = 0; i < sample.size(); i ++) { // Cheking if all elements of sample are in source array
-        int tmp_element = sample.at(i);
+        int tmp_element = sample[i];
         int sample_count = 0;
         int array_count = 0;
 
 
         for (int j = 0; j < sample.size(); j ++) {
-            if (sample.at(j) == tmp_element)
+            if (sample[j] == tmp_element)
                 sample_count ++;
         }
 
