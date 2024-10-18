@@ -1,0 +1,5 @@
+CMakeLists.txt
+lab1.py
+generate_dataset.py
+imgs/
+cmake-build-debug/
