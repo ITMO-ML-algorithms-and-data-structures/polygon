@@ -39,6 +39,7 @@ void test_isomorphic() {
     assert(isIsomorphicStr("1234567890","0987654321"));
     assert(isIsomorphicStr("aMng","xByq"));
     assert(isIsomorphicStr("a041","xByq"));
+    std::cout << "OK";
 
 }
 
@@ -54,6 +55,7 @@ int main() {
             cout << "Не изоморфные" << endl;
         }
     }
+    test_isomorphic();
 
 //    inputFile.close();
 //    test_isomorphic();
