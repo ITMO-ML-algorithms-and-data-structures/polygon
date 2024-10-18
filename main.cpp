@@ -1,97 +1,92 @@
-#include <fstream>
+#include <algorithm>
 #include <iostream>
-#include <unordered_map>
+#include <cstdlib>
+#include <ctime>
 #include <vector>
-#include <string_view>
-#include <cassert> // Для тестов
+#include <cassert>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
-// Функция для обработки строк со значениями
-vector<int> processLine(string_view line, unordered_map<string_view, int> &labels, int &index) {
-    vector<int> result; // Вектор, хранящий индексы меток (размер вектора: 16 байт)
-    size_t start = 0, end; // Два размера типа size_t: 8 байт * 2 = 16 байт
-
-    // разделяем строку по ","
-    while ((end = line.find(',', start)) != string::npos) {
-        // получаем string_view нашей подстроки
-        string_view curString = line.substr(start, end - start);
-
-        // проверяем вхождение нашей строки в map лейблов, если нет, то добавляем и присваиваем новый индекс
-        if (!labels.contains(curString)) {
-            // Если метки нет, добавляем новую метку
-            labels[curString] = index++;
-        }
-        result.push_back(labels[curString]); // Добавляем индекс метки в результат (4 байта на каждый int)
-        start = end + 1;
-    }
-    // тот же самый код, только для самой последней строки с запятой
-    string_view curString = line.substr(start);
-    if (!labels.contains(curString)) {
-        labels[curString] = index++;
-    }
-    result.push_back(labels[curString]);
-
-    return result;
+// Метод для изменения смены двух элементов
+void swap(int *a, int *b) {
+    const int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-// Фукнция для вывода полученного списка из лэйблов
-void printVector(const vector<int> &vec) {
-    cout << "[";
-    for (size_t i = 0; i < vec.size(); i++) {
-        // Проходим по вектору (4 байта на каждый элемент)
-        cout << vec[i];
-        if (i != vec.size() - 1) {
-            cout << ", ";
-        }
+// Алгоритм сэмплирования массива
+vector<int> sample_array(vector<int> arr) {
+    srand(time(nullptr)); // инициализация генератора случайных чисел, O(1) - инициализация генератора случайных чисел
+    int n = arr.size(); // O(1) - получение размера массива
+    for (int i = n - 1; i > 0; i--) {
+        // Цикл выполняется (n-1) раз - O(n)
+        int j = rand() % (i + 1); // O(1) - генерация случайного числа
+
+        swap(&arr[i], &arr[j]); // O(1) - обмен двух элементов массива
     }
-    cout << "]" << endl;
+
+    return arr; // O(1) - возврат результата
+    // Общая сложность: O(n) - один проход по массиву
 }
 
 // Функция для чтения файла
-void readFileAndProcess(const string &filename) {
-    string line; // Строка для чтения из файла: базовое использование 16 байт + динамическая память для данных
-    unordered_map<string_view, int> labels;
-    // string_view чтобы избежать копирование данных
-    vector<int> labelsVector; // наш вектор полученных лэйблов (базовые 16 байт)
-    int index = 0; // Индекс для присвоения меткам: 4 байта
+void readFileAndProcess(const string &filename, vector<int> &arr) {
+    fstream file(filename, fstream::in); // O(1) - открытие файла
 
-    fstream file(filename, fstream::in);
-    // читаем файл построчно
-    while (getline(file, line)) {
-        vector<int> lineIndices = processLine(line, labels, index);
-        labelsVector.insert(labelsVector.end(), lineIndices.begin(), lineIndices.end());
+    if (file.is_open()) {
+        string line;
+        while (getline(file, line)) { // O(m) - где m - количество строк в файле
+            istringstream iss(line); // O(1) - создание потока для строки
+            string number;
+            while (getline(iss, number, ',')) { // O(L) - где L - количество символов в строке
+                if (!number.empty()) {
+                    arr.push_back(stol(number)); // преобразуем строку в число и добавляем в вектор O(1) - добавление числа в вектор (амортизированно)
+                }
+            }
+        }
+        arr = sample_array(arr); // O(n) - перемешивание массива
+
+        file.close(); // O(1) - закрытие файла
     }
-    file.close();
-
-    printVector(labelsVector);
+    // Общая сложность чтения файла: O(m * L + n) - m строк и L символов на строку + перемешивание
 }
 
-// Функция с тестами
-void testProcessLine() {
-    unordered_map<string_view, int> testLabels1;
-    unordered_map<string_view, int> testLabels2;
-    unordered_map<string_view, int> testLabels3;
-    int testIndex1 = 0;
-    int testIndex2 = 0;
-    int testIndex3 = 0;
+// Тесты
+void test_sample_array() {
+    // Тест 1: Проверяем, что перемешивание не меняет размер массива
+    vector<int> arr1 = {1, 2, 3, 4, 5};
+    vector<int> result1 = sample_array(arr1);
+    assert(result1.size() == arr1.size());
 
-    vector<int> result = processLine("Orange,Yellow,Orange", testLabels1, testIndex1);
-    assert((result == vector{0, 1, 0}));
+    // Тест 2: Проверяем, что все элементы присутствуют после перемешивания
+    vector<int> sorted_arr1 = {1, 2, 3, 4, 5};
+    sort(result1.begin(), result1.end());
+    assert(result1 == sorted_arr1);
 
-    result = processLine("Orange,Blue,Grey,Orange,Yellow,Blue", testLabels2, testIndex2);
-    assert((result == vector{0, 1, 2, 0, 3, 1}));
+    // Тест 3: Проверка на массив с одним элементом
+    vector<int> arr2 = {42};
+    vector<int> result2 = sample_array(arr2);
+    assert(result2.size() == 1);
+    assert(result2[0] == 42);
 
-    result = processLine("Blue", testLabels3, testIndex3);
-    assert((result == vector{0}));
-
-    cout << "All tests passed!" << endl;
+    // Тест 4: Проверка на пустой массив
+    vector<int> arr3 = {};
+    vector<int> result3 = sample_array(arr3);
+    assert(result3.size() == 0);
 }
 
 int main() {
-    testProcessLine(); // Запуск тестов
+    test_sample_array();
+    int k;
+    cin >> k; // O(1)
+    vector<int> sampled_arr;
 
-    cout << "File read started" << endl;
-    readFileAndProcess("../dataset.txt");
+    readFileAndProcess("../dataset.txt", sampled_arr); // O(m * L + n) - обработка файла и перемешивание
+
+    for (int i = 0; i < k; i++) {
+        cout << sampled_arr[i] << endl; // O(k) - вывод элементов
+    }
 
     return 0;
 }
