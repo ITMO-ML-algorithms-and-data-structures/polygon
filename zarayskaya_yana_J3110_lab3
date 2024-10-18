@@ -1,0 +1,58 @@
+// lab-3-ZarayskayaYana.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+//
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <cassert>
+
+//функция для подсчета уникальных значений в массиве и замены их на количество вхождений
+//n - количество элементов изначального вектора
+void counting_values(std::vector<std::string>& array) {
+	std::unordered_map <std::string, int> hesh_values; 
+
+	for (int i = 0; i < array.size(); i++) { 
+		hesh_values[array[i]]++; //O(1) - увеличение счетчика
+	}
+	// O(n) - проход по всем элементам вектора и подсчет количества их вхождений
+	for (int i = 0; i < array.size(); i++) { 
+		array[i] = std::to_string(hesh_values[array[i]]); //O(1) - замена значения
+	}
+	// O(n) - проход по всем элементам вектора и замена их значений на количество вхождений
+}
+// Общая временная сложность: O(n)+O(n) = O(n) - в любом случае
+
+void test_counting_values() {
+    std::vector<std::string> test1 = { "Orange", "Red", "Green", "Orange"};
+    std::vector<std::string> expected1 = { "2", "1", "1", "2" };
+    counting_values(test1);
+    assert(test1 == expected1);
+
+    std::vector<std::string> test2 = { };
+    std::vector<std::string> expected2 = { };
+    counting_values(test2);
+    assert(test2 == expected2);
+
+    std::vector<std::string> test3 = { "Orange", "Green", "Res", "Banana"};
+    std::vector<std::string> expected3 = { "1", "1", "1", "1"};
+    counting_values(test3);
+    assert(test3 == expected3);
+
+    std::vector<std::string> test4 = { "Orange" };
+    std::vector<std::string> expected4 = { "1" };
+    counting_values(test4);
+    assert(test4 == expected4);
+
+    std::vector<std::string> test5 = {  "Orange",  "Orange",  "Orange",  "Orange",  "Orange" };
+    std::vector<std::string> expected5 = { "5", "5", "5", "5", "5" };
+    counting_values(test5);
+    assert(test5 == expected5);
+
+    std::cout << "All tests passed!" << std::endl;
+}
+
+int main() {
+    test_counting_values();
+    return 0;
+}
