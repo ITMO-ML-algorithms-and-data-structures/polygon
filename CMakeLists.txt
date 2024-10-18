@@ -6,10 +6,12 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_subdirectory("googletest")
 
-add_executable(PolygonLabelEncoder main.cpp)
+add_executable(PolygonLabelEncoder main.cpp
+        label_encoder.cpp)
 
 # Тесты
-add_executable(PolygonLabelEncoderTests tests.cpp)
+add_executable(PolygonLabelEncoderTests tests.cpp
+        label_encoder.cpp)
 
 # Линкуем Google Test библиотеки с тестами
 target_link_libraries(PolygonLabelEncoderTests gtest_main gtest)
