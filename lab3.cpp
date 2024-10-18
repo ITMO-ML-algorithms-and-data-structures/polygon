@@ -3,6 +3,8 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -28,25 +30,25 @@ vector<int> solution(int size, const vector<int>& arr, int k) {
 
 void test() {
     // Тест 1: Основная функциональность
-    vector<int> input1 = {1, 100, 10, 2};
+    vector<int> input1 = { 1, 100, 10, 2 };
     int k1 = 3;
     vector<int> result1 = solution(input1.size(), input1, k1);
     assert(result1.size() == k1);
 
     // Тест 2: Когда k больше размера массива
-    vector<int> input2 = {1, 2, 3};
+    vector<int> input2 = { 1, 2, 3 };
     int k2 = 5;
     vector<int> result2 = solution(input2.size(), input2, k2);
     assert(result2.size() == input2.size());
 
     // Тест 3: Когда k равно нулю
-    vector<int> input3 = {1, 2, 3, 4, 5};
+    vector<int> input3 = { 1, 2, 3, 4, 5 };
     int k3 = 0;
     vector<int> result3 = solution(input3.size(), input3, k3);
     assert(result3.empty());
 
     // Тест 4: Проверка уникальности результатов
-    vector<int> input4 = {1, 2, 3, 4, 5};
+    vector<int> input4 = { 1, 2, 3, 4, 5 };
     int k4 = 3;
     vector<int> result4 = solution(input4.size(), input4, k4);
     bool unique = true;
@@ -81,12 +83,33 @@ int main() {
     // Пример использования функции
     // Вход
     int size = 4;
-    vector<int> arr = {1, 100, 10, 2};
+    vector<int> arr = { 1, 100, 10, 2 };
     int k = 3;
     // Выход
     vector<int> answer = solution(arr.size(), arr, k);
     for (int i = 0; i < k; i++) {
         cout << answer[i] << " ";
+    }
+    cout << endl;
+
+    // Сгенерированный датасет
+    // Вход
+    vector<int> numbers;
+    ifstream inputFile("random_numbers.txt");
+    string line;
+    while (getline(inputFile, line)) {
+        istringstream iss(line);
+        int number;
+        while (iss >> number) {
+            numbers.push_back(number);
+        }
+    }
+    inputFile.close();
+    int m = 4;
+    // Выход
+    vector<int> answer2 = solution(numbers.size(), numbers, m);
+    for (int i = 0; i < m; i++) {
+        cout << answer2[i] << " ";
     }
     return 0;
 }
