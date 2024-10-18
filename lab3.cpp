@@ -9,21 +9,27 @@
 using namespace std;
 
 vector<int> solution(int size, const vector<int>& arr, int k) {
+    // O(1)
     if (k > size) {
         k = size;
     }
+    // O(N) для выделения памяти
     vector<int> result(k); // + 4*k байт (максимум 4e9 байт)
+    // O(N) для выделения памяти
     vector<int> shuffled = arr; // + 4*size (максимум 4e9 байт)
+    // O(1)
     int j; // + 4 байт
+    // Цикл O(N)
     for (int i = 0; i < size; i++) { // + 4 байт
-        j = rand() % size;
-        swap(shuffled[i], shuffled[j]);
+        j = rand() % size; // O(1)
+        swap(shuffled[i], shuffled[j]); // O(1)
     }
+    // Цикл O(K)<=O(N)
     for (int i = 0; i < k; i++) { // + 4 байт
-        result[i] = shuffled[i];
+        result[i] = shuffled[i]; // O(1)
     }
     return result;
-    // Алгоритмическая сложность по времени: O(size) + O(k < size) <= O(2*size) = O(size) - линейное время
+    // Алгоритмическая сложность по времени: O(size) + O(k <= size) <= O(2*size) = O(size) - линейное время
     // Затраты по дополнительной памяти: 4*size + 4*k + 3*4 = 4*size + 4*k + 12 байт <= 2*4*1e9 + 12 = 8000000012 байт
 }
 
@@ -95,7 +101,7 @@ int main() {
     // Сгенерированный датасет
     // Вход
     vector<int> numbers;
-    ifstream inputFile("random_numbers.txt");
+    ifstream inputFile("C:/Users/b0605/CLionProjects/untitled/random_numbers.txt");
     string line;
     while (getline(inputFile, line)) {
         istringstream iss(line);
