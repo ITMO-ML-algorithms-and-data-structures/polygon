@@ -27,7 +27,7 @@ std::vector<unsigned char> label_encoder(const std::string& path) {    // Фун
     while (file >> inp) {    // Пока в файле еще есть строки:
 
         if (!hash_table.contains(inp))    // Проверяем, не встречали ли мы эту строку раньше
-            hash_table[inp] = next_value++;    // Если нет, то присваиваем ему номер и увеличиваем переменную next_value на 1
+            hash_table[inp] = next_value++;    // Если нет, то присваиваем ей номер и увеличиваем переменную next_value на 1
 
         encoded.push_back(hash_table[inp]);    // Добавляем номер текущей строки в выходной массив
 
@@ -44,12 +44,14 @@ TEST_CASE("testing the label_encoder function") {
     std::string
         path1 = "Tests/label_encoder/test_label_encoder_1.txt",
         path2 = "Tests/label_encoder/test_label_encoder_2.txt",
-        path3 = "Tests/label_encoder/test_label_encoder_3.txt";
+        path3 = "Tests/label_encoder/test_label_encoder_3.txt",
+        path4 = "Tests/label_encoder/test_label_encoder_4.txt";
 
     std::vector<unsigned char>
         res_path1 = {},
         res_path2(441, 1),
-        res_path3;
+        res_path3,
+        res_path4 {1, 2};
 
     for (size_t i = 1; i <= 100; i++)
         res_path3.push_back(i);
@@ -57,5 +59,6 @@ TEST_CASE("testing the label_encoder function") {
     CHECK(label_encoder(path1) == res_path1);
     CHECK(label_encoder(path2) == res_path2);
     CHECK(label_encoder(path3) == res_path3);
+    CHECK(label_encoder(path4) == res_path4);
 
 }
