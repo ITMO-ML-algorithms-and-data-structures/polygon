@@ -19,3 +19,4 @@ target_link_libraries(PolygonLabelEncoderTests gtest_main gtest)
 enable_testing()
 add_test(NAME PolygonLabelEncoderTests COMMAND PolygonLabelEncoderTests)
 
+
