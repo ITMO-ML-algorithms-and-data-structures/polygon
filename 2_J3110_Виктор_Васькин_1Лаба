@@ -1,0 +1,103 @@
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <cassert>
+
+// Функция для подсчета вхождений строк в массиве и замены их на количество вхождений
+void Count_Enters(int size, const std::vector<std::string>& arr, std::vector<short>& res) {
+    std::unordered_map<std::string, int> hesh_enter; // Хэш-таблица для подсчета вхождений
+    // Память: + 8 байт
+
+    // Подсчет вхождений строк
+    for (const auto& value : arr) {
+        hesh_enter[value]++; // Увеличиваем счетчик для текущей строки
+        // Память: + 40 байт
+    }
+
+    res.resize(size); // Устанавливаем размер вектора результата
+    // Память: + 2 байта * size (размер вектора short)
+
+    // Заполнение вектора результата количеством вхождений
+    for (int i = 0; i < size; i++) {
+        res[i] = hesh_enter[arr[i]]; // Заменяем строку на количество её вхождений
+        // Память: + 0 байтов (просто присваивание значения)
+    }
+}
+
+// Функция для проверки результатов тестов
+void assertEqual(const std::vector<short>& actual, const std::vector<short>& expected, const std::string& testName) {
+    if (actual == expected) {
+        std::cout << "[PASSED] " << testName << "\n";
+    }
+    else {
+        std::cout << "[NOT PASSED] " << testName << "\n";
+    }
+}
+
+void test() {
+    std::vector<short> res;
+
+    // Тест 1
+    Count_Enters(4, { "Яблоко", "Банан", "Груша", "Яблоко" }, res);
+    assertEqual(res, { 2, 1, 1, 2 }, "Тест 1: Яблоко, Банан, Груша");
+
+    // Тест 2
+    Count_Enters(5, { "Апельсин", "Манго", "Киви", "Персик", "Ананас" }, res);
+    assertEqual(res, { 1, 1, 1, 1, 1 }, "Тест 2: Апельсин, Манго, Киви");
+
+    // Тест 3
+    Count_Enters(3, { "Вишня", "Вишня", "Вишня" }, res);
+    assertEqual(res, { 3, 3, 3 }, "Тест 3: Вишня");
+
+    // Тест 4
+    Count_Enters(0, {}, res);
+    assertEqual(res, {}, "Тест 4: Пустой ввод");
+
+    // Тест 5
+    Count_Enters(1, { "Кубинский мандарин" }, res);
+    assertEqual(res, { 1 }, "Тест 5: Кубинский мандарин");
+
+    std::cout << "Все тесты пройдены!" << "\n";
+}
+
+int main() {
+    setlocale(LC_ALL, "RU");
+    int size; // + 4 байта
+    std::cout << "Введите количество фруктов: ";
+    std::cin >> size;
+
+    if (size < 0) {
+        std::cout << "Количество фруктов не может быть отрицательным!" << std::endl;
+        return 1; // Завершение программы с ошибкой
+    }
+
+    std::vector<short> res; // + 0 байтов (пока не используется)
+    std::vector<std::string> arr(size); // + 40 байт * size (для хранения строк)
+
+    // Считывание введенных фруктов
+    for (int i = 0; i < size; i++) {
+        std::cout << "Введите фрукт " << (i + 1) << ": ";
+        std::cin >> arr[i];
+        // Память: + 40 байт (для каждой строки)
+    }
+
+    Count_Enters(size, arr, res); // Подсчет вхождений строк
+
+    // Вывод количества вхождений
+    std::cout << "Количество вхождений: ";
+    for (const auto& count : res) {
+        std::cout << count << " ";
+        // Память: + 0 байтов (просто вывод результата)
+    }
+    std::cout << "\n";
+
+    test(); // Запуск тестов
+    return 0;
+}
+
+// Итоговое использование памяти:
+// - Для переменной size: + 4 байта
+// - Для вектора res: + 0 байтов (не используется сразу)
+// - Для вектора arr: + 40 байт * size (память для строк)
+// - Для каждого элемента хэш-таблицы: + 8 байт
