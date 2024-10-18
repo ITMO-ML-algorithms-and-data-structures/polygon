@@ -1,7 +1,7 @@
 #include "iostream"
 #include "cassert"
-
-
+#include "fstream"
+#include "string"
 bool fun(std::string str){ //O(n)
 	//std::string str = "((fqfqwfqwfqw))";
 	int a = 0; //O(1)
@@ -22,11 +22,12 @@ bool fun(std::string str){ //O(n)
 	return false; //O(1)
 }
 int main(){
-	std::cout << fun("(");
-	assert(fun("(()))(") == true);
-	assert(fun("") == false);
-	assert(fun("()()()") == false);
-	assert(fun("((((((((((((((((((((((((") == true);
-	assert(fun(")") == true);
-	assert(fun("a(b)(((a)b)") == true);	
+	std::ifstream f;
+	f.open("dataset.txt");
+	std::string line;
+
+	while (std::getline(f,line)){
+		std::cout << line << " ";	
+		std::cout << fun(line) << "\n";
+	}
 }
