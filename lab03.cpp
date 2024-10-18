@@ -1,7 +1,9 @@
-//удалить дублирующие значения из входного массива ize=4 arr=[1,2,3,1] -> arr=[1,2,3]
+//удалить дублирующие значения из входного массива size=4 arr=[1,2,3,1] -> arr=[1,2,3]
 #include <iostream>
 #include <vector>
 #include <set>
+#include <fstream>
+#include <sstream>
 
 std::vector<long long int> delete_duplicates(const std::vector<long long int> &arr, long long int &size) {
     std::set<long long int> unique_elements;  // память: O(n) в худшем случае
@@ -69,7 +71,32 @@ void test() {
     }
 }
 
+
 int main() {
-    test();
-    return 0;
+    std::cout<<"Tests\n"; // O(1)
+    std::vector<long long int> numbers; //O(1) инициализация вектора
+    std::ifstream inputFile("set_datatest"); //O(1) инициализация файла
+    std::string line; //O(1) инициализация строки
+    if (!inputFile.is_open()) { //O(1)
+        std::cerr << "Error!" << std::endl; //O(1)
+        return 1; // O(1)
+    }
+    while (std::getline(inputFile, line)) { //O(m) m - количество строк в файле
+        std::istringstream iss(line); //O(1)
+        long long int number; //O(1)
+        while (iss >> number) { //O(n) n - количество чисел в файле
+            numbers.push_back(number); //O(1)
+            std::cout<<number<<" "; //O(1)
+        }
+    }
+    std::cout<<'\n'; //O(1)
+    inputFile.close(); //O(1)
+    long long int numbers_size=numbers.size(); //O(1)
+    std::vector<long long int> answer2 = delete_duplicates(numbers,numbers_size); //O(nlogn)
+    for (auto i = 0;i<answer2.size();i++) { //O(k) k - количество уникальных элементов
+        std::cout<<answer2[i]<<" "; //O(1)
+    }
+    std::cout<<'\n'; //O(1)
+    test(); //O(p*nlogn) p - количество тестов
+    return 0; //O(1)
 }
