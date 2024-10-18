@@ -14,6 +14,8 @@ std::vector<long long int> delete_duplicates(const std::vector<long long int> &a
     }
     return ans;
 }
+// Память: O(n)
+// Сложность: O(nlogn)
 
 void test() {
     //1 test base
