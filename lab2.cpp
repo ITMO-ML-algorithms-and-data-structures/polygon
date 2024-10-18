@@ -54,4 +54,14 @@ void testProcessLine() {
 }
 int main() {
     testProcessLine();
+    // получаем значения из файл
+    ifstream MyReadFile("vhod.txt");
+    string str;
+    vector <string> arr;
+    while (getline(MyReadFile, str)) arr.push_back(str);
+    vector<int> result = labelencoder(arr);
+    // записываем данные в файл
+    ofstream MyFile("vihod.txt");
+    for (int i = 0; i < result.size(); i++)MyFile << result[i] << '\n';
+    MyFile.close();
 }
