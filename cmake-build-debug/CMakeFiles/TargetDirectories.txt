@@ -1,0 +1,3 @@
+/home/ktulhuu/CLionProjects/polygon/cmake-build-debug/CMakeFiles/new_target.dir
+/home/ktulhuu/CLionProjects/polygon/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/ktulhuu/CLionProjects/polygon/cmake-build-debug/CMakeFiles/rebuild_cache.dir
