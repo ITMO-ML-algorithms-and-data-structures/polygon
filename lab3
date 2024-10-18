@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <optional>
+#include <string>
+
+// Функция для замены null на среднее значение
+void replaceNull(std::vector<std::optional<int>>& arr) {
+    int sum_arr = 0; //O(1)
+    int count_non_null = 0; //O(1)
+    std::vector<int> null_indices; //O(1)
+
+    // Проходим по массиву и собираем сумму ненулевых значений, индексы null
+    for (int i = 0; i < arr.size(); ++i) { //O(N)
+        if (arr[i].has_value()) {
+            sum_arr += arr[i].value();
+            ++count_non_null;
+        } else {
+            null_indices.push_back(i);
+        }
+    }
+
+    // Если нет ненулевых элементов, возвращаемся
+    if (count_non_null == 0) { //O(1)
+        return;
+    }
+
+    // Вычисляем среднее значение ненулевых элементов
+    double average = static_cast<double>(sum_arr) / count_non_null; //O(1)
+
+    // Замена null на среднее
+    for (int index : null_indices) { // O(K) , K <= N
+        arr[index] = static_cast<int>(average);
+    }
+}
+// В итоге сложность линейная O(N)
+// Глобальные переменные для подсчета пройденных и не пройденных тестов
+int test_passed = 0;
+int test_failed = 0;
+
+// Функция для сравнения двух векторов
+void assertEqual(const std::vector<std::optional<int>>& result,
+                 const std::vector<std::optional<int>>& expected,
+                 const std::string& testName) {
+    bool condition = (result == expected);  // Сравниваем два вектора
+    if (condition) {
+        test_passed++;
+    } else {
+        test_failed++;
+    }
+}
+
+// Отчёт о прохождении тестов
+void report() {
+    std::cout << "\nTotal of tests passed: " << test_passed << "\n";
+    std::cout << "Total of tests failed: " << test_failed << "\n";
+}
+
+int main() {
+    std::vector<std::optional<int>> arr1 = {1, 2, std::nullopt, 4, 5, std::nullopt};
+    replaceNull(arr1);
+    std::vector<std::optional<int>> expected1 = {1, 2, 3, 4, 5, 3};
+    assertEqual(arr1, expected1, "Test 1: Standard Array");
+
+    std::vector<std::optional<int>> arr2 = {std::nullopt, std::nullopt, std::nullopt};
+    replaceNull(arr2);
+    std::vector<std::optional<int>> expected2 = {std::nullopt, std::nullopt, std::nullopt};
+    assertEqual(arr2, expected2, "Test 2: All null");
+
+    std::vector<std::optional<int>> arr3 = {1, 2, 3, 4};
+    replaceNull(arr3);
+    std::vector<std::optional<int>> expected3 = {1, 2, 3, 4};
+    assertEqual(arr3, expected3, "Test 3: Without null");
+
+    std::vector<std::optional<int>> arr4 = {1, 2, std::nullopt, 3};
+    replaceNull(arr4);
+    std::vector<std::optional<int>> expected4 = {1, 2, 2, 3};
+    assertEqual(arr4, expected4, "Test 4: One null");
+
+    std::vector<std::optional<int>> arr5 = {std::nullopt, std::nullopt, 5, std::nullopt};
+    replaceNull(arr5);
+    std::vector<std::optional<int>> expected5 = {5, 5, 5, 5};
+    assertEqual(arr5, expected5, "Test 5: One numeric value");
+
+    // Отчёт о результатах тестов
+    report();
+
+    return 0;
+}
