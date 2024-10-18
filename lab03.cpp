@@ -4,13 +4,13 @@
 #include <set>
 
 std::vector<long long int> delete_duplicates(const std::vector<long long int> &arr, long long int &size) {
-    std::set<long long int> unique_elements;
-    std::vector<long long int> ans;
-    for (auto i = 0; i<size; i++) {
-        unique_elements.insert(arr[i]);
+    std::set<long long int> unique_elements;  // память: O(n) в худшем случае
+    std::vector<long long int> ans; // память: O(n) в худшем случае
+    for (auto i = 0; i<size; i++) { // сложность: O(n) проход по входному массиву
+        unique_elements.insert(arr[i]); // сложность: O(logm) m - кол-во уникальных на момент вставки. Худший случай O(n)
     }
-    for (auto value : unique_elements) {
-        ans.push_back(value);
+    for (auto value : unique_elements) { // сложность: O(m) где m - количество уникальных элементов
+        ans.push_back(value); // сложность: O(1)
     }
     return ans;
 }
