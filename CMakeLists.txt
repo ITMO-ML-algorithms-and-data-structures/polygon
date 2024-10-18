@@ -3,7 +3,6 @@ project(PolygonLabelEncoder)
 
 set(CMAKE_CXX_STANDARD 14)
 
-
 add_subdirectory("googletest")
 
 add_executable(PolygonLabelEncoder main.cpp
@@ -19,3 +18,4 @@ target_link_libraries(PolygonLabelEncoderTests gtest_main gtest)
 # Включаем тестирование
 enable_testing()
 add_test(NAME PolygonLabelEncoderTests COMMAND PolygonLabelEncoderTests)
+

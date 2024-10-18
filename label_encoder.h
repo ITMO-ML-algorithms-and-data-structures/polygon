@@ -9,3 +9,4 @@
 std::vector<int> label_encode(std::ifstream& input);
 
 #endif // POLYGON_LABEL_ENCODER_H
+
