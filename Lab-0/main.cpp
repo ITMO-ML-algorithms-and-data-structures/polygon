@@ -5,13 +5,21 @@
 using namespace std;
 
 set<pair<int, int>> f( vector<int>& e, int s) {
-    set<pair<int, int>> res;
-    for (size_t i = 0; i < e.size(); ++i) {
-        for (size_t j = i + 1; j < e.size(); ++j) {
-            if (e[i] + e[j] == s) {
-                res.insert(make_pair(e[i], e[j]));
-            }
-        }
+
+
+     set<pair<int, int>> res;
+     set<int>numb;
+     for (size_t i = 0; i < e.size(); ++i){
+       numb.insert(e[i]);
+     }
+
+
+      for (size_t i = 0; i < e.size(); ++i) {
+       int numb1= s- e[i];
+       if (numb.count(numb1)){
+         if (res.count(make_pair(numb1,e[i])) == 0){
+             res.insert(make_pair(e[i],numb1));}
+           }
     }
 
     return res;
