@@ -49,12 +49,12 @@ cmake_ninja_workdir = /home/ktulhuu/CLionProjects/polygon/cmake-build-debug/
 
 build cmake_object_order_depends_target_polygon: phony || .
 
-build CMakeFiles/polygon.dir/imgs/main.cpp.o: CXX_COMPILER__polygon_unscanned_Debug /home/ktulhuu/CLionProjects/polygon/imgs/main.cpp || cmake_object_order_depends_target_polygon
-  DEP_FILE = CMakeFiles/polygon.dir/imgs/main.cpp.o.d
+build CMakeFiles/polygon.dir/main.cpp.o: CXX_COMPILER__polygon_unscanned_Debug /home/ktulhuu/CLionProjects/polygon/main.cpp || cmake_object_order_depends_target_polygon
+  DEP_FILE = CMakeFiles/polygon.dir/main.cpp.o.d
   FLAGS = -g -std=gnu++14 -fdiagnostics-color=always
   INCLUDES = -I/home/ktulhuu/CLionProjects/polygon/imgs
   OBJECT_DIR = CMakeFiles/polygon.dir
-  OBJECT_FILE_DIR = CMakeFiles/polygon.dir/imgs
+  OBJECT_FILE_DIR = CMakeFiles/polygon.dir
 
 
 # =============================================================================
@@ -64,7 +64,7 @@ build CMakeFiles/polygon.dir/imgs/main.cpp.o: CXX_COMPILER__polygon_unscanned_De
 #############################################
 # Link the executable polygon
 
-build polygon: CXX_EXECUTABLE_LINKER__polygon_Debug CMakeFiles/polygon.dir/imgs/main.cpp.o
+build polygon: CXX_EXECUTABLE_LINKER__polygon_Debug CMakeFiles/polygon.dir/main.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/polygon.dir
   POST_BUILD = :
