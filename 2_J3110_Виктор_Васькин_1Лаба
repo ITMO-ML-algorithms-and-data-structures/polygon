@@ -25,47 +25,38 @@ void Count_Enters(int size, const std::vector<std::string>& arr, std::vector<sho
     }
 }
 
+// Функция для проверки результатов тестов
+void assertEqual(const std::vector<short>& actual, const std::vector<short>& expected, const std::string& testName) {
+    if (actual == expected) {
+        std::cout << "[PASSED] " << testName << "\n";
+    }
+    else {
+        std::cout << "[NOT PASSED] " << testName << "\n";
+    }
+}
+
 void test() {
-    {
-        std::vector<std::string> arr = { "Яблоко", "Банан", "Груша", "Яблоко" };
-        std::vector<short> res;
-        Count_Enters(4, arr, res);
-        std::vector<short> expected = { 2, 1, 1, 2 };
+    std::vector<short> res;
 
-        assert(res == expected);
-    }
-    {
-        std::vector<std::string> arr = { "Апельсин", "Манго", "Киви", "Персик", "Ананас" };
-        std::vector<short> res;
-        Count_Enters(5, arr, res);
-        std::vector<short> expected = { 1, 1, 1, 1, 1 };
+    // Тест 1
+    Count_Enters(4, { "Яблоко", "Банан", "Груша", "Яблоко" }, res);
+    assertEqual(res, { 2, 1, 1, 2 }, "Тест 1: Яблоко, Банан, Груша");
 
-        assert(res == expected);
-    }
-    {
-        std::vector<std::string> arr = { "Вишня", "Вишня", "Вишня" };
-        std::vector<short> res;
-        Count_Enters(3, arr, res);
-        std::vector<short> expected = { 3, 3, 3 };
+    // Тест 2
+    Count_Enters(5, { "Апельсин", "Манго", "Киви", "Персик", "Ананас" }, res);
+    assertEqual(res, { 1, 1, 1, 1, 1 }, "Тест 2: Апельсин, Манго, Киви");
 
-        assert(res == expected);
-    }
-    {
-        std::vector<std::string> arr = {};
-        std::vector<short> res;
-        Count_Enters(0, arr, res);
-        std::vector<short> expected = {}; // Пустой ввод
+    // Тест 3
+    Count_Enters(3, { "Вишня", "Вишня", "Вишня" }, res);
+    assertEqual(res, { 3, 3, 3 }, "Тест 3: Вишня");
 
-        assert(res == expected);
-    }
-    {
-        std::vector<std::string> arr = { "Кубинский мандарин" };
-        std::vector<short> res;
-        Count_Enters(1, arr, res);
-        std::vector<short> expected = { 1 };
+    // Тест 4
+    Count_Enters(0, {}, res);
+    assertEqual(res, {}, "Тест 4: Пустой ввод");
 
-        assert(res == expected);
-    }
+    // Тест 5
+    Count_Enters(1, { "Кубинский мандарин" }, res);
+    assertEqual(res, { 1 }, "Тест 5: Кубинский мандарин");
 
     std::cout << "Все тесты пройдены!" << "\n";
 }
