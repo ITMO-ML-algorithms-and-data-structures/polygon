@@ -1,0 +1,55 @@
+# Visual Studio-specific files
+.vs/
+*.vcxproj.user
+*.vcxproj.filters
+*.suo
+*.user
+*.opendb
+*.VC.db
+*.VC.opendb
+
+# Build directories and generated files
+out/
+build/
+Debug/
+Release/
+x64/
+*.obj
+*.exe
+*.dll
+*.lib
+*.pdb
+*.exp
+*.log
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# OS-generated files
+Thumbs.db
+.DS_Store
+*.tmp
+*.swp
+
+# Backup files
+*.bak
+*.old
+*.orig
+*.save
+
+# IDE configurations and miscellaneous
+.idea/
+.vscode/
+*.code-workspace
+
+# Environment files
+.env
+*.env
+
+# Temporary files
+*.tmp
+*.temp
+*.log
