@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include "label_encoder.h"
+
 
 
 int main() {
