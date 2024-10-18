@@ -25,3 +25,4 @@ std::vector<int> label_encode(std::ifstream& input) {
 
     return T;
 }
+// memory: 24+32+32*n +24+56+4+5*кол-во уник. значений + 4*k =140 + 32*n + 5*кол-во уник.значений + 4*k
