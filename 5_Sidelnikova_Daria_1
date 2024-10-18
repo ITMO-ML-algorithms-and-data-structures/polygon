@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <map>// библиотека для работы с словарями
+#include <fstream>// библиотека для работы с файлами
+#include <cassert>// библиотека для работы с assert
+
+using namespace std;
+vector <int> function(int n, vector <string>& mass) {
+    map <string, int> koll_words;// создаем словарь (ключ -> значение) ;
+     // вес: 24 (словарь) + 4 * n
+    for (int i = 0; i < n; i += 1){
+        string word = mass[i];// 32 байта * n (где n - кол-во строк во входном файле)
+        koll_words[word] += 1; // по ключу приплюсовываем кол-во таких слов
+    }
+    vector <int> res;
+
+    for (int i = 0; i < n; i += 1){
+        res.push_back(koll_words[mass[i]]);
+    } 
+    return res;
+} 
+void test1() {
+    vector <string> test1  = {};
+    vector <int> res1 = {};
+    vector <string> test2  = {"Orenge", "Red", "Green", "Orenge", "Orenge", "Red", "Green", "Orenge"};
+    vector <int> res2 = {4, 2, 2, 4, 4, 2, 2, 4};
+    vector <string> test3 = {"Green", "Green", "Green", "Green", "Green", "Green"};
+    vector <int> res3 = {6, 6, 6, 6, 6, 6};
+    assert(function(6, test3) == res3);
+    assert(function(8, test2) == res2);
+    assert(function(0, test1) == res1);
+}
+
+
+int main() {
+    test1();
+
+    ifstream fin("test0.txt"); // ~ 152 байтов
+
+    int n; fin >> n; // создаем и считываем переменную отвечающую за кол-во элементов в vector
+    vector <string> mass(n); // создаем вектор наших слов 
+    // вес: 24 (вектор) + 4 * n, где n - кол-во строк во входном файле
+    for (int i = 0; i < n; i += 1){
+        fin >> mass[i]; // заполняем вектор
+    } // вес: 24 (вектор) + n * (4 байта + L), L - длина строки
+
+    vector <int> res = function(n, mass);
+    for (int i = 0; i < n; i += 1){
+        cout << res[i] << " ";
+    }
+    return 0;
+}
