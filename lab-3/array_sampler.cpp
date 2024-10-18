@@ -6,7 +6,7 @@
 #include <cassert>
 #include <string>
 
-std::vector<int> get_array_sample(int* array_to_sample, int array_size, int sample_size) {
+std::vector<int> get_array_sample(int* array_to_sample, const int array_size, const int sample_size) {
     // Сэмплирование массива
     std::vector<int> sample(sample_size); // O(K) для выделения памяти
     std::vector<int> available_index(array_size); // О(N) для выделения памяти
@@ -77,16 +77,21 @@ void report() {
 int main() {
     int arr[10000];
 
-    for(int i = 0; i < 10000; i ++) {
+    for (int i = 0; i < 10000; i ++) {
         arr[i] = i;
     }
 
     int arr_len = sizeof(arr) / sizeof(arr[0]);
 
-    for(int k = 1; k <= 10; k ++) {
+    for (int k = 1; k <= 10; k ++) {
         std::vector<int> res_sample = get_array_sample(arr, 10000, k);
 
         assertEqual(arr, arr_len, res_sample, k, "Test: " + std::to_string(k));
+
+        for (auto i : res_sample)
+            std::cout << i << ' ';
+
+        std::cout << '\n';
     }
 
     report();
