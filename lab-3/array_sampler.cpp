@@ -8,7 +8,7 @@
 
 std::vector<int> get_array_sample(int* array_to_sample, const int array_size, const int sample_size) {
     // Сэмплирование массива
-    std::vector<int> sample(sample_size); // O(K) для выделения памяти
+    std::vector<int> sample(sample_size); // O(K) для выделения памяти (в худшем случае О(N))
     std::vector<int> available_index(array_size); // О(N) для выделения памяти
 
     for (int i = 0; i < array_size; i ++) {
@@ -22,6 +22,7 @@ std::vector<int> get_array_sample(int* array_to_sample, const int array_size, co
     for (int i = 0; i < sample_size; i ++) {
         int random_index = i; // О(1) * K - присваивание
         sample[i] = array_to_sample[available_index[random_index]]; // (О(1) + O(1) + O(1)) * K - два взятия по индексу и одно присваивание
+        // в худшем случае * N
     }
 
     // Сложность алгоритма составляет:
