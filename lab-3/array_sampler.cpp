@@ -17,7 +17,7 @@ std::vector<int> get_array_sample(int* array_to_sample, const int array_size, co
 
     unsigned seed = std::chrono::high_resolution_clock::now().time_since_epoch().count(); // O(1) - взятие текущего времени
     std::srand(static_cast<unsigned>(seed)); // О(1) - передача seed в генератор
-    std::random_shuffle(available_index.begin(), available_index.end()); // О(N) - перемещивание значений в векторе
+    std::random_shuffle(available_index.begin(), available_index.end()); // О(N) - перемешивание значений в векторе
 
     for (int i = 0; i < sample_size; i ++) {
         int random_index = i; // О(1) * K - присваивание
@@ -36,8 +36,11 @@ int test_failed = 0;
 void assertEqual(int* array, const int array_size, std::vector<int>& sample, int required_size, const std::string& testName) {
     bool condition = true;
 
-    if (sample.size() != required_size) condition = false; // Checking size of sample
-    
+    if (sample.size() != required_size) { // Checking size of sample
+        condition = false;
+        std::cout << "Wrong sample size\n"; 
+    }
+
     for (int i = 0; i < sample.size(); i ++) { // Cheking if all elements of sample are in source array
         int tmp_element = sample[i];
         int sample_count = 0;
@@ -56,6 +59,7 @@ void assertEqual(int* array, const int array_size, std::vector<int>& sample, int
 
         if (sample_count > array_count) {
             condition = false;
+            std::cout << "Wrong number of element containing\n"; 
             break;
         }
     }
