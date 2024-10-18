@@ -20,6 +20,7 @@ jobs:
       run: sudo apt-get install g++
 
     - name: Compile C++ code
-      run: g++ main.cpp -o main
+      run: g++ main.cpp label_encoder.cpp -o PolygonLabelEncoderTests
+
 
    
