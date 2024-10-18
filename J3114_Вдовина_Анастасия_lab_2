@@ -2,8 +2,11 @@
 #include <string>
 #include <map>
 #include <fstream>
+#include <cassert>
 
 using namespace std;
+
+
 
 bool isIsomorphicStr(const string& str1, const string& str2) {
     if (str1.length() != str2.length()) return false;
@@ -26,9 +29,22 @@ bool isIsomorphicStr(const string& str1, const string& str2) {
     return true;
 }
 
+void test_isomorphic() {
+    assert(isIsomorphicStr("aba","bab"));
+    assert(!isIsomorphicStr("acd","xxs"));
+    assert(!isIsomorphicStr("aaaaaaaaaa","bbbbbbbbb"));
+    assert(isIsomorphicStr("ababababab", "bababababa"));
+    assert(isIsomorphicStr("x031bd","c451nf"));
+    assert(!isIsomorphicStr("аьфф","цощщ"));
+    assert(isIsomorphicStr("1234567890","0987654321"));
+    assert(isIsomorphicStr("aMng","xByq"));
+    assert(isIsomorphicStr("a041","xByq"));
+
+}
+
 int main() {
     ifstream inputFile("dataset.txt");
-    
+
     string word1, word2;
     while (inputFile >> word1 >> word2) {
         cout << word1 << " и " << word2 << " - ";
@@ -39,6 +55,11 @@ int main() {
         }
     }
 
-    inputFile.close();
-    return 0;
+//    inputFile.close();
+//    test_isomorphic();
+//    string str1, str2;
+
+//    cin >> str1 >> str2;
+//    cout << isIsomorphicStr(str1, str2) << endl;
+//    return 0;
 }
