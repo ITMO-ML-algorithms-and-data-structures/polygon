@@ -12,7 +12,7 @@ void create_test_file(const std::string& filename, const std::string& content) {
 }
 
 // Тест для базового случая
-TEST(LabelEncoderTest, BasicEncoding) {
+TEST(PolygonLabelEncoderTests, BasicEncoding) {
     create_test_file("test_input_basic.txt", "apple\nbanana\napple\norange\nbanana\n");
 
     std::ifstream inputFile("test_input_basic.txt");
@@ -22,7 +22,7 @@ TEST(LabelEncoderTest, BasicEncoding) {
 }
 
 // Тест для уникальных строк
-TEST(LabelEncoderTest, UniqueStrings) {
+TEST(PolygonLabelEncoderTests, UniqueStrings) {
     create_test_file("test_input_unique.txt", "cat\ndog\nfish\n");
 
     std::ifstream inputFile("test_input_unique.txt");
@@ -32,7 +32,7 @@ TEST(LabelEncoderTest, UniqueStrings) {
 }
 
 // Тест для пустого ввода
-TEST(LabelEncoderTest, EmptyInput) {
+TEST(PolygonLabelEncoderTests, EmptyInput) {
     create_test_file("test_input_empty.txt", "");
 
     std::ifstream inputFile("test_input_empty.txt");
@@ -42,7 +42,7 @@ TEST(LabelEncoderTest, EmptyInput) {
 }
 
 // Тест для одной строки
-TEST(LabelEncoderTest, SingleInput) {
+TEST(PolygonLabelEncoderTests, SingleInput) {
     create_test_file("test_input_single.txt", "hello\n");
 
     std::ifstream inputFile("test_input_single.txt");
@@ -52,7 +52,7 @@ TEST(LabelEncoderTest, SingleInput) {
 }
 
 // Тест для одинаковых строк
-TEST(LabelEncoderTest, RepeatedStrings) {
+TEST(PolygonLabelEncoderTests, RepeatedStrings) {
     create_test_file("test_input_repeated.txt", "hello\nhello\nhello\nhello\n");
 
     std::ifstream inputFile("test_input_repeated.txt");

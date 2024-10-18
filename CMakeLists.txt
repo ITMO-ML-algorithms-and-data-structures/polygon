@@ -1,20 +1,19 @@
-cmake_minimum_required(VERSION 3.29)
-project(polygon)
+cmake_minimum_required(VERSION 3.21)
+project(PolygonLabelEncoder)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(LabelEncoder main.cpp)
 
+add_subdirectory("googletest")
 
-find_package(GTest REQUIRED)
+add_executable(PolygonLabelEncoder main.cpp)
 
-add_executable(LabelEncoderTests tests.cpp)
+# Тесты
+add_executable(PolygonLabelEncoderTests tests.cpp)
 
+# Линкуем Google Test библиотеки с тестами
+target_link_libraries(PolygonLabelEncoderTests gtest_main gtest)
 
-
-target_link_libraries(LabelEncoderTests GTest::GTest GTest::Main pthread)
-
+# Включаем тестирование
 enable_testing()
-add_test(NAME LabelEncoderTests COMMAND LabelEncoderTests)
-
-
+add_test(NAME PolygonLabelEncoderTests COMMAND PolygonLabelEncoderTests)
