@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cstdlib>  // For rand() and srand()
-#include <ctime>    // For time()
 #include <vector>
 #include <algorithm> // For std::shuffle
 #include <chrono>
-#include <thread>
+#include <cassert>
+#include <string>
 
 std::vector<int> get_array_sample(int* array_to_sample, int array_size, int sample_size) {
     // Сэмплирование массива
@@ -30,30 +30,66 @@ std::vector<int> get_array_sample(int* array_to_sample, int array_size, int samp
     return sample;
 }
 
+int test_passed = 0;
+int test_failed = 0;
 
-void test() {
-    int arr1[10000];
+void assertEqual(int* array, const int array_size, std::vector<int>& sample, int required_size, const std::string& testName) {
+    bool condition = true;
 
-    for(int i = 0; i < 10000; i ++) {
-        arr1[i] = i;
-    }
+    if (sample.size() != required_size) condition = false; // Checking size of sample
+    
+    for (int i = 0; i < sample.size(); i ++) { // Cheking if all elements of sample are in source array
+        int tmp_element = sample.at(i);
+        int sample_count = 0;
+        int array_count = 0;
 
-    for(int k = 1; k <= 10; k ++) {
-        std::vector<int> res_sample = get_array_sample(arr1, 10000, k);
 
-
-        for(auto elem : res_sample) {
-            std::cout << elem << " ";
+        for (int j = 0; j < sample.size(); j ++) {
+            if (sample.at(j) == tmp_element)
+                sample_count ++;
         }
 
-        std::cout << std::endl;
-    }
+        for (int k = 0; k < array_size; k ++) {
+            if (array[k] == tmp_element)
+                array_count ++;
+        }
 
+        if (sample_count > array_count) {
+            condition = false;
+            break;
+        }
+    }
+    
+    if (condition) {
+        std::cout << "[PASSED]" << testName << "\n";
+        test_passed++;
+    } else {
+        std::cout << "[NOT PASSED]" << testName << "\n";
+        test_failed++;
+    }
 }
 
+void report() {
+    std::cout << "\nTests passed: " << test_passed << "\n";
+    std::cout << "\nTests not passed: " << test_failed << "\n";
+}
 
 int main() {
-    test();
+    int arr[10000];
+
+    for(int i = 0; i < 10000; i ++) {
+        arr[i] = i;
+    }
+
+    int arr_len = sizeof(arr) / sizeof(arr[0]);
+
+    for(int k = 1; k <= 10; k ++) {
+        std::vector<int> res_sample = get_array_sample(arr, 10000, k);
+
+        assertEqual(arr, arr_len, res_sample, k, "Test: " + std::to_string(k));
+    }
+
+    report();
 
     return 0;
 }
