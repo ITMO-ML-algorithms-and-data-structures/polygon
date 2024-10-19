@@ -1,8 +1,11 @@
-#include "variant_1_tests.h"
+// В Count_vectorizer.h два метода. Один для вектора,а второй для файла.
+// В Count_vectorizer_tests.h там 4 теста для разных проверок и пятая проверка на тест лимитов.
+// для генерации использовал пятого теста использовал
+// python generate_dataset.py --mode text --max-length 100 --num-rows 10000 --charset default --enter 1 --min-unique 100 --output-file dataset.txt --delimiter \n
+#include "Count_vectorizer_tests.h"
+using namespace std;
 int main () {
-    Variant_1_tests::palindrome_test();
-    Variant_1_tests::binary_search_test();
-    Variant_1_tests::is_massive_sorted_test();
-    Variant_1_tests::sum_div_by_3_test();
-    Variant_1_tests::submassives_of_S_test();
+  Count_vectorize_tests::test1();
+  // Count_vectorize_tests::tests();
+  // Count_vectorize_tests::test6();
 }
