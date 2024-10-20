@@ -6,7 +6,9 @@
 #include <cassert>
 #include <string>
 
-std::vector<int> get_array_sample(int* array_to_sample, const int array_size, const int sample_size) {
+//TODO: optimisation and pr
+
+std::vector<int> get_array_sample(int* array_to_sample, const int& array_size, const int& sample_size) {
     // Сэмплирование массива
     std::vector<int> sample(sample_size); // O(K) для выделения памяти (в худшем случае О(N))
     std::vector<int> available_index(array_size); // О(N) для выделения памяти
@@ -34,37 +36,44 @@ std::vector<int> get_array_sample(int* array_to_sample, const int array_size, co
 int test_passed = 0;
 int test_failed = 0;
 
-void assertEqual(int* array, const int array_size, std::vector<int>& sample, int required_size, const std::string& testName) {
-    bool condition = true;
+void assertEqual(int* array, const int& array_size, std::vector<int>& sample, const int& required_size, const std::string& testName) {
+    bool condition = true; // O(1) - присваивание
 
-    if (sample.size() != required_size) { // Checking size of sample
-        condition = false;
+    // Checking size of sample
+    if (sample.size() != required_size) { // O(1) - сравнение
+        condition = false; // O(1) - присваивание
         std::cout << "Wrong sample size\n"; 
     }
 
-    for (int i = 0; i < sample.size(); i ++) { // Cheking if all elements of sample are in source array
-        int tmp_element = sample[i];
-        int sample_count = 0;
-        int array_count = 0;
+    // Cheking if all elements of sample are in source array
+    for (int i = 0; i < sample.size(); i ++) {
+        int tmp_element = sample[i]; // (O(1) + O(1)) * K - присваивание и взятие по индексу
+        int sample_count = 0; // O(1) * K - присваивание
+        int array_count = 0; // O(1) * K - присваивание
 
 
         for (int j = 0; j < sample.size(); j ++) {
-            if (sample[j] == tmp_element)
-                sample_count ++;
+            if (sample[j] == tmp_element) // (O(1) + O(1)) * K * K - взятие по индексу и сравнение
+                sample_count ++; // (O(1) + O(1)) * K * K - взятие значения и присваивание 
         }
 
         for (int k = 0; k < array_size; k ++) {
-            if (array[k] == tmp_element)
-                array_count ++;
+            if (array[k] == tmp_element) // (O(1) + O(1)) * K * N - взятие по индексу и сравнение
+                array_count ++; // (O(1) + O(1)) * K * N - взятие значения и присваивание 
         }
 
-        if (sample_count > array_count) {
-            condition = false;
+        if (sample_count > array_count) { // O(1) * K - сравнение
+            condition = false; // O(1) * K - присваивание
             std::cout << "Wrong number of element containing\n"; 
             break;
         }
     }
-    
+
+    // Сложность тестов составляет:
+    // O(N^2) - в худшем случае
+    // O(N * K) - в среднем случае, где K равномерно распределено от 1 до N
+    // O(N) - в лучшем случае, когда K = 1
+
     if (condition) {
         std::cout << "[PASSED]" << testName << "\n";
         test_passed++;
