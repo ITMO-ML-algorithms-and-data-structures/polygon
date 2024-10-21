@@ -47,9 +47,9 @@ int main() {
     vector<long long> exp1 = {12345, 52341, 76452, 98989};
     test(res1, exp1);
 
-    vector<long long> res3 = solution("test3.txt");
-    vector<long long> exp3 = {};
-    test(res3, exp3);
+    vector<long long> res2 = solution("test2.txt");
+    vector<long long> exp2 = {};
+    test(res2, exp2);
     
 }
 
