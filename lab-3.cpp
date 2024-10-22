@@ -1,13 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <ctime>
-#include <cstdlib>  // Для rand() и srand()
+#include <ctime> // time()
 
 using namespace std;
 
 // Извлекаем dataset в vector
-vector<int> read_file(const string& filename) {
+vector<int> read_file(const string filename) {
     vector<int> mas;
     ifstream in(filename);  // Открываем файл для чтения
     int number;
@@ -20,16 +19,14 @@ vector<int> read_file(const string& filename) {
 }
 
 // Функция для перемешивания вектора
-void shuffle_vector(vector<int>& mas) {
-    srand(static_cast<unsigned>(time(0)));  // Инициализируем генератор случайных чисел с помощью времени
-
+void shuffle_vector(vector<int>& a) {
     // Перемешивание с помощью прохода по всем элементам
-    for (size_t i = 0; i < mas.size(); ++i) { // O(N)
+    for (int i = 0; i < a.size(); ++i) { // O(N)
         // Генерируем случайный индекс для обмена в диапазоне от i до конца массива
-        size_t j = i + rand() % (mas.size() - i);
+        int j = i + rand() * time(0) % (a.size() - i);
 
         // Меняем местами элемент на позиции i и элемент на позиции j
-        swap(mas[i], mas[j]);
+        swap(a[i], a[j]);
     }
 }
 
@@ -41,7 +38,7 @@ int main() {
     shuffle_vector(mas);
 
     // Выводим вектор после перемешивания
-    for (int num : mas) {
+    for (int num: mas) {
         cout << num << " ";
     }
     cout << endl;
