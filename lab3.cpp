@@ -15,6 +15,7 @@ void find_min_max(ifstream &inputFile, float &mini, float &maxi, vector<int> &nu
     }
 }
 
+
 void normalize_and_print(const vector<int> &numbers, float mini, float maxi) {
     cout << scientific << setprecision(1); // o(1)
     int count = 0; // o(1)
