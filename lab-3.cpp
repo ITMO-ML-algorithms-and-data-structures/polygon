@@ -1,67 +1,99 @@
-//Подсчет значений в массиве. Hard. Кирпо Тимофей Сергеевич. ИСУ 466167
+//Удаление дубликата из массива [medium] Кирпо Тимофей 466167
 
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <cassert>
+#include <stdlib.h>
+#include <fstream>
+#include <string>
 
-std::vector<int> mass_count(int size, std::vector<std::string> names) { //4 байта + 24 байта + Y байт * X байт(Y - количество элементов)
-    std::unordered_map<std::string, int> counts; // 32 байта + Y байт * X байт
 
-    //Считаем элементы с помощью хэш-таблицы
-    for (int i = 0; i < size; i++) {
-        counts[names[i]]++;
+
+
+
+std::vector<int> fileinput(std::string filename) {
+    std::vector<int> numbers;
+    std::string project_path = "../";
+    filename = project_path + filename;
+    std::ifstream input_file(filename);
+    std::string a;
+    int n;
+
+    if (!input_file.is_open()) {
+        std::cout << "Error: failed to open file " << filename << std::endl;
+        return numbers;
     }
 
-    //Создаем result и добавляем туда подсчитанные элементы
-    std::vector<int> result(size); //24 байта + Y байт * 4 байта(Y - количество элементов)
-    for (int i = 0; i < size; i++) {
-        result[i] = counts[names[i]];
+    while (input_file >> a) {
+        n = atoi(a.c_str());
+        numbers.push_back(n);
     }
+
+    input_file.close();
+    return numbers;
+}
+
+void filewrite(std::vector<int> numbers, std::string filename) {
+    std::string project_path = "../";
+    filename = project_path + filename;
+    std::ofstream output_file(filename);
+    for(int number : numbers) {
+        output_file << number << std::endl;
+    }
+    output_file.close();
+}
+
+
+std::vector<int> del_double(std::vector<int> names) {
+    //Создание хэш таблицы для подсчета повторений
+    std::unordered_map<int, int> count_repeat; //O(1) выделение памяти
+
+    //Взятие размера входного значения
+    int size = names.size(); //O(1) взятие ращмера массива
+
+    //Подсчет повторений и запись в хэш таблицу
+    for (int i = 0; i < size; i++) { //O(n)
+        count_repeat[names[i]]++; //O(1) * n добавление элемемента повторяется n раз
+    }
+
+    //Создаем вектор для результата
+    std::vector<int> result; //O(1) выделение памяти
+
+    //Проходимся по элементам names и удаляем повторения
+    for (int i = 0; i < size; i++) { //O(n)
+        if (count_repeat[names[i]] > 1) {
+            count_repeat[names[i]]--; //O(1) * n вычитание из хэш таблицы n раз
+        }else {
+            result.push_back(names[i]); //O(1) * n добавление элемента в вектор
+        }
+    }
+
     return result;
 }
 
 void tests() {
-    if (mass_count(5, {"1", "2", "3", "1", "2"}) == std::vector<int>{2, 2, 1, 2, 2}) {
-        std::cout << "Test1 passed" << std::endl;
-    }else {
-        std::cout << "Test1 failed" << std::endl;
-    }
-
-    if (mass_count(2, {"1", "2"}) == std::vector<int>{1, 1}) {
-        std::cout << "Test2 passed" << std::endl;
-    }else {
-        std::cout << "Test2 failed" << std::endl;
-    }
-
-    if (mass_count(2, {"1", "1"}) == std::vector<int>{2, 2}) {
-        std::cout << "Test3 passed" << std::endl;
-    }else {
-        std::cout << "Test3 failed" << std::endl;
-    }
-
-    if (mass_count(5, {"1", "1", "1", "1", "1"}) == std::vector<int>{5, 5, 5, 5, 5}) {
-        std::cout << "Test4 passed" << std::endl;
-    }else {
-        std::cout << "Test4 failed" << std::endl;
-    }
-
-    if (mass_count(5, {"1", "2", "3", "4", "5"}) == std::vector<int>{1, 1, 1, 1, 1}) {
-        std::cout << "Test5 passed" << std::endl;
-    }else {
-        std::cout << "Test5 failed" << std::endl;
-    }
-    std::vector<int> vec = {};
-    assert(mass_count(5, {}) == vec);
+    // std::vector<int> vec = fileinput();
+    // for (int i = 0; i < vec.size(); i++){
+    //     std::cout << vec[i] << std::endl;
+    // }
+    // std::vector<int> vec = {1,2,3,4};
+    // assert(del_double({1, 2 ,3 ,4}) == vec);
+    // vec = {2,3,1};
+    // assert(del_double({1, 1, 2 ,3 ,1}) == vec);
+    // vec = {1};
+    // assert(del_double({1, 1, 1}) == vec);
+    // vec = {1,2};
+    // assert(del_double({1, 2, 1, 2, 1, 2}) == vec);
+    // vec = {};
+    // assert(del_double({}) == vec);
 }
 
 int main() {
-    tests();
+    filewrite(del_double(fileinput("million_nums.txt")), "output.txt");
     return 0;
 }
 
-
-//Итого память: 4 байта + 24 байта + Y байт * X байт + 32 байта + Y байт * X байт + 24 байта + Y байт * 4 байта =
-// = 28 + XY + 32 + XY + 24 + 4Y = 84 + 2XY + 4Y байт
-//X - количество символов в строке
-//Y - количество элементов
+//Сложность алгоритма составляет:
+//O(N) - в худшем и среднем случае
+//O(1) - в лучшем случае
