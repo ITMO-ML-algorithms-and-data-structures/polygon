@@ -1,0 +1,105 @@
+#include <iostream>
+#include <string>
+#include <random>
+#include <vector>
+#include <unordered_map>
+#include <fstream>
+#include <list>
+#include <ctime>
+using namespace std;
+unordered_map<int, int> expectedMap;
+// в expectedMap будем хранить map с исходными значениями (это нужно для тестов)
+bool checkSolve(vector<int> &elements)
+{ // функция тестирования
+    unordered_map<int, int> inputMap;
+    for(int i = 0; i < elements.size(); i++)
+    {
+        int el = elements[i];
+        inputMap[el] = 1 ? inputMap.count(el) == 0 : inputMap[el] + 1;
+
+        if (expectedMap.find(el) == expectedMap.end() || inputMap[el] > expectedMap[el])
+        { // если в конечном массиве получили элемент, которого не было в исходном, или кол-во
+            // вхождений элемента el в конечном массиве больше, чем в исходном, то возвращаем false
+            return false;
+        }
+    }
+    return true;
+}
+int getKey(list<int>& keys, int& index)
+{
+    auto key = next(keys.begin(), index);
+    return *key;
+}
+list<int>::iterator getIterator(list<int>& keys, int& index)
+{ 
+    auto it = next(keys.begin(), index); // итератор по индексу
+    return it;
+}
+void solve(fstream& inputFile, int index)
+{
+    int size, k;
+    fstream outputFile;
+    inputFile >> size >> k;
+    unordered_map<int, int> mp;
+    list<int> keys;
+    while (inputFile)
+    {
+        int el;
+        inputFile >> el;
+        if (mp.count(el) == 0)
+        {
+            mp[el] = 1;
+            keys.push_back(el);
+        }
+        else
+        {
+            mp[el]++;
+        }
+    }
+    expectedMap = mp; // перезаписываем expectedMap для тестирования
+    vector<int> outputVector(k);
+    for (int i = 0; i < k; i++)
+    {
+        int random = rand() % keys.size();
+        int key = getKey(keys, random);
+        outputVector[i] = key;
+        mp[key]--;
+        if (mp[key] <= 0)
+        {
+            keys.erase(getIterator(keys, random)); // в худшем случае мы удалим n ключей
+        }
+    } // O(k + n) - худший случай
+    outputFile.open("C:\\Users\\Huawei\\Desktop\\output" + to_string(index) + ".txt");
+    for (int i : outputVector)
+    {
+        outputFile << i << " ";
+    }
+    if (checkSolve(outputVector))
+    {
+        cout << "Test " + to_string(index) + " passed" << '\n';
+    }
+    else
+    {
+        cerr << "ATTENTION: Test " + to_string(index) + " is not passed" << '\n';
+    }
+    outputFile.close();
+    return;
+}// Время работы алгоритма: O(k + n)
+
+int main()
+{
+    srand((int)time(0));
+    vector<string> inputPathes =
+    {
+        "C:\\Users\\Huawei\\Desktop\\input1.txt",
+        "C:\\Users\\Huawei\\Desktop\\input2.txt",
+        "C:\\Users\\Huawei\\Desktop\\input1e9.txt",
+    }; // вставьте ваш путь к файлам
+    for (int i = 0; i < 3; i++)
+    {
+        fstream input;
+        input.open(inputPathes[i]);
+        solve(input, i + 1);
+    }
+    
+}
