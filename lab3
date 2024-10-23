@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <cassert>
+
+//Создаём функцию для удаления дубликатов
+std::vector<int> delete_extra_number(std::vector<int> arr) {
+    std::vector<int> sorted_arr;//создаём массив в который будем складывать уникальные числа
+    std::unordered_map<int, bool> entering;
+
+    for (int i = 0; i < arr.size(); i++) {
+        if (entering.count(arr[i]) == 0) {
+            entering.insert(std::make_pair(arr[i], true));
+            sorted_arr.push_back(arr[i]);
+        }
+    }
+
+    return sorted_arr;
+}
+
+int main() {
+
+    // Базовый случай
+    std::vector<int> test1 = { 1, 1, 2, 3, 2, 4, 4, 4, 1 };
+    std::vector<int> result1 = { 1, 2, 3, 4 };
+    assert(delete_extra_number(test1) == result1);
+
+    // Без дубликатов
+    std::vector<int> test2 = { 1, 2, 3 };
+    std::vector<int> result2 = { 1, 2, 3 };
+    assert(delete_extra_number(test2) == result2);
+
+    // Пустой вектор
+    std::vector<int> test3 = {};
+    std::vector<int> result3 = {};
+    assert(delete_extra_number(test3) == result3);
+
+    // Только одинаковые элементы
+    std::vector<int> test4 = { 1, 1, 1, 1, 1, 1 };
+    std::vector<int> result4 = { 1 };
+    assert(delete_extra_number(test4) == result4);
+
+    // Один элемент 
+    std::vector<int> test5 = { 2 };
+    std::vector<int> result5 = { 2 };
+    assert(delete_extra_number(test5) == result5);
+
+    std::cout << "all tests completed";
+}
