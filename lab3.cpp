@@ -2,47 +2,43 @@
 #include <stdexcept>
 #include <fstream>
 #include <string>
+#include <stack>
 
-bool brackets(std::string& line) 
-// создаём функцию, которая возвращает bool и на вход принимает string
-{
-    try // в этом блоке находится код, который может вызвать исключение (ошибку)
+bool brackets(const std::string& line) {
+    try
     {
-        // создаём переменную для подсчёта открытых скобок
-        int opened = 0; // O(1) - операция присваивания
-        for (char i : line) // O(N) - каждый символ строки обрабатывается 1 раз
-        {
-            if (i == '(') // O(1) - проверка на равенство   
-            // считаем открытые скобки
-            {
-                opened++; // O(1)
+        std::stack <char> queue; // O(1) - выделяем память, стек пока пустой
+        for (const char i: line) { // O(N), N - длина строки
+            if ((i == '(') || (i == '[') ||  (i == '{')) { // O(1), проверяем, является ли символ открывающей скобкой
+                queue.push(i); // O(1) - добавляем скобку
             }
-            else if (i == ')') // O(1) - проверка на равенство
-            // если встреттилась закрытая скобка, уменьшаем счётчик на 1
-            {
-                opened--; // O(1)
-            }
-            if (opened < 0) // O(1) - сравнение
-            // если встретилась закрытая скобка без открытой, выводим ошибку
-            {
-                throw std::runtime_error("Error: a bracket isn't opened"); // O(1) - создание объекта исключения
+            if ((i == ')') || (i == ']') || (i == '}')) { // O(1)
+                if (queue.empty()) { // O(1) - если очередь пустая, значит, закрывающая скобка без соответствующей открывающей
+                    throw std::runtime_error("Error: a bracket isn't opened"); // O(1)
+                }
+                char opened_bracket = queue.top(); // O(1), cмотрим на последнюю добавленную открывающую скобку
+                queue.pop(); // O(1) - удаляем её из очереди
+                if ((i == ')' && opened_bracket != '(') || (i == ']' && opened_bracket != '[') || (i == '}' && opened_bracket != '{')) //O (1)
+                {
+                    return true; // если не соответствует, возвращаем false
+                }
             }
         }
-        return opened > 0; // O(1) - операция сравнения и возврата
-        // если есть незакрытые скобки, возвращаем true
+        return !queue.empty(); // O(1), если очередь пустая, значит, все скобки закрыты
     }
-    catch(const std::exception& e) // O(1) - вывод сообщения об ошибке
+    
+    catch (const std::exception &e)
     // обработка исключений, которые возникли в блоке try
     {
-        std::cerr << e.what() << std::endl; // вывод сообщения об ошибке
+        std::cerr << e.what() << std::endl; // O(1) - обработка исключений вывод сообщения об ошибке
         return false;
     }
 }
-
+// всего: O(1 + N + 1 + 1 + 1 + ... + 1) = O(N)
 
 void test1() // скобки открыты
 {
-    std::string str = "a(b)(((a)b)";
+    std::string str = "a(b)(([a]b)";
     bool ans = brackets(str);
     if (ans == true) {
         std::cout << "Test 1 passed" << std::endl;
@@ -51,10 +47,9 @@ void test1() // скобки открыты
     }
 }
 
-
 void test2() // скобки закрыты
 {
-    std::string str = "a((b)(())(a)b)";
+    std::string str = "a[(b)]())({a})b)";
     bool ans = brackets(str);
     if (ans == false) {
         std::cout << "Test 2 passed" << std::endl;
@@ -65,7 +60,7 @@ void test2() // скобки закрыты
 
 void test3() // скобки без других символов
 {
-    std::string str = "((((((())(()))";
+    std::string str = "{[{}()()(){{}()()]}";
     bool ans = brackets(str);
     if (ans == true)
     {
@@ -77,7 +72,7 @@ void test3() // скобки без других символов
     }
 }
 
-void test_dataset(const std::string &filename)
+void test_dataset(const std::string& filename)
 {
     // создаём объект file, который открывает файл с именем, указанным в параметре filename
     std::ifstream file(filename);
@@ -94,7 +89,7 @@ void test_dataset(const std::string &filename)
         bool ans = brackets(line);
         if (ans == false)
         {
-            std::cout << "Test with dataset passed!" << std::endl;
+            std::cout << "Test with dataset passed" << std::endl;
         }
         else
         {
