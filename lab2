@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+
+int main() {
+    // Ввод данных
+    int size = 4;
+    std::vector<std::string> arr = {"Orange", "Red", "Green", "Orange"};
+
+    // Создаем словарь для подсчета уникальных значений
+    std::unordered_map<std::string, int> countMap;
+    
+    // Подсчитываем количество уникальных значений
+    for (const auto& color : arr) {
+        countMap[color]++;
+    }
+
+    // Создаем выходной массив
+    std::vector<int> result(size);
+    
+    // Заполняем выходной массив количеством уникальных значений
+    for (int i = 0; i < size; ++i) {
+        result[i] = countMap[arr[i]];
+    }
+
+    // Выводим результат
+    std::cout << "[";
+    for (size_t i = 0; i < result.size(); ++i) {
+        std::cout << result[i];
+        if (i < result.size() - 1) {
+            std::cout << ", ";
+        }
+    }
+    std::cout << "]" << std::endl;
+
+    return 0;
+}
