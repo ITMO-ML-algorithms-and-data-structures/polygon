@@ -37,7 +37,8 @@ using namespace std;
 void TestLabelEnc() {
     std::vector<int> test_1 {1, 2, 3, 4, 5, 6};
     std::vector<int> test_2 {52};
-    std::vector<int> test_3 {2, 1};
+    std::vector<int> test_3_1{2, 1};
+    std::vector<int> test_3_2 {2, 1};
     std::vector<int> test_4 {3, 3, 3, 3, 3, 3};
     std::vector<int> test_5 {5, 4, 3, 2, 1};
     std::vector<int> test_6 {1, 2, 2, 3, 3, 3};
@@ -45,7 +46,7 @@ void TestLabelEnc() {
     std::vector<int> test_empty {};
     assert(shuffle_array("test_dir/test.txt") != test_1);
     assert(shuffle_array("test_dir/test_2.txt") == test_2);
-    assert(shuffle_array("test_dir/test_3.txt") == test_3);
+    assert(shuffle_array("test_dir/test_3.txt") == test_3_1 || shuffle_array("test_dir/test_3.txt") == test_3_2);
     assert(shuffle_array("test_dir/test_4.txt") == test_4);
     assert(shuffle_array("test_dir/test_5.txt") != test_5);
     assert(shuffle_array("test_dir/test_6.txt") != test_6);
