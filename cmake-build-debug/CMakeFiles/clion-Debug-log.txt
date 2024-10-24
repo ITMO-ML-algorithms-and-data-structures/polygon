@@ -1,0 +1,1 @@
+CMakeLists.txt not found in C:\Users\Nikita\CLionProjects\polygon Select CMakeLists.txt
