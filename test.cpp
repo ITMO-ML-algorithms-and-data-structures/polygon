@@ -22,8 +22,8 @@ std::vector<int> shuffle_array(std::string path) {
 
     // идем с конца, чтобы уже перемещенное элемент повторно не трогать
     for (int i = array.size() - 1; i > 0; --i) { // O(N) - цикл по массиву
-        // Генерация случайного индекса от 0 до i - 1
-        std::uniform_int_distribution<> dist(0, i - 1); // O(1)
+        // Генерация случайного индекса от 0 до i
+        std::uniform_int_distribution<> dist(0, i); // O(1)
         // меняем местами наш элмент и элмент под случайным идексом
         std::swap(array[i], array[dist(gen)]); // O(1)
     }
