@@ -34,7 +34,7 @@ std::vector<int> shuffle_array(std::string path) {
 
 
 using namespace std;
-void TestLabelEnc() {
+void Test() {
     std::vector<int> test_1 {1, 2, 3, 4, 5, 6};
     std::vector<int> test_2 {52};
     std::vector<int> test_3_1{2, 1};
@@ -56,6 +56,6 @@ void TestLabelEnc() {
 }
 
 int main() {
-    TestLabelEnc();
+    Test();
     return 0;
 }
