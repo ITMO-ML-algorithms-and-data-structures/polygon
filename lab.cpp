@@ -1,44 +1,140 @@
 #include <vector>
 #include <iostream>
+#include "UniformDistribution.h"
+#include "MersenneTwister.h"
+#include <ctime>
+#include <optional>
+#include <fstream>
+#include <string>
+#include <tuple>
 
 typedef long long ll;
 
-ll INF = 1000000007;
+template<typename T>
+void swap(T &a, T &b) {
+    T tmp = a; // O(1)
+    a = b; // O(1)
+    b = tmp; // O(1)
+}
 
-using namespace std;
+template<typename T>
+void shuffle(std::vector<T> &array, std::optional<int> seed = std::nullopt) {
+    MersenneTwister gen(seed.has_value() ? seed.value() : std::time(nullptr)); // O(1) - 624 итерации цикла
+    UniformDistribution dis(0, array.size() - 1); // O(1)
 
-pair <ll, ll> getMaxComposition(vector<ll> digits) {
-    auto size = digits.size();
-
-    ll max_1 = -INF, max_2 = -INF, min_1 = INF, min_2 = INF;
-
-    // отработатываем вариант, когда размер входного массива меньше 2, выбрасываем нули
-    if (size < 2) {
-        return {0, 0};
-    }
-
-    // ищем два минимальных элемента и два максимальных элемента
-    for (int i=0; i<size; i++) {
-        if (digits[i] >= max_1) {
-            max_2 = max_1;
-            max_1 = digits[i];
-        } else if (digits[i] >= max_2) {
-            max_2 = digits[i];
-        }
-
-        if (digits[i] <= min_1) {
-            min_2 = min_1;
-            min_1 = digits[i];
-        } else if (digits[i] <= min_2) {
-            min_2 = digits[i];
-        }
-    }
-
-    // произведение двух отрицательных наименьших чисел может быть больше произведения
-    // двух наибольших чисел => надо отработать этот вариант
-    if (max_1 * max_2 > min_1 * min_2) {
-        return {max_1, max_2};
-    } else {
-        return {min_1, min_2};
+    for (unsigned int i = 0; i < array.size(); i++) {  // O(n)
+        unsigned int j = dis(gen); // O(1)
+        swap(array[i], array[j]); // O(1)
     }
 }
+
+template<typename T>
+std::vector<T> sample(std::vector<T> array, const int k, std::optional<int> seed = std::nullopt) {
+//    std::vector<T> sampled_array(k);
+
+    if (k < 0 || k > array.size()) {
+        throw std::runtime_error("k should be 0 <= k <= size of array");
+    }
+
+    shuffle(array, seed); // O(n)
+
+//    for (unsigned int i = 0; i < k; i++) { // O(k)
+//        sampled_array[i] = array[i]; // O(1)
+//    }
+
+    return std::vector<T>(array.begin(), array.begin() + k);
+}
+
+template<typename T>
+std::tuple<unsigned int, std::vector<T>, unsigned int> read_data_from_console() {
+    unsigned int size, k;
+    std::vector<T> array;
+
+    std::cin >> size;
+
+    array.resize(size); // O(1)
+
+    for (int i = 0; i < size; i++)
+        std::cin >> array[i];
+
+    std::cin >> k;
+
+    return {size, array, k};
+}
+
+template<typename T>
+std::tuple<unsigned int, std::vector<T>, unsigned int> read_data_from_txt_file(std::string input_file_path) {
+    std::vector<T> array;
+    std::ifstream input_file(input_file_path);
+
+    if (!input_file.is_open()) {
+        throw std::runtime_error("Failed to open input file");
+
+    }
+
+    T input_value;
+
+    unsigned int size;
+    input_file >> size;
+    array.resize(size);
+
+    for (unsigned int num_rows = 0; num_rows < size; num_rows++)
+        input_file >> array[num_rows];
+
+    unsigned int k = input_value;
+    input_file >> k;
+
+    input_file.close();
+    return {size, array, k};
+}
+
+template<typename T>
+void output_to_console(std::vector<T> array) {
+    for (auto i: array)
+        std::cout << i << " ";
+    std::cout << std::endl;
+}
+
+template<typename T>
+void output_to_file(std::vector<T> array, std::string output_file_path) {
+    std::ofstream output_file(output_file_path);
+
+    if (!output_file.is_open())
+        throw std::runtime_error("Failed to open output file");
+
+    for (auto i: array) {
+        output_file << i << "\n";
+    }
+
+    output_file.close();
+}
+
+template<typename T>
+void solve(
+        bool is_from_file,
+        bool is_to_file,
+        std::optional<std::string> input_file_path = std::nullopt,
+        std::optional<std::string> output_file_path = std::nullopt,
+        std::optional<unsigned int> seed = std::nullopt
+) {
+    if (is_from_file && !input_file_path)
+        throw std::runtime_error("no input file name");
+
+    if (is_to_file && !output_file_path)
+        throw std::runtime_error("no output file name");
+
+    unsigned int size, k;
+    std::vector<T> array;
+
+    if (is_from_file)
+        std::tie(size, array, k) = read_data_from_txt_file<T>(input_file_path.value());
+    else
+        std::tie(size, array, k) = read_data_from_console<T>();
+
+    std::vector<T> result = sample(array, k, seed);
+
+    if (is_to_file)
+        output_to_file(result, output_file_path.value());
+    else
+        output_to_console(result);
+};

@@ -1,17 +1,25 @@
 #include <vector>
 #include <iostream>
 #include "lab.cpp"
+#include "UniformDistribution.h"
+#include "MersenneTwister.h"
+#include <string>
+#include <cmath>
 
 typedef long long ll;
 
-using namespace std;
+typedef long long ll;
 
 int main() {
-    vector<ll> digits = {0, -45, 72, 13, 65, 23, -99, 0, 0, 1, 2, 5};
+    MersenneTwister gen(42);
+    UniformDistribution dis(1, 100);
 
-    pair<ll, ll> result = getMaxComposition(digits);
+    std::vector<unsigned int> counter(100, 0);
 
-    cout << result.first << " " << result.second << endl;
+    for(int i=0; i<10000; i++)
+        counter[dis(gen) - 1]++;
 
-    return 0;
+    unsigned int a = 5;
+
+    std::cout << std::pow(97 - 100, 2) * 1.0 / 100;
 }
