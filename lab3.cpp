@@ -15,11 +15,11 @@ std::string compress_string(const std::string& str) {
             if (count > 1) {
                 compressed_str += std::to_string(count); //O(1) - присваивание, std::to_string() - O(log(count)), если значение count небольшое, то сложность можно считать за O(1)
             }
-            count = 1;
+            count = 1; //O(1) - присваивание
         }
     }
     
-    return compressed_str;
+    return compressed_str; //O(1) - возврат значения
 }
 
 int main() {
