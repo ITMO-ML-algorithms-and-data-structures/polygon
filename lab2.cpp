@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-unsigned short find_most_frequent(std::vector<unsigned short> data) { //unsigned short - 2 байта, всего n элементов сам std::vector - 24 байт, итого 2*n + 24 байт
+unsigned short find_most_frequent(std::vector<unsigned short>& data) { //unsigned short - 2 байта, всего n элементов сам std::vector - 24 байт, итого 2*n + 24 байт
     unsigned short frequency[30000]; //unsigned short - 2 байта, всего 30000 элементов, итого 2*30000 = 60000 байт
     unsigned short most_frequent_value = 0; //unsigned short - 2 байта
     unsigned short max_count = 0; //unsigned short - 2 байта
