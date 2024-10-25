@@ -6,40 +6,42 @@
 #include <cassert>
 #include <stdlib.h>
 #include <fstream>
-#include <string>
 
 
-
-
-
+//Функция импорта из файла, где элементы построчно
 std::vector<int> fileinput(std::string filename) {
+    //Задаем вектор и инпутим файл
     std::vector<int> numbers;
-    std::string project_path = "../";
-    filename = project_path + filename;
     std::ifstream input_file(filename);
     std::string a;
     int n;
 
-    if (!input_file.is_open()) {
+    //Проверяем открылся ли файл
+    if (!input_file.is_open()) { //O(1)
         std::cout << "Error: failed to open file " << filename << std::endl;
         return numbers;
     }
 
-    while (input_file >> a) {
-        n = atoi(a.c_str());
-        numbers.push_back(n);
+    //Инпутим из файла
+    while (input_file >> a) { //O(1) * n = O(n)
+        n = atoi(a.c_str()); //O(n)
+        numbers.push_back(n); //O(1)
     }
 
     input_file.close();
     return numbers;
 }
 
+
+//Функция записи в файл
 void filewrite(std::vector<int> numbers, std::string filename) {
-    std::string project_path = "../";
-    filename = project_path + filename;
+
+    //Открываем файл для записи
     std::ofstream output_file(filename);
-    for(int number : numbers) {
-        output_file << number << std::endl;
+
+    //Записываем файл
+    for(int number : numbers) { //O(1) * n = O(n)
+        output_file << number << std::endl; //O(1)
     }
     output_file.close();
 }
@@ -49,11 +51,8 @@ std::vector<int> del_double(std::vector<int> names) {
     //Создание хэш таблицы для подсчета повторений
     std::unordered_map<int, int> count_repeat; //O(1) выделение памяти
 
-    //Взятие размера входного значения
-    int size = names.size(); //O(1) взятие ращмера массива
-
     //Подсчет повторений и запись в хэш таблицу
-    for (int i = 0; i < size; i++) { //O(n)
+    for (int i = 0; i < names.size(); i++) { //O(n)
         count_repeat[names[i]]++; //O(1) * n добавление элемемента повторяется n раз
     }
 
@@ -61,7 +60,7 @@ std::vector<int> del_double(std::vector<int> names) {
     std::vector<int> result; //O(1) выделение памяти
 
     //Проходимся по элементам names и удаляем повторения
-    for (int i = 0; i < size; i++) { //O(n)
+    for (int i = 0; i < names.size(); i++) { //O(n)
         if (count_repeat[names[i]] > 1) {
             count_repeat[names[i]]--; //O(1) * n вычитание из хэш таблицы n раз
         }else {
@@ -73,24 +72,22 @@ std::vector<int> del_double(std::vector<int> names) {
 }
 
 void tests() {
-    // std::vector<int> vec = fileinput();
-    // for (int i = 0; i < vec.size(); i++){
-    //     std::cout << vec[i] << std::endl;
-    // }
-    // std::vector<int> vec = {1,2,3,4};
-    // assert(del_double({1, 2 ,3 ,4}) == vec);
-    // vec = {2,3,1};
-    // assert(del_double({1, 1, 2 ,3 ,1}) == vec);
-    // vec = {1};
-    // assert(del_double({1, 1, 1}) == vec);
-    // vec = {1,2};
-    // assert(del_double({1, 2, 1, 2, 1, 2}) == vec);
-    // vec = {};
-    // assert(del_double({}) == vec);
+    std::vector<int> vec = {1,2,3,4};
+    assert(del_double({1, 2 ,3 ,4}) == vec);
+    vec = {2,3,1};
+    assert(del_double({1, 1, 2 ,3 ,1}) == vec);
+    vec = {1};
+    assert(del_double({1, 1, 1}) == vec);
+    vec = {1,2};
+    assert(del_double({1, 2, 1, 2, 1, 2}) == vec);
+    vec = {};
+    assert(del_double({}) == vec);
 }
 
 int main() {
-    filewrite(del_double(fileinput("million_nums.txt")), "output.txt");
+    //filewrite(del_double(fileinput("1e9_data.txt")), "output_for_1e9.txt");
+    //filewrite(del_double(fileinput("1e6_data.txt")), "outuput_for_1e6.txt");
+    tests();
     return 0;
 }
 

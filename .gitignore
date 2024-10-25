@@ -7,3 +7,17 @@ lab-3.exe
 CMakeLists.txt
 
 .vscode/
+
+1e9_data.txt
+
+datagenerator.cpp
+
+datagenerator.exe
+
+datagenerator.py
+
+output_for_1e9.txt
+
+outuput_for_1e6.txt
+
+1e6_data.txt
