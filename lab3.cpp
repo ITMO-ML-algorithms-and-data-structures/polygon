@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+//всего один цикл, поэтому сложность алгорита O(n)
 std::string compress_string(const std::string& str) {
     std::string compressed_str;
     int length = str.length();
