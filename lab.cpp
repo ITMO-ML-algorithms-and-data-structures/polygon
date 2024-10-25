@@ -26,29 +26,25 @@ void shuffle(std::vector<T> &array, std::optional<int> seed = std::nullopt) {
         unsigned int j = dis(gen); // O(1)
         swap(array[i], array[j]); // O(1)
     }
+
+    // Общая сложность функции - O(n)
 }
 
 template<typename T>
 std::vector<T> sample(std::vector<T> array, const int k, std::optional<int> seed = std::nullopt) {
-//    std::vector<T> sampled_array(k);
-
-    if (k < 0 || k > array.size()) {
-        throw std::runtime_error("k should be 0 <= k <= size of array");
+    if (k < 0 || k > array.size()) { // O(1) + O(1) + O(1)
+        throw std::runtime_error("k should be 0 <= k <= size of array"); // O(1)
     }
 
     shuffle(array, seed); // O(n)
 
-//    for (unsigned int i = 0; i < k; i++) { // O(k)
-//        sampled_array[i] = array[i]; // O(1)
-//    }
-
-    return std::vector<T>(array.begin(), array.begin() + k);
+    return std::vector<T>(array.begin(), array.begin() + k); // O(k) + O(k) по памяти
 }
 
 template<typename T>
 std::tuple<unsigned int, std::vector<T>, unsigned int> read_data_from_console() {
-    unsigned int size, k;
-    std::vector<T> array;
+    unsigned int size, k; // O(1) + O(1)
+    std::vector<T> array; // O(1)
 
     std::cin >> size;
 
@@ -117,11 +113,11 @@ void solve(
         std::optional<std::string> output_file_path = std::nullopt,
         std::optional<unsigned int> seed = std::nullopt
 ) {
-    if (is_from_file && !input_file_path)
-        throw std::runtime_error("no input file name");
+    if (is_from_file && !input_file_path) // O(1)
+        throw std::runtime_error("no input file name"); // O(1)
 
-    if (is_to_file && !output_file_path)
-        throw std::runtime_error("no output file name");
+    if (is_to_file && !output_file_path) // O(1)
+        throw std::runtime_error("no output file name"); // O(1)
 
     unsigned int size, k;
     std::vector<T> array;
@@ -131,7 +127,11 @@ void solve(
     else
         std::tie(size, array, k) = read_data_from_console<T>();
 
-    std::vector<T> result = sample(array, k, seed);
+    std::cout << "data is collected\n";
+
+    std::vector<T> result = sample(array, k, seed); // O(n + k) = O(n)
+
+    std::cout << "ready\n";
 
     if (is_to_file)
         output_to_file(result, output_file_path.value());
