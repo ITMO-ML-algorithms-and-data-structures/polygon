@@ -43,12 +43,12 @@ std::vector<T> sample(std::vector<T> array, const int k, std::optional<int> seed
 
 template<typename T>
 std::tuple<unsigned int, std::vector<T>, unsigned int> read_data_from_console() {
-    unsigned int size, k; // O(1) + O(1)
-    std::vector<T> array; // O(1)
+    unsigned int size, k;
+    std::vector<T> array;
 
     std::cin >> size;
 
-    array.resize(size); // O(1)
+    array.resize(size);
 
     for (int i = 0; i < size; i++)
         std::cin >> array[i];
@@ -77,7 +77,7 @@ std::tuple<unsigned int, std::vector<T>, unsigned int> read_data_from_txt_file(s
     for (unsigned int num_rows = 0; num_rows < size; num_rows++)
         input_file >> array[num_rows];
 
-    unsigned int k = input_value;
+    unsigned int k;
     input_file >> k;
 
     input_file.close();

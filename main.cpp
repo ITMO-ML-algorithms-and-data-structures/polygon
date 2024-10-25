@@ -9,5 +9,5 @@
 typedef long long ll;
 
 int main() {
-    solve<int>(true, true, "../data/input.txt", "../data/output.txt");
+    solve<int>(true, true, "../data/standard_input.txt", "../data/standard_output.txt");
 }
