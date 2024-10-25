@@ -1,17 +1,18 @@
 #include <fstream>
 #include <iostream>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
-std::vector<std::vector<unsigned short> > CountVectorizer(const std::vector<std::string> &input) { // функция векторизации
-    std::vector<std::vector<unsigned short> > answer; // создаём массив выходных данных
+std::vector<std::vector<unsigned short>>
+CountVectorizer(const std::vector<std::string> &input) { // функция векторизации
+    std::vector<std::vector<unsigned short>> answer; // создаём массив выходных данных
     // вес N * U * 2, где N - число строк и U - число уникальных слов
     // максимальный вес 10000 * 100 * 2 байт = 2000000 байт
     answer.reserve(input.size()); // указываем, что будем расширять answer до количества строк
     std::unordered_map<std::string, unsigned short> word_number; // создаём хеш-таблицу, в которой
     // каждому слову будет соответствовать свой индекс
-    // вес - L1 + 2 + ... + Ln + 2 байт, где L1 - вес i уникальной строки, где её вес равен l байт, где l - количество символов
-    // максимальный вес 100 * 102 байт = 10200 байт
+    // вес - L1 + 2 + ... + Ln + 2 байт, где L1 - вес i уникальной строки, где её вес равен l байт, где l - количество
+    // символов максимальный вес 100 * 102 байт = 10200 байт
 
     for (const std::string &input_line: input) { // рассматриваем каждую строку
         std::string line = input_line + ' '; // добавляем пробел в конец каждой рассматриваемой строки,
@@ -19,14 +20,16 @@ std::vector<std::vector<unsigned short> > CountVectorizer(const std::vector<std:
         // вес равен l байт, где l - количество символов
         // максимальный вес 101 байт
 
-        answer.push_back(std::vector<unsigned short>(word_number.size(), 0)); // добавляем в answer рассматриваемую строку
+        answer.push_back(
+                std::vector<unsigned short>(word_number.size(), 0)); // добавляем в answer рассматриваемую строку
         // заполняем нулями каждый столбец, который принадлежит уже известному уникальному слову
 
         unsigned short word_start_index = 0;
         // задаём начало слова, как 0 индекс
         // вес 2 байта
 
-        for (unsigned short curr_index = 1; curr_index < line.length(); curr_index++) // пробегаемся по всем элементам строки
+        for (unsigned short curr_index = 1; curr_index < line.length();
+             curr_index++) // пробегаемся по всем элементам строки
             // вес 2 байта
             if (line[curr_index] == ' ') { // если находим пробел, то слово закончилось
                 std::string word = line.substr(word_start_index, curr_index - word_start_index); // считываем это слово
@@ -39,7 +42,8 @@ std::vector<std::vector<unsigned short> > CountVectorizer(const std::vector<std:
                     answer.back().push_back(1); // добавляем в выходной массив в новый столбец для этого слова 1,
                     // так как один раз встретили уже
                 } else
-                    answer.back()[word_number[word]]++; // увеличиваем в выходном массиве значение, соответствующее найденному слову, на один
+                    answer.back()[word_number[word]]++; // увеличиваем в выходном массиве значение, соответствующее
+                                                        // найденному слову, на один
             }
     }
 
@@ -48,6 +52,7 @@ std::vector<std::vector<unsigned short> > CountVectorizer(const std::vector<std:
 
     return answer; // возвращаем выходной массив
 }
+
 
 int main() {
     std::ifstream input_file("dataset0.txt"); // принимаем на вход файл "dataset.txt"
@@ -60,7 +65,8 @@ int main() {
     // вес input - L1 + ... + Ln байт, где Li - вес i строки, где её вес равен l байт, где l - количество символов
     // значит максимальный вес 10000 * 100 = 1000000 байт
 
-    std::vector<std::vector<unsigned short> > answer = CountVectorizer(input); // создаём и заполняем массив для выходного файла
+    std::vector<std::vector<unsigned short>> answer =
+            CountVectorizer(input); // создаём и заполняем массив для выходного файла
     // вес N * U * 2, где N - число строк и U - число уникальных слов
     // максимальный вес 10000 * 100 * 2 байт = 2000000 байт
 
