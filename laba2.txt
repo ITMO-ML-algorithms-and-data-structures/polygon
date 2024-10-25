@@ -1,0 +1,32 @@
+#include <iostream>//подключаем библиотеки и так далее
+#include <vector>
+#include <Windows.h>
+using namespace std;
+int main() {
+	setlocale(LC_ALL, "Russian");//для того чтобы я мог вывести по русски
+	cout << "Vvedite kol elementov massiva  ";
+	int n; // Переменная типа `int`, занимает 4 байта
+	cin >> n;
+	vector <int> a(n); // Память: 4 * n байт (если `int` занимает 4 байта) плюс накладные расходы `std::vector` (обычно около 8-24 байт)
+	vector <int> s; //4 * n для всех уникальных элементов , пока не используем память
+	cout << "Vvedite massiv  ";
+	for (int i = 0; i < n; i++) {//4
+		cin >> a[i];//память уже выделена
+	}
+	for (int i = 0; i < n; i++) {// 4
+		bool flag = true;
+		for (int j = i + 1; j < n; j++) {//4b
+			if (a[i] == a[j]) {
+				flag = false;
+				break;
+			}
+		}
+		if (flag == true) {
+			s.push_back(a[i]); //увеличивается на 4 байта(если `int` занимает 4 байта)
+		}
+	}
+	for (int i = 0; i < s.size(); i++) {// 4b
+		cout << s[i];
+	}
+}
+// 4+4*n+4+4+4+4 = 20 + 4*n
