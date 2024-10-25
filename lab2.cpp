@@ -15,7 +15,7 @@ std::string compression(std::string &s) {
         // +4 байта из-за цикла
         // во время выолнения цикла в строке ans максимум 2*m-1 символ, где m - кол-во частей подряд идущих символов
         // тогда максимальный вес строки достигается на последней итерации и равен 2*m
-        // на последний итерации программа использует больше всего памяти 2*n + 1 + 4 + 4 + 2*m байт
+        // на последний итерации программа использует больше всего памяти 4 + 4 + 2*n + 1 + 4 + 4 + 2*m = 2*n + 2*m + 17 байт
         if (s[i] == ans[ans.size() - 1]) {
             cnt_last += 1;
         } else {
@@ -41,8 +41,13 @@ void test() {
 int main()
 {
     test();
+    int number_of_lines; // +4 байта
+    std::cin >> number_of_lines;
     std::string input; // строка весит n+1 байт, где n - кол-во символов
-    std::cin >> input;
-    std::cout << compression(input);
+    for (int i=0; i < number_of_lines ; i++) {
+        //+4 байта из-за цикла
+        std::cin >> input;
+        std::cout << compression(input);
+    }
     return 0;
 }
