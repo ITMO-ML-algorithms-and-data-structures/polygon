@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <fstream>
+#include <sstream>
+#include <string>
 using namespace std;
 void duplicates(vector<int>& mass) {
     set<int> uniqu;
@@ -14,11 +17,28 @@ void duplicates(vector<int>& mass) {
         result.push_back(uniq);
     }
     mass = result;
+   // cout<<endl<<sizeof(uniqu);
+    //cout<<endl<<sizeof(result);
 }
  
 int main()
 {
-    vector<int> mass = {1, 2, 3, 2, 1, 4, 5, 3,67000, 67000};
+    vector<int> mass;
+    ifstream input;
+    input.open("C:\\Users\\oleg-\\numbers.txt");
+    if (!input) { 
+        cout << "Не";
+        return 1; 
+    }
+    string line;
+    while (getline(input, line)) {
+        stringstream ss(line);
+        string number;
+        while (getline(ss, number, '\t')) {
+            mass.push_back(stoi(number));
+        }
+    }
+   // cout<< sizeof(mass);
     cout << "massiv";
     for (int num : mass)
     {
@@ -31,4 +51,11 @@ int main()
     {
         cout << num << " ";
     }
+   // cout<<endl<<sizeof(mass);
+    
 }
+//mass = 24 + 4*n
+//result = 24 + 4*n
+//uniqu = 48 + 4*n
+//Num = 4
+//100 + 12n
