@@ -30,7 +30,7 @@ vector<char> randomize(vector<char> arr){ // O(1)
 vector<char> read_file(string name){ // O(1) 
     //vector<int> values[n];
     string line; // O(1) 
-    std::ifstream in("ttt.txt"); 
+    std::ifstream in(name); 
     getline(in, line); // O(1) 
     
     int n = stoi(line); // O(1) + O(1)
