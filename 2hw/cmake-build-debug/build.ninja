@@ -52,14 +52,12 @@ build cmake_object_order_depends_target_2hw: phony || .
 build CMakeFiles/2hw.dir/2hw.cpp.obj: CXX_COMPILER__2hw_unscanned_Debug C$:/Users/vorandpav_mini/Documents/CppProject/polygon/2hw/2hw.cpp || cmake_object_order_depends_target_2hw
   DEP_FILE = CMakeFiles\2hw.dir\2hw.cpp.obj.d
   FLAGS = -g -std=gnu++14 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/vorandpav_mini/Documents/CppProject/ADS/2hw
   OBJECT_DIR = CMakeFiles\2hw.dir
   OBJECT_FILE_DIR = CMakeFiles\2hw.dir
 
 build CMakeFiles/2hw.dir/C_/Users/vorandpav_mini/Documents/CppProject/polygon/execute.cpp.obj: CXX_COMPILER__2hw_unscanned_Debug C$:/Users/vorandpav_mini/Documents/CppProject/polygon/execute.cpp || cmake_object_order_depends_target_2hw
   DEP_FILE = CMakeFiles\2hw.dir\C_\Users\vorandpav_mini\Documents\CppProject\polygon\execute.cpp.obj.d
   FLAGS = -g -std=gnu++14 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/vorandpav_mini/Documents/CppProject/ADS/2hw
   OBJECT_DIR = CMakeFiles\2hw.dir
   OBJECT_FILE_DIR = CMakeFiles\2hw.dir\C_\Users\vorandpav_mini\Documents\CppProject\polygon
 

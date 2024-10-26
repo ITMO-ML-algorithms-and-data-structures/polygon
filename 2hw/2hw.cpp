@@ -31,7 +31,12 @@ std::string string_compression(const std::string &inp_line) {
 }
 
 
+bool compare_function(const std::string &s1, const std::string &s2) {
+    return s1 == s2;
+}
+
+
 int main() {
-    tester(3, string_compression, "C:/Users/vorandpav_mini/Documents/CppProject/polygon/2hw/tests/");
+    tester(3, string_compression, "C:/Users/vorandpav_mini/Documents/CppProject/polygon/2hw/tests/", compare_function);
     return 0;
 }

@@ -1,0 +1,3 @@
+C:/Users/vorandpav_mini/Documents/CppProject/polygon/3hw/cmake-build-debug/CMakeFiles/3hw.dir
+C:/Users/vorandpav_mini/Documents/CppProject/polygon/3hw/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/vorandpav_mini/Documents/CppProject/polygon/3hw/cmake-build-debug/CMakeFiles/rebuild_cache.dir
