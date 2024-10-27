@@ -14,8 +14,9 @@ double mean(const std::vector<double> &v) {
 
 double cluster_metric(const std::vector<double> &v) {
     double metric = 0;
+    const double current_mean = mean(v);
     for (const double &x: v)
-        metric += std::abs((x - mean(v)));
+        metric += std::abs((x - current_mean));
     return metric;
 }
 
@@ -28,11 +29,15 @@ double clusters_metric(const std::vector<std::vector<double>> &cluster_distribut
 
 
 std::pair<double, std::vector<std::vector<double>>> clustering(const std::vector<double> &original_array,
+                                                               const size_t number_of_element,
+                                                               const size_t &number_of_clusters, double &best_metric,
                                                                std::vector<std::vector<double>> &cluster_distribution,
-                                                               size_t number_of_element,
-                                                               const size_t &number_of_clusters) {
-    if (number_of_element == original_array.size())
-        return {clusters_metric(cluster_distribution), cluster_distribution};
+                                                               double &current_clusters_metric) {
+    if (number_of_element == original_array.size()) {
+        if (current_clusters_metric < best_metric)
+            best_metric = current_clusters_metric;
+        return {current_clusters_metric, cluster_distribution};
+    }
 
     std::pair<double, std::vector<std::vector<double>>> best_clusters = {10e20, std::vector<std::vector<double>>()};
 
@@ -44,27 +49,38 @@ std::pair<double, std::vector<std::vector<double>>> clustering(const std::vector
         return best_clusters;
 
     for (size_t i = 0; i < number_of_clusters; ++i) {
-        if (number_of_element == original_array.size() - 2 and number_of_empty_clusters == 1 and
+        if (number_of_element == original_array.size() - 1 and number_of_empty_clusters == 1 and
             !cluster_distribution[i].empty())
             continue;
 
+        current_clusters_metric -= cluster_metric(cluster_distribution[i]);
         cluster_distribution[i].push_back(original_array[number_of_element]);
-        std::pair<double, std::vector<std::vector<double>>> current_clusters =
-                clustering(original_array, cluster_distribution, number_of_element + 1, number_of_clusters);
+        current_clusters_metric += cluster_metric(cluster_distribution[i]);
 
-        if (current_clusters.first < best_clusters.first)
-            best_clusters = current_clusters;
+        if (current_clusters_metric < best_metric) {
+            std::pair<double, std::vector<std::vector<double>>> current_clusters =
+                clustering(original_array, number_of_element + 1, number_of_clusters, best_metric, cluster_distribution,
+                           current_clusters_metric);
 
+            if (current_clusters.first < best_clusters.first)
+                best_clusters = current_clusters;
+        }
+
+        current_clusters_metric -= cluster_metric(cluster_distribution[i]);
         cluster_distribution[i].pop_back();
+        current_clusters_metric += cluster_metric(cluster_distribution[i]);
     }
 
     return best_clusters;
 }
 
-std::vector<std::vector<double>> clusterization(const std::vector<double> &original_array, const size_t &number_of_clusters) {
+std::vector<std::vector<double>> clusterization(const std::vector<double> &original_array,
+                                                const size_t &number_of_clusters) {
     std::vector<std::vector<double>> cluster_distribution(number_of_clusters);
+    double best_metric = 10e20, current_clusters_metric = 0;
 
-    return clustering(original_array, cluster_distribution, 0, number_of_clusters).second;
+    return clustering(original_array, 0, number_of_clusters, best_metric, cluster_distribution, current_clusters_metric)
+            .second;
 }
 
 std::string execute_clusterization(const std::string &input) {
