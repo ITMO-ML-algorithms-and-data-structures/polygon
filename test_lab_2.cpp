@@ -1,51 +1,80 @@
 #include <gtest/gtest.h>
-#include <vector>
 
-TEST(GetUniqueValuesTest, HandlesUniqueValues) {
-    std::vector<int> input = {1, 2, 3, 1};
-    std::vector<int> expected = {1, 2, 3};
-    EXPECT_EQ(getUniqueValues(input), expected);
+// Функция remove_Duplicates
+int remove_Duplicates(int arr[], int n) {
+    int new_Size = n; for (int i = 0; i < new_Size; ++i) {
+        for (int j = i + 1; j < new_Size; ++j) {
+            if (arr[i] == arr[j]) {
+                for (int k = j; k < new_Size - 1; ++k) {
+                    arr[k] = arr[k + 1];
+                }
+                --new_Size;
+                --j;
+            }
+        }
+    }
+
+    return new_Size;
 }
-//проверяет стандартный случай с несколькими уникальными значениями
 
-
-TEST(GetUniqueValuesTest, HandlesAllDuplicates) {
-    std::vector<int> input = {2, 2, 2, 2};
-    std::vector<int> expected = {2};
-    EXPECT_EQ(getUniqueValues(input), expected);
+// Тесты
+TEST(RemoveDuplicatesTest, HandlesDuplicates) {
+    int arr[] = { 1, 2, 3, 1, 2, 4, 5 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int new_Size = remove_Duplicates(arr, n);
+    
+    EXPECT_EQ(new_Size, 5);
+    EXPECT_EQ(arr[0], 1);
+    EXPECT_EQ(arr[1], 2);
+    EXPECT_EQ(arr[2], 3);
+    EXPECT_EQ(arr[3], 4);
+    EXPECT_EQ(arr[4], 5);
 }
-//проверяет случай, когда все элементы одинаковые
 
-
-TEST(GetUniqueValuesTest, HandlesEmptyInput) {
-    std::vector<int> input = {};
-    std::vector<int> expected = {};
-    EXPECT_EQ(getUniqueValues(input), expected);
+TEST(RemoveDuplicatesTest, HandlesNoDuplicates) {
+    int arr[] = { 1, 2, 3, 4, 5 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int new_Size = remove_Duplicates(arr, n);
+    
+    EXPECT_EQ(new_Size, 5);
+    EXPECT_EQ(arr[0], 1);
+    EXPECT_EQ(arr[1], 2);
+    EXPECT_EQ(arr[2], 3);
+    EXPECT_EQ(arr[3], 4);
+    EXPECT_EQ(arr[4], 5);
 }
-//проверяет функцию на пустом векторе
 
-
-TEST(GetUniqueValuesTest, HandlesAlreadyUnique) {
-    std::vector<int> input = {5, 6, 7};
-    std::vector<int> expected = {5, 6, 7};
-    EXPECT_EQ(getUniqueValues(input), expected);
+TEST(RemoveDuplicatesTest, HandlesAllDuplicates) {
+    int arr[] = { 1, 1, 1, 1, 1 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int new_Size = remove_Duplicates(arr, n);
+    
+    EXPECT_EQ(new_Size, 1);
+    EXPECT_EQ(arr[0], 1);
 }
-//проверяет случай, когда все элементы уже уникальны
 
-
-TEST(GetUniqueValuesTest, HandlesMixedInput) {
-    std::vector<int> input = {3, 1, 2, 3, 1};
-    std::vector<int> expected = {1, 2, 3};
-    EXPECT_EQ(getUniqueValues(input), expected);
+TEST(RemoveDuplicatesTest, HandlesEmptyArray) {
+    int arr[] = {};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int new_Size = remove_Duplicates(arr, n);
+    
+    EXPECT_EQ(new_Size, 0);
 }
-//проверяет случай с перемешанными значениями и дубликатами
 
+TEST(RemoveDuplicatesTest, HandlesSingleElement) {
+    int arr[] = { 42 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int new_Size = remove_Duplicates(arr, n);
+ EXPECT_EQ(new_Size, 1);
+    EXPECT_EQ(arr[0], 42);
+}
 
-
+// Запуск тестов
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+
 
 
 g++ -o test_unique_values test_unique_values.cpp -lgtest -lpthread
