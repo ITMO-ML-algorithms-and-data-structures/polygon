@@ -37,7 +37,7 @@ int main() {
 
     minMaxScaler(arr, scaledArr);
 
-    cout << fixed << setprecision(1) << "[";
+    cout << setprecision(1) << "[";
     for (size_t i = 0; i < scaledArr.size(); ++i) {
         cout << scientific << scaledArr[i];
         if (i != scaledArr.size() - 1) cout << " ";
