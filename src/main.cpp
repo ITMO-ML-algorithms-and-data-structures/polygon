@@ -1,79 +1,59 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <unordered_set>
+#include <unordered_set> 
+#include <sstream>
 
-// докинем условия
-#define MAX_LINES 10000
-#define MAX_LINE_LENGTH 100
-#define MAX_UNIQUE_WORDS 100
-#define MAX_WORD_LENGTH 100
+#define LOG(X) std::cout<<X<<"\n";
 
-// немного утилов
-std::vector<std::string> splitLine(const std::string& line) {
-    std::vector<std::string> splitLines;            // [24]
-    std::string currentLine;                        // [32]
-                                                    // [сколько бы я не тестил, тут будет 24+32=56 байт]
-
-    for (char c : line) {                           // [1]
-        if (c == ' ') { 
-            if (!currentLine.empty()) {
-                splitLines.push_back(currentLine);
-                currentLine.clear();
-            }
-        } else currentLine += c;
-    }
-
-    if (!currentLine.empty()) splitLines.push_back(currentLine);
-    return splitLines;
+size_t GLOB_MEM_USED = 0;
+void* operator new(size_t size) {
+    GLOB_MEM_USED += size;
+    return malloc(size);
 }
 
 int main() {
     std::cout << "size=? >";
-    short int size;                                     // [2]
+    size_t size;
     std::cin >> size; // не будем устраивать доп проверки на не-интовое значение
 
-    if (size > MAX_LINES) {
-        std::cout << "бро в меня столько не вместится (по условиям задачи)" << std::endl;
-        return 1;
-    }
-    std::cin.ignore(); // фиксим прикол с переносом строки
-    
-    std::vector<std::vector<std::string>> arr;          // [24]
+    std::vector<std::vector<std::string>> input;
+    std::string line;
+    std::cin.ignore();
 
-    for (int i = 0; i < size; i++) {                    // [ну тут в цикле +4]
-        std::cout << "line " << i + 1 << " >";
-        std::string inputLine;                          // [32]
-        std::getline(std::cin, inputLine);          
-        
-        if (inputLine.length() >= MAX_LINE_LENGTH) {
-            std::cout << "бро в меня столько не вместится (по условиям задачи)" << std::endl;
-            return 1;
+    for (int i = 0; i < size; ++i) {
+        std::cout << ">";
+        std::getline(std::cin, line);
+
+        std::vector<std::string> words;
+        std::istringstream iss(line);
+        std::string word;
+
+        while (std::getline(iss, word, ' ')) {
+            words.push_back(word);
         }
-        arr.push_back(splitLine(inputLine));            // [24 так и остается]
-    }
 
-                                                        // [итого: 2 + 24. возможно, остальное - динамическая память, но я, честно, не шарю]
+        input.push_back(words);
+    }
 
     // вот тут стартуем алгоритм ===========
 
     // залетим как уважаемые люди через set
-    std::unordered_set<std::string> vocab;              // [56]
-    for (const auto& line : arr) { // ну авто и авто че бубнить то, все равно set заполняем
+    std::unordered_set<std::string> vocab;
+    for (const auto& line : input) { // ну авто и авто че бубнить то, все равно set заполняем
         for (const auto& word : line) {
-            vocab.insert(word);                         // [сколько бы не sizeof() все равно 56 говорит... похоже правда динамическая память. не бейте(]
+            vocab.insert(word);
         }
     }
 
-    std::vector<std::string> vecVocab(vocab.begin(), vocab.end()); // [24]
-    delete vocab // я больше не хочу с тобой играть
+    std::vector<std::string> vecVocab(vocab.begin(), vocab.end());
 
-   for (const auto& lineWords : arr) {                  // [24]
+   for (const auto& lineWords : input) {
         // развернул цикл в обратную сторону что бы пример совпадал. как сделал - загуглил :/
-        for (auto vocabIter = vecVocab.rbegin(); vocabIter != vecVocab.rend(); ++vocabIter) {       // [8 байт на указатель]    
-            const std::string& vocabWord = *vocabIter;  // [32]
-            bool found = false;                         // [1]
-            for (const auto& word : lineWords) {        // [std::string=32]
+        for (auto vocabIter = vecVocab.rbegin(); vocabIter != vecVocab.rend(); ++vocabIter) {    
+            const std::string& vocabWord = *vocabIter;
+            bool found = false;
+            for (const auto& word : lineWords) {
                 if (vocabWord == word) {
                     found = true;
                     break;
@@ -84,14 +64,23 @@ int main() {
         std::cout << std::endl;
     }
 
-    /* считаем. хотя динамическая память нам такое не позволит
-        2 + 24 + 24(vecVocab) - то, что с нами всегда
-        дальше
-        1) в arr лежат `size` стрингов * splitLine(x), точно подсчитать не получится.
-        2) в vocab лежат от 56 до 32(стринга)*MAX_UNIQUE_WORDS
+    /* считаем память */
 
-        пик используемой памяти, скорее всего, будет достигаться на 76 строке
-    */
+    size_t MEM_USED = 0;
+    for (const auto& inner1 : input) {
+        for (const auto& inner2 : inner1) {
+            MEM_USED += inner2.capacity() * sizeof(char);
+        }
+    }
+    for (const auto& word : vocab) {
+        MEM_USED += word.capacity() * sizeof(char);
+    }
+    for (const auto& word : vecVocab) {
+        MEM_USED += word.capacity() * sizeof(char);
+    }
+
+    LOG("mem:" << MEM_USED);
+    LOG("mem by overloaded `operator new`:" << GLOB_MEM_USED << "\n");
 
     return 0;
 }
