@@ -24,30 +24,33 @@ g++-14 -O3 -std=c++17 -I/opt/homebrew/include -L/opt/homebrew/lib feature_select
 
 
 void generate_combi_and_train(arma::mat& dataset,float& result_score,float& best_score,
-    std::vector<int>& fichi,const std::vector<int>& nums, std::vector<int>& combination, int start) {
+    std::vector<int>& fichi,const std::vector<int>& nums, std::vector<int>& combination) {
     // если список удаляемых фич пуст (комбинация) или наоборот из всех фич, смысла проверять нет
     if (!combination.empty() && nums.size() != combination.size()) {
+
             // создаем датасет и удаляем нужные столбцы
             arma::mat drop_dataset = drop_columns(dataset, combination);
+
             //считаем метрику, искомый столбец второй с конца, айди последний
-            float score = evaluate_dataset(drop_columns(dataset, combination), drop_dataset.n_rows - 2,
+            float score = evaluate_dataset(drop_columns(dataset, combination),
+                drop_dataset.n_rows - 2,
                 drop_dataset.n_rows - 1);
+
             // проверяем подходит ли под условия задачи
             if (-0.1 * best_score <= score - best_score && score - best_score <= best_score * 0.1
                 && fichi.size() <= combination.size()) {
                 result_score = score;
                 fichi = combination;
             }
-            // генерируем все возможные комбинации удаляемых столбцов, чтобы сложность алгоритма была большой
-            // можно удалить do_while и код будет в тысячи раз быстрее с тем же самым результатом
-        // сложность O(n!)
     }
     // создаем рекурсивно все возможные комбинации столбцов для удаления разной длин
-    // сложность O(2^n) (сумма чисел сочетаний)
-    for (int i = start; i < nums.size(); ++i) {
-        count++;
+    // сложность O(n^n), нормальный перебор был бы 2^n(число сочетаний)
+    for (int i = 0; i < nums.size(); ++i) {
+        if (std::find(combination.begin(), combination.end(), i) != combination.end()) {
+            continue;
+        }
         combination.push_back(nums[i]);
-        generate_combi_and_train(dataset,result_score, best_score, fichi, nums, combination, i + 1);
+        generate_combi_and_train(dataset,result_score, best_score, fichi, nums, combination);
         combination.pop_back();
         }
 }
@@ -69,14 +72,18 @@ int feature_selection() {
     for (int i = 0; i < dataset.n_rows - 2; i++) {
         nums.push_back(i);
     }
+
     //создаем вектор для хранения комбинаций столбцов
     std::vector<int> combination;
+
     //считаем лучший результат
     float best_score = evaluate_dataset(dataset, 11, 12);
+    // задаем значение result_score
     float result_score = 10;
+    //создаем вектор в котором будем хранить лучшую комбинацию
     std::vector<int> fichi;
     //запускаем перебор всех комбинаций
-    generate_combi_and_train(dataset, result_score, best_score,fichi, nums, combination, 0);
+    generate_combi_and_train(dataset, result_score, best_score,fichi, nums, combination);
 
     //выводим все данные
     std::cout << "best score: " << best_score << std::endl;
