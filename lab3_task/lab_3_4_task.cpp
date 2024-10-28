@@ -1,30 +1,26 @@
 ﻿#include <iostream>
 #include <vector>
 #include <iomanip>
-#include <limits>
-#include <algorithm>
  
 using namespace std;
 
 void minMaxScaler(const vector<double>& arr, vector<double>& scaledArr) {
+    // If array is empty, then scaledArr is empty too
     if (arr.empty()) {
         scaledArr.clear();
         return;
     }
-    
+
     double minVal = *min_element(arr.begin(), arr.end());
     double maxVal = *max_element(arr.begin(), arr.end());
 
-    // If min == max, then scaledArr is filled with 0.0
+    // if minVal == maxVal, fill scaledArr with 0.0
     if (minVal == maxVal) {
         scaledArr.assign(arr.size(), 0.0);
         return;
     }
 
-    
-
-    // Normalizing
-    scaledArr.clear();
+    // Calculating each scaledValue and adding them in scaledArr
     for (double num : arr) {
         double scaledValue = (num - minVal) / (maxVal - minVal);
         scaledArr.push_back(scaledValue);
@@ -32,8 +28,8 @@ void minMaxScaler(const vector<double>& arr, vector<double>& scaledArr) {
 }
 
 int main() {
-    vector<double> arr = { 1, 100, 1000001, 2, 900000};
-    vector<double> scaledArr;
+    vector<double> arr = { 1, 100, 1000001, 2, 900000, 1000000, 7};
+    vector<double> scaledArr = {};
 
     minMaxScaler(arr, scaledArr);
 
