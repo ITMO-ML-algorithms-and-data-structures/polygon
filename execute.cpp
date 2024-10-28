@@ -52,9 +52,12 @@ void tester(const size_t file_count, std::string (&exec_function)(const std::str
     size_t right_answers = 0;
 
     for (int i = 0; i < file_count; i++) {
-        std::string input_file_name = test_path + "test" + std::to_string(i) + ".txt"; // O(1)
-        std::string output_file_name = test_path + "output" + std::to_string(i) + ".txt"; // O(1)
+        std::string input_file_name = test_path + "test" + std::to_string(i) + ".txt";
+        std::string output_file_name = test_path + "output" + std::to_string(i) + ".txt";
+
+        clock_t start = clock();
         execute_str_to_str_function(input_file_name, output_file_name, exec_function);
+        clock_t end = clock();
 
         std::string answer_file_name = test_path + "answer" + std::to_string(i) + ".txt";
         std::string prog_result_file_name = test_path + "output" + std::to_string(i) + ".txt";
@@ -62,6 +65,8 @@ void tester(const size_t file_count, std::string (&exec_function)(const std::str
         std::cout << "TEST " << i << ": ";
 
         check_answer(answer_file_name, prog_result_file_name, compare_function) ? right_answers++ : 0;
+
+        std::cout << "TIME: " << (double) (end - start) / CLOCKS_PER_SEC << " SECONDS" << std::endl << std::endl;
     }
 
     std::cout << "Right answers: " << right_answers << "/" << file_count << std::endl;

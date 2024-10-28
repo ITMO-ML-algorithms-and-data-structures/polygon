@@ -148,6 +148,6 @@ bool compare_function(const std::string &s1, const std::string &s2) {
 
 
 int main() {
-    tester(4, execute_clusterization, "C:/Users/vorandpav_mini/Documents/CppProject/polygon/3hw/tests/",
+    tester(9, execute_clusterization, "C:/Users/vorandpav/CLionProjects/polygon/3hw/tests/",
            compare_function);
 }
