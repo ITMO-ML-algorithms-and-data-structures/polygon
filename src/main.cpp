@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_set> 
 #include <sstream>
+#include <array>
 
 #define LOG(X) std::cout<<X<<"\n";
 
@@ -12,74 +13,56 @@ void* operator new(size_t size) {
     return malloc(size);
 }
 
+size_t RAND_SEED = 2634885343;
+int rand() {
+    RAND_SEED = RAND_SEED * 9823489423 + 8234234;
+    return (RAND_SEED / 65536);
+}
+
+std::vector<int> sample(const int& size, const std::vector<int>& input) {
+    std::unordered_set<size_t> idxs;
+    std::vector<int> output(size);
+    for (auto inputIter = input.rbegin(); inputIter != input.rend(); ++inputIter) {
+        size_t idx;
+        do {
+            idx = rand();
+            idx = idx % size;
+        } while (idxs.find(idx) != idxs.end());
+        idxs.insert(idx); output[idx] = *inputIter;
+    }
+    return output;
+}
+
+
 int main() {
     std::cout << "size=? >";
     size_t size;
-    std::cin >> size; // не будем устраивать доп проверки на не-интовое значение
-
-    std::vector<std::vector<std::string>> input;
-    std::string line;
+    std::cin >> size;
     std::cin.ignore();
 
-    for (int i = 0; i < size; ++i) {
-        std::cout << ">";
-        std::getline(std::cin, line);
+    std::vector<int> input;
+    std::string line;
+    std::cout << "arr>";
 
-        std::vector<std::string> words;
-        std::istringstream iss(line);
-        std::string word;
-
-        while (std::getline(iss, word, ' ')) {
-            words.push_back(word);
-        }
-
-        input.push_back(words);
+    std::getline(std::cin, line);
+    std::istringstream iss(line);
+    std::string snum;
+    while (std::getline(iss, snum, ' ' )) {
+        input.push_back(std::stoi(snum));
     }
 
-    // вот тут стартуем алгоритм ===========
-
-    // залетим как уважаемые люди через set
-    std::unordered_set<std::string> vocab;
-    for (const auto& line : input) { // ну авто и авто че бубнить то, все равно set заполняем
-        for (const auto& word : line) {
-            vocab.insert(word);
-        }
+    if (input.size() != (size)) {
+        std::cout << "num of ​​entered values doesnt match with entered size";
+        return 1;
     }
 
-    std::vector<std::string> vecVocab(vocab.begin(), vocab.end());
-
-   for (const auto& lineWords : input) {
-        // развернул цикл в обратную сторону что бы пример совпадал. как сделал - загуглил :/
-        for (auto vocabIter = vecVocab.rbegin(); vocabIter != vecVocab.rend(); ++vocabIter) {    
-            const std::string& vocabWord = *vocabIter;
-            bool found = false;
-            for (const auto& word : lineWords) {
-                if (vocabWord == word) {
-                    found = true;
-                    break;
-                }
-            }
-            std::cout << (found ? "1" : "0") << " ";
-        }
-        std::cout << std::endl;
+    std::vector<int> output = sample(size, input);
+    std::cout << "sampled: ";
+    for (auto outputIter = output.rbegin(); outputIter != output.rend(); ++outputIter) {
+        std::cout << *outputIter << " ";
     }
-
-    /* считаем память */
-
-    size_t MEM_USED = 0;
-    for (const auto& inner1 : input) {
-        for (const auto& inner2 : inner1) {
-            MEM_USED += inner2.capacity() * sizeof(char);
-        }
-    }
-    for (const auto& word : vocab) {
-        MEM_USED += word.capacity() * sizeof(char);
-    }
-    for (const auto& word : vecVocab) {
-        MEM_USED += word.capacity() * sizeof(char);
-    }
-
-    LOG("mem:" << MEM_USED);
+    std::cout << "\n";
+   
     LOG("mem by overloaded `operator new`:" << GLOB_MEM_USED << "\n");
 
     return 0;
