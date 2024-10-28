@@ -2,51 +2,73 @@
 #include <string>
 #include <cassert>
 using namespace std;
-string compress_str(const string& input) { 
-	string result; //O(1) для выделения памяти
-	int number = 1; //О(1)+О(1) для выделения памяти и присванивание 
-	int len = input.length();//О(1)+О(1) для выделения памяти и присванивание
 
-	for (int i = 0; i < len; i++) { //O(1)+О(1)+О(1)+О(1) - присваивание, сравнение, инкремент; в худшем случае - О(n)
+string compress_str(const string& input) { // функция сжатия строки
+	if (input.empty()) { //О(1) - проверка состояния
+		return ""; 
+	}
+
+	string compressed; //O(1) для выделения памяти
+	int count = 1; //О(1)+О(1) для выделения памяти и присванивание 
+	int len = input.length(); //О(1)+О(1) для выделения памяти и присванивание
+	for (size_t i = 0; i < len; i++) { //O(1)+О(1)+О(1)+О(1) - присваивание, сравнение, инкремент; в худшем случае - О(n)
 		if (i + 1 < len && input[i] == input[i + 1]) { //О(1)+О(1)+О(1)+О(1)+O(1)+O(1)- вычисление i+1, сравнение,
-													   //взятие элементов по индексу [i],[i+1], сравнение, операция "&&" 
-			number++; // О(1) - инкремент
+			                                                    //взятие элементов по индексу [i],[i+1], сравнение, операция "&&" 	
+			count++; // О(1) - инкремент
 		}
 		else {
-			result += to_string(number) + input[i]; //O(1)+О(n)+O(1)+O(1) - в лучшем случае(выделение памяти, 
-														 //функция перевода в строку, взятие по индексу,сложение строк),
-														 // в худшем: О(1)+О(n)+O(1)+O(n)
-			number = 1; //О(1) - присваивание
-		}
+			// Добавляем символ только если количество больше 1
+			compressed += input[i];//O(1)+O(1) - выделение памяти, взятие по индексу
 
+			if (count > 1) { // O(1) - операция сравнения
+				compressed += to_string(count); //О(1)+О(n) - выделение памяти, функция перевода в строку
+			}
+			count = 1; // О(1) присваивание
+		}
 	}
-    // Сложность алгоритма составляет:
+	// Сложность алгоритма составляет:
     //В худшем случае : О(n)
     //В лучшем случае: O(1)
 
-	return result;
+	return compressed;
 }
-// функции для тестирования
+
 void tests() {
-	assert(compress_str("aaabb") == "3a2b");
-	assert(compress_str("abc") == "1a1b1c");
-	assert(compress_str("") == "");  // Пустая строка
-	assert(compress_str("a") == "1a");  // Одна буква
-	assert(compress_str("aaa") == "3a");  // Три одинаковых символа
-	assert(compress_str("abababa") == "1a1b1a1b1a1b1a");  // Чередующиеся символы
-	assert(compress_str("aabbbaaac") == "2a3b3a1c");  // Смешанные символы
-	cout << "Tests ok" << endl;
+	// Тест 1
+	string input1 = "aaabbc";
+	string expected1 = "a3b2c";
+	assert(compress_str(input1) == expected1);
+
+	// Тест 2
+	string input2 = "abc";
+	string expected2 = "abc"; // без изменений
+	assert(compress_str(input2) == expected2);
+
+	// Тест 3
+	string input3 = "aaa";
+	string expected3 = "a3";
+	assert(compress_str(input3) == expected3);
+
+	// Тест 4
+	string input4 = "a";
+	string expected4 = "a"; // без изменения
+	assert(compress_str(input4) == expected4);
+
+	// Тест 5
+	string input5 = "";
+	string expected5 = "";// без изменений
+	assert(compress_str(input5) == expected5);
+
+	// Тест 6
+	string input6 = "aaabbaaa";
+	string expected6 = "a3b2a3";
+	assert(compress_str(input6) == expected6);
+
+	cout << "OK" << endl;
 }
 
 int main() {
 	tests();
-	string input;
-	cout<< "Input your text: ";
-	getline(cin, input);
-
-	string compressed = compress_str(input);
-	cout << "Compressed: " << compressed;
-	
 
 	return 0;
 }
