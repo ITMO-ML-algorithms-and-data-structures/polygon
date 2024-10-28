@@ -1,19 +1,30 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <vector>
 #include <iomanip>
 #include <limits>
+#include <algorithm>
+ 
+using namespace std;
 
-void minMaxScaler(const std::vector<double>& arr, std::vector<double>& scaledArr) {
-    double minVal = std::numeric_limits<double>::max();
-    double maxVal = std::numeric_limits<double>::lowest();
+void minMaxScaler(const vector<double>& arr, vector<double>& scaledArr) {
+    if (arr.empty()) {
+        scaledArr.clear();
+        return;
+    }
+    
+    double minVal = *min_element(arr.begin(), arr.end());
+    double maxVal = *max_element(arr.begin(), arr.end());
 
-    // Первый проход: находим min и max
-    for (double num : arr) {
-        if (num < minVal) minVal = num;
-        if (num > maxVal) maxVal = num;
+    // If min == max, then scaledArr is filled with 0.0
+    if (minVal == maxVal) {
+        scaledArr.assign(arr.size(), 0.0);
+        return;
     }
 
-    // Второй проход: нормализация значений
+    
+
+    // Normalizing
+    scaledArr.clear();
     for (double num : arr) {
         double scaledValue = (num - minVal) / (maxVal - minVal);
         scaledArr.push_back(scaledValue);
@@ -21,20 +32,17 @@ void minMaxScaler(const std::vector<double>& arr, std::vector<double>& scaledArr
 }
 
 int main() {
-    // Пример входных данных
-    int size = 4;
-    std::vector<double> arr = { 1, 100, 1000001, 2 };
+    vector<double> arr = { 1, 100, 1000001, 2, 900000};
+    vector<double> scaledArr;
 
-    std::vector<double> scaledArr;
     minMaxScaler(arr, scaledArr);
 
-    // Вывод результата
-    std::cout << std::fixed << std::setprecision(1) << "[";
+    cout << fixed << setprecision(1) << "[";
     for (size_t i = 0; i < scaledArr.size(); ++i) {
-        std::cout << std::scientific << scaledArr[i];
-        if (i != scaledArr.size() - 1) std::cout << " ";
+        cout << scientific << scaledArr[i];
+        if (i != scaledArr.size() - 1) cout << " ";
     }
-    std::cout << "]" << std::endl;
+    cout << "]" << endl;
 
     return 0;
 }
