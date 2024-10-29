@@ -4,4 +4,5 @@ project(polygon)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(polygon
-    scratch.cpp)
+    scratch.cpp
+)

@@ -1,3 +1,5 @@
 # ninja log v6
-5	472	7503366637575236	CMakeFiles/polygon.dir/scratch.cpp.obj	6df836bffb019060
-480	584	7503366642334045	polygon.exe	25c7c6710792c4c4
+20	98	7506942239873409	polygon.exe	8868d88faf211f57
+6	324	7506940750559167	CMakeFiles/polygon.dir/scratch.cpp.obj	8a2374396508dacf
+11	331	7506940750599173	CMakeFiles/polygon.dir/1.cpp.obj	e46d23c1c6b603bd
+4	234	7506942488807884	build.ninja	e95b7cad7404ed50
