@@ -1,4 +1,11 @@
-/.vscode
+# Игнорировать файлы из lab-4
+.vscode
 /build/Debug
 /lab3.exe
 /lab03.cpp
+
+# Игнорировать файлы сборки (из ветки main)
+*.dSYM
+/a.out
+/tmp.cpp
+
