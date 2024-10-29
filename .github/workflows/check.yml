@@ -39,7 +39,7 @@ jobs:
     - name: Compile code
       run: |
         g++ -Wall -Wextra src/main.cpp -o src/main
-        g++ -Wall -Wextra src/test.cpp -o src/test -lcunit
+        g++ -Wall -Wextra src/test.cpp -o src/test
 
     # вопрос по механике а зачем мы запускам код который требует от пользователя некоторый ввод?
     # - name: Run code

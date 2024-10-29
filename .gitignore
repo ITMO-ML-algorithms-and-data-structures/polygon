@@ -1,4 +1,3 @@
 .vscode/
-imgs
-src/build
 *.txt
+!*.cpp
