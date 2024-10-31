@@ -5,11 +5,11 @@
 
 using namespace std;
 
-bool isMappedvalue(unordered_map<char, char> &biection, char curr_value) {
+bool isMappedvalue(unordered_map<char, char> &biection, const char &curr_el2) {
 
         for (const auto& [key, value] : biection) {
 
-        if (value == curr_value) {
+        if (value == curr_el2) {
             return true;
         }
     }
@@ -17,7 +17,7 @@ bool isMappedvalue(unordered_map<char, char> &biection, char curr_value) {
     return false;
 }
 
-bool isIsomorphic(string &str1, string &str2) {
+bool isIsomorphic(const string &str1, const string &str2) {
 
     unordered_map<char, char> biection;
 
@@ -28,7 +28,7 @@ bool isIsomorphic(string &str1, string &str2) {
         return str1.empty() && str2.empty();
     }
 
-    int size1 = str1.size();
+    int size1 = str1.size(); //4 bytes
 
     if (size1 != str2.size()) {
         return false;
@@ -38,8 +38,9 @@ bool isIsomorphic(string &str1, string &str2) {
     //можно ли построить биекцию между элементами двух строк
 
     for (size_t i = 0; i != size1; ++i) {
-        char curr_el1 = str1[i];
-        char curr_el2 = str2[i];
+            
+        char curr_el1 = str1[i]; //1 byte
+        char curr_el2 = str2[i]; //1 byte
 
 
         //если элемента из строки 1 нет в ключах,
@@ -163,8 +164,7 @@ TEST(NewCases, OneIdenticalChar){
 
 int main(int argc, char **argv) {
 
-    string str1, str2;
-    unordered_map<char, char> biection;
+    string str1, str2; //примерно n+1 байт, где n длина строки + 8 байт указатель + 8 байт длина на каждую
 
     ifstream file("../filename.txt");
 
@@ -175,6 +175,8 @@ int main(int argc, char **argv) {
         
         file.close();
     }
+
+    cout << boolalpha << isIsomorphic(str1, str2);
 
     ::testing::InitGoogleTest(&argc, argv);
 
