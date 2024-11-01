@@ -2,7 +2,36 @@
 #include <vector>
 #include <set>
 #include <chrono>
+#include <fstream>
+#include <sstream>
+#include <string>
 
+void read_csv(const std::string& filename, std::vector<int>& intArray) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string value;
+
+        while (std::getline(ss, value, ';')) { // Split by comma
+            try {
+                int number = std::stoi(value); // Convert to int
+                intArray.push_back(number); // Add to the vector
+            } catch (const std::invalid_argument& e) {
+                std::cerr << "Invalid number: " << value << std::endl;
+            } catch (const std::out_of_range& e) {
+                std::cerr << "Number out of range: " << value << std::endl;
+            }
+        }
+    }
+
+    file.close();
+}
 
 void get_k_subarray(const int& K, int currentLevel, const int* array, std::set<std::set<int>>& subarrays, const int& N, std::set<int> indices) {
     // Рекурсия вызывается K раз
@@ -19,7 +48,7 @@ void get_k_subarray(const int& K, int currentLevel, const int* array, std::set<s
     }
 
     for (int i = 0; i < N; i ++) {
-        if (indices.find(i) == indices.end()) { // O(log N) * N - поиск по значению
+        if (indices.find(i) == indices.end()) { // O(log K) * N - поиск по значению
             std::set<int> next_indices = indices; // (32 (заголовок) + 4 * k (int-ы)) * n байт
             next_indices.insert(i);
             get_k_subarray(K, currentLevel + 1, array, subarrays, N, next_indices); 
@@ -27,7 +56,7 @@ void get_k_subarray(const int& K, int currentLevel, const int* array, std::set<s
     }
 
     // Итоговая сложность алгоритма:
-    // для O(N) рекурсия вызывается K раз, следовательно сложность - O(N^K)
+    // для O(N * log K) рекурсия вызывается K раз, следовательно сложность - O((N log K)^K), что можно апроксимировать до O(N^K)
     
     // Суммарные затраты памяти:
     // (68 + 4 * k) * n + (32 + 4 * k) * n = (100 + 8 * k) * n байт
@@ -64,7 +93,18 @@ void report() {
     std::cout << "Tests not passed: " << test_failed << "\n";
 }
 
-int main() {
+void display_set(std::set<std::set<int>> target_set) {
+     for (const auto& innerSet : target_set) {
+        std::cout << "{ ";
+        // Iterate over the inner set
+        for (const auto& elem : innerSet) {
+            std::cout << elem << " ";
+        }
+        std::cout << "}" << std::endl; // Close the brace for the inner set
+    }
+}
+
+void trivial_tests() {
     std::set<int> indices;
     std::set<std::set<int>> subarrays;
     // Память для каждого вложенного множества:
@@ -116,31 +156,69 @@ int main() {
     subarrays.clear();
     
     report();
+}
 
-    // for (int i = 6; i <= 25; i ++) {
-    //     int arr[i];
-    //     for (int j = 0; j < i; j ++) {
-    //         if (j % 2 == 0)
-    //             arr[j] = 1;
-    //         else
-    //             arr[j] = -1;
-    //     }
+void big_test() {
+    std::vector<int> numbers;
+    read_csv("../numbers.csv", numbers);
 
-    //     int k = 6;
+    int arr[numbers.size()];
 
-    //     int N = sizeof(arr) / sizeof(arr[0]);
+    for (int i = 0; i < numbers.size(); i ++)
+        arr[i] = numbers[i];
 
-    //     auto start = std::chrono::high_resolution_clock::now();
+    std::set<int> indices;
+    std::set<std::set<int>> subarrays;
 
-    //     get_k_subarray(k, 0, arr, subarrays, N, indices);
+    int k = 6;
 
-    //     auto end = std::chrono::high_resolution_clock::now();
+    int N = sizeof(arr) / sizeof(arr[0]);
 
-    //     // Calculate the duration
-    //     std::chrono::duration<double> duration = end - start;
+    get_k_subarray(k, 0, arr, subarrays, N, indices);
 
-    //     std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl;
-    // }
+    display_set(subarrays);
+
+    std::set<std::set<int>> expected_result_4;
+
+    //assertEqual(subarrays, expected_result_4, k, false, "Test: 4");
+}
+
+void test_time() {
+    std::set<int> indices;
+    std::set<std::set<int>> subarrays;
+
+    for (int i = 6; i <= 25; i ++) {
+        int arr[i];
+        for (int j = 0; j < i; j ++) {
+            if (j % 2 == 0)
+                arr[j] = 1;
+            else
+                arr[j] = -1;
+        }
+
+        int k = 6;
+
+        int N = sizeof(arr) / sizeof(arr[0]);
+
+        auto start = std::chrono::high_resolution_clock::now();
+
+        get_k_subarray(k, 0, arr, subarrays, N, indices);
+
+        auto end = std::chrono::high_resolution_clock::now();
+
+        // Calculate the duration
+        std::chrono::duration<double> duration = end - start;
+
+        std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl;
+    }
+}
+
+int main() {    
+    trivial_tests();
+
+    //big_test();
+
+    //test_time();
 
     return 0;
 }
