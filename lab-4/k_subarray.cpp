@@ -65,7 +65,7 @@ void get_k_subarray(const int& K, int currentLevel, const int* array, std::set<s
 int test_passed = 0;
 int test_failed = 0;
 
-void assertEqual(std::set<std::set<int>> real_result, std::set<std::set<int>> expected_result, const int& k, const bool mode, const std::string& testName) {
+void assertEqual(const int* array, std::set<std::set<int>> real_result, std::set<std::set<int>> expected_result, const int& k, const bool mode, const std::string& testName) {
     bool condition = true;
 
     if (mode) {
@@ -74,8 +74,15 @@ void assertEqual(std::set<std::set<int>> real_result, std::set<std::set<int>> ex
 
     else {
         for (const auto& inner_set : real_result) {
-            if (inner_set.size() != k)
+            int tmp_sum = 0;
+
+            for (int value : inner_set)
+                tmp_sum += array[value];
+            
+            if (tmp_sum != 0 || inner_set.size() != k) {
                 condition = false;
+                break;
+            }    
         }
     }
 
@@ -127,7 +134,7 @@ void trivial_tests() {
     expected_result_1.insert({0, 1});
     expected_result_1.insert({2, 3});
 
-    assertEqual(subarrays, expected_result_1, k, true, "Test: 1");
+    assertEqual(arr1, subarrays, expected_result_1, k, true, "Test: 1");
     subarrays.clear();
 
     int arr2[4] = {1, -1, 2, -3};
@@ -138,7 +145,7 @@ void trivial_tests() {
     std::set<std::set<int>> expected_result_2;
     expected_result_2.insert({0, 2, 3});
 
-    assertEqual(subarrays, expected_result_2, k, true, "Test: 2");
+    assertEqual(arr2, subarrays, expected_result_2, k, true, "Test: 2");
     subarrays.clear();
 
     int arr3[4] = {1, 1, -1, -1};
@@ -152,7 +159,7 @@ void trivial_tests() {
     expected_result_3.insert({1, 2});
     expected_result_3.insert({1, 3});
 
-    assertEqual(subarrays, expected_result_3, k, true, "Test: 3");
+    assertEqual(arr3, subarrays, expected_result_3, k, true, "Test: 3");
     subarrays.clear();
     
     report();
@@ -208,6 +215,10 @@ void test_time() {
 
         // Calculate the duration
         std::chrono::duration<double> duration = end - start;
+
+        std::set<std::set<int>> tmp_expected_result;
+
+        assertEqual(arr, subarrays, tmp_expected_result, k, false, "Test: " + std::to_string(i));
 
         std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl;
     }
