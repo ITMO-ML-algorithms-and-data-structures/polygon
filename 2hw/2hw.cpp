@@ -5,28 +5,34 @@
 
 
 std::string vector_to_string(const std::vector<std::pair<char, size_t>> &v) {
-    std::stringstream ss; // O(1)
-    for (const auto [fst, snd]: v) // O(NofP)
-        if (snd > 1)
-            ss << fst << snd;
+    std::stringstream ss; // O(1) - создание потока
+    for (const auto [fst, snd]: v) // O(NofP) - перебор всех пар
+        if (snd > 1) // O(1) - сравнение
+            ss << fst << snd; // O(2) - добавление в поток
         else
-            ss << fst;
-    return ss.str(); // O(1)
-    // O(2 + NofP * 2)
+            ss << fst; // O(1) - добавление в поток
+    return ss.str(); // O(2*NofP) - возвращение строки
+
+    // O(NofP) - общая сложность
 }
 
 
 std::string string_compression(const std::string &inp_line) {
-    std::vector<std::pair<char, size_t>> out_line; // O(1)
-    size_t counter = 1; // O(2)
+    std::vector<std::pair<char, size_t>> out_line; // O(1) - выделение памяти
+    size_t counter = 1; // O(1 + 1) - выделение + присваивание
 
-    for (size_t i = 0; i < inp_line.size(); i++) // O(N)
-        if (i == inp_line.size() - 1 or inp_line[i] != inp_line[i + 1]) // O(3 + 4 = 7)
-            out_line.emplace_back(inp_line[i], counter), counter = 1; // O(4)
+    for (size_t i = 0; i < inp_line.size(); i++) // O(1 + 1 - выделение + присваивание
+        // + (1 + 1 + 1) * N - (обращение к методу + сравнение + инкремент) * количество символов строке)
+        if (i == inp_line.size() - 1 or inp_line[i] != inp_line[i + 1]) // O(1 + 1 + 1 - обращение к методу + вычитание + сравнение
+            // + 1 - логическое или, если первое верно, то второе не будет проверяться
+            // + 1 + 1 + 1 - 2 обращения по индексу + сравнение)
+            out_line.emplace_back(inp_line[i], counter), counter = 1; // O(1 + 1 + 1 - обращение по индексу + создание пары + метод добавления в массив
+            // + 1 - присваивание)
         else
-            counter++; // O(1)
+            counter++; // O(1) - инкремент
 
-    return vector_to_string(out_line); // O(7*N + NofP * 4 + (N - NofP),
+    return vector_to_string(out_line);
+    // O(N + NofP) - общая сложность
     // NofP - количество пар "буква, число"
 }
 
