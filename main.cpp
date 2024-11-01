@@ -1,98 +1,85 @@
 ﻿#include <iostream>
-#include <string>
-#include <unordered_map>
-#include <fstream>
+#include <random>
 #include <cassert>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iterator>
+#include <algorithm>
 
 using namespace std;
 
-
-bool isomorph(string str, int len) {
-	// на вход берем строку 40 байт и int 4 байта
-	//создаём словари для выстраивания взамосвязи между буквами слов в обе стороны
-	// (буквам первого слова - буквы второго, а буквам второго - буквы первого)
-	unordered_map<char, char> hashTable_straight, hashTable_back; // + 80 * 2 байт
-	string a{}, b{}; // + 40 * 2 байт
-	bool flag = 0; // + 1 байт
-	int len1{}, len2{}; // + 4 байта
-	// делим строку на два слова и записываем их в a и b, также считаем их длины
-	for (int i = 0; i < len; i++) { // O(n)
-		// + 4 байта
-		if (str[i] == ' ') flag = 1;
-		if (flag == 0 and str[i] != ' ') {
-			a += str[i];
-			len1 += 1;
-		}
-		else if (str[i] != ' ') {
-			b += str[i];
-			len2 += 1;
-		}
+vector<int> sample(int size, int new_size, vector<int> arr) {
+	vector<int> new_arr(new_size); // O(1)
+	
+	for (int i = 0; i < new_size; i++) {
+		int ind = (rand() % (size - i) + i) % size; // O(1) * 11  
+		new_arr[i] = arr[ind]; // O(1) * 2
+		swap(arr[ind], arr[i]); // O(3) + O(1) + O(1)
 	}
-	// проверка на непустоту и соответствие длин слов
-	if ((len1 == len2) && (len1 != 0)) { 
-		// O(n)
-		// присваиваем каждой букве первого слова букву второго, а уже в другом словаре каждой букве второго слова букву первого
-		string result_straight{}, result_back{}; // + 40 * 2 байт
-		for (int k = 0; k < len1; k++) {
-			// + 4 байта
-			hashTable_straight[a[k]] = b[k];
-			hashTable_back[b[k]] = a[k];
-		}
-		// пытаемся сконвертировать исходные слова друг в друга
-		for (int j = 0; j < len2; j++) {
-			// + 4 байта
-			result_straight += hashTable_straight[a[j]];
-			result_back += hashTable_back[b[j]];
-		}
-		// если получилось, значит связь выстроена, слова изоморфны
-		if (result_straight == b && result_back == a) return true;
-		else return false;
-	}
-	else return false;
+	return new_arr;
+	// Имеем ~O(18 * n) = O(n)
 
-	// 40 + 4 + 80 + 80 + 40 + 40 + 1 + 4 + 40 + 40 = 369 байт
 }
 
-
-// Простые тесты на работоспособность программы + на взаимодействие с кириллицей
 void test() {
-	string tests[] = { "odd egg", "jar marck", "train lococ", "paper title", "foo bar", "bar foo", "??? !!!", "000 115", "-==+ door" };
-	int right_answers[] = { 1, 0, 0, 1, 0, 0, 1, 0, 1 };
+	long int n = pow(10, 9);
+	vector<int> arr(n);
+	for (long int i = 0; i < n; i++) {
+		arr[i] = 0;
+	}
+	vector<vector<int>> tests = { { 1, 2, 10, 100, 11109 }, { 1, 2, 3 } };
+	vector<vector<long int>> sizes = { {5, 3}, {3, 2}, {(long int) n, 5} };
+	vector<vector<int>> right_answers = { {11109, 1, 100}, { 1, 3 }, {0, 0, 0, 0, 0} };
+	tests.push_back(arr);
 	for (int i = 0; i < size(tests); i++) {
-		assert(isomorph(tests[i], size(tests[i])) == right_answers[i]);
+		assert(sample(sizes[i][0], sizes[i][1], tests[i]) == right_answers[i]);
 	}
 }
 
-
-void main() {
-	// Чтобы кириллица нормально выводилась
+int main() {
 	setlocale(LC_ALL, "Russian");
-	
-	// Подготовка файла для вывода результата
-	string line;
-	ofstream out;
-	out.open("result.txt");
-	
+
 	// Чтение названия файла, который нужно прочитать
+	string line;
 	string path{};
 	cin >> path;
 	ifstream in(path);
-	// Запускаем тесты, чтобы предупредить в случае чего крах программы
-	test();
 
-	cout.setf(std::ios_base::boolalpha);
-	// Построчно применяем алгоритм к заданному набору данных
+	srand(1234545);
+	// test();
+
+	srand((unsigned int)time(NULL));
+	
+	// Применяем алгоритм к заданному набору данных
+	vector<int> sp{};
+	int n{};
 	if (in.is_open())
 	{
-		cout << "Результат записан в result.txt\n";
-		while (getline(in, line))
-		{
-			// Выводим результат в консоль, записываем в файл
-			out << boolalpha << (isomorph(line, size(line)) == true) << endl;
-			cout << (isomorph(line, size(line)) == true) << "\n";
+		int c = 0;
+		while (getline(in, line)) {
+			vector<string> tokens;
+			istringstream iss(line);
+			string token;
+
+			while (iss >> token) {
+				tokens.push_back(token);
+			}
+
+			for (const auto& t : tokens) {
+				if (c == 0) {
+					sp.push_back(stoi(t));
+				}
+				else { n = stoi(t); }
+			}
+			c++;
 		}
 	}
 	else cout << "Неверное наименование файла";
 	in.close();
-	out.close();
+	vector<int> arr = sample(size(sp), n, sp);
+	for (int i = 0; i < n; ++i) {
+		cout << arr[i] << ' ';
+	}
 }
