@@ -62,19 +62,22 @@ void test() {
 
 int main()
 {
-    srand(static_cast<unsigned>(time(0)));
     test();
-    //Потоковый ввод
-    string input;
-    getline(cin, input);
+    //Читаем файл
+    ifstream inputFile("input.txt");
 
-    istringstream iss(input);
+    string line;
     vector<int> arr;
+
+    getline(inputFile, line);
+    istringstream iss(line);
     int x;
 
     while (iss >> x) { // Извлекаем числа из строки
         arr.push_back(x);
     }
+    inputFile.close();
+
 
     vector<int> ans = solution(arr);
 
