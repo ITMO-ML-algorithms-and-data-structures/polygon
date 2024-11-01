@@ -6,6 +6,7 @@ using namespace std;
 
 
 vector<int> new_indexes(vector<int> index, int N) {
+    // проверка на последний возможный вариант для индексов
     bool flag = false;
     if (index[0] == N - index.size()) {
         flag = true;
@@ -16,10 +17,10 @@ vector<int> new_indexes(vector<int> index, int N) {
         }
     }
 
-    if (flag) { // isEmpty?
-        return vector(1, -1);
+    if (flag) {
+        return vector(1, -1); // при последнем возможном варианте вернет vector(1,-1)
     }
-
+    // конец проверки на последний возможный вариант для индексов
     int i = index.size() - 1;
     index[i]++;
     while (index[i] == N) {
@@ -73,10 +74,6 @@ vector<vector<int>> subarrays_with_sum_0(int arr[], int N, int K) {
         if (is_sum_zero(arr, index, K)) {
             result.push_back(index);
         }
-        /*for (int i = 0; i < K; i++) {
-            cout << index[i] << " ";
-        }
-        cout << "\n";*/
         index = new_indexes_increasing(index, N);
     }
     return result;
@@ -117,12 +114,12 @@ void times_for_different_K(int arr[], int N) {
 }
 
 void asimptotika(int N) {
-    long a = 0;
+    int a = 0;
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             for (int z = 0; z < N; z++) {
-                for (int v = 0; v < N; v++) {
-                    for (int d = 0; d < N; d++) {
+                for (int d = 0; d < N; d++) {
+                    for (int e = 0; e < 170; e++) {
                         a++;
                     }
                 }
@@ -137,13 +134,13 @@ int main() {
     int arr2[] {1,-1,2,-3};
     int arr3[] {1,1,-1,-1};
     int arr4[] {0};
-    int arr5[] {0,1,1,1};*/
+    int arr5[] {0,1,1,1};
     int arr6[] {1,2,3,-2,5,6,7,8,9,10,-1,12,13,-2,15,16,17,18,19,20,21,22,23,24,25};
     int arr7[] {1,2,3,-2,5,6,7,8,9,10,-1,12,13,-2,15,16,17,18,19,20};
     int arr8[] {1,2,3,-2,5,6,7,8,9,10,-1,12,13,-2,15};
     int arr9[] {1,2,3,-2,5,6,7,8,9,10};
     int arr10[] {1,2,3,-2,5};
-    /*auto start = chrono::high_resolution_clock::now();
+    auto start = chrono::high_resolution_clock::now();
     assertEqual(subarrays_with_sum_0(arr1, 4, 2),{{0,1},{2,3}}," test1 from task");
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
@@ -159,16 +156,10 @@ int main() {
     times_for_different_K(arr9, 10);
     times_for_different_K(arr10, 5);*/
     auto start = chrono::high_resolution_clock::now();
-    asimptotika(25);
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
     cout << duration.count() << " milliseconds\n";
-    /*for (int i = 0; i < result.size(); i++) {
-        for (int j = 0; j < result[i].size(); j++) {
-            cout << result[i][j] << " ";
-        }
-        cout << "\n";
-    }*/
+
     //report();
     return 0;
 
