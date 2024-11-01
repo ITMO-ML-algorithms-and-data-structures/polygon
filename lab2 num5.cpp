@@ -2,13 +2,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-
-void print_vector(const std::vector<int> &vec) { //функция для вывода вектора
-    for (auto val : vec) { //O(N)
-        std::cout << " " << val;
-    }
-    std::cout << std::endl;
-}
+#include <cassert>
 
 std::vector<int> counter(const std::string arr[], const int size){  //функция, считающая количество повторений элемента в списке
 
@@ -45,13 +39,14 @@ std::vector<int> counter(const std::string arr[], const int size){  //функц
 
 int main(){
 
-    const std::string arr[] = {"Red", "Green", "Yellow", "Yellow", "Yellow", "Red", "White", "Black", "Black", "Yellow"};
-    const int size = sizeof(arr)/sizeof(arr[0]);
+    const std::string arr[] = {"Red", "Green", "Yellow", "Yellow", "Yellow", "Red", "White", "Black", "Black", "Yellow"}; //O(1+1+1)
+    const int size = sizeof(arr)/sizeof(arr[0]);//O(1+1+1)
 
-    auto res_matrix = counter(arr, size);
-
-    print_vector(res_matrix);
+    auto res_matrix = counter(arr, size); //O(1=1)
+    for (int i = 0; i < res_matrix.size(); i++) { //O(N), печатаем вектор
+        std::cout << " " << res_matrix[i];
+    }
 
     return 0;
-
 }
+

@@ -1,0 +1,9 @@
+    
+    // const std::string arr_test[] = {"res", "res", "we"};
+    // const int size_t = sizeof(arr_test)/sizeof(arr_test[0]);
+
+
+    // std::vector<int> True_res = {2, 2, 1};
+    // auto res = counter(arr_test, size_t);
+
+    // assert(True_res ==  res);
