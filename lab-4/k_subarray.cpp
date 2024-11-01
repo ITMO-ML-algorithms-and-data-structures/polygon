@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 
-void read_csv(const std::string& filename, std::vector<int>& intArray) {
+void read_csv(const std::string& filename, std::vector<int>& intArray) { // Функция чтения чисел из csv в массив
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename << std::endl;
@@ -33,20 +33,22 @@ void read_csv(const std::string& filename, std::vector<int>& intArray) {
     file.close();
 }
 
+// Основная рекурсивная функция
 void get_k_subarray(const int& K, int currentLevel, const int* array, std::set<std::set<int>>& subarrays, const int& N, std::set<int> indices) {
     // Рекурсия вызывается K раз
-    if (currentLevel == K) {
+    if (currentLevel == K) { // Если достигли нужной глубины рекурсии
         int summ = 0;
 
-        for (const int& index : indices)
+        for (const int& index : indices) // Проверяем сумму полученного подмассива
             summ += array[index]; // O(1) * K - взятие по индексу
 
         if (summ == 0 && subarrays.find(indices) == subarrays.end()) // O(log N) - поиск по значению
-            subarrays.insert(indices);
+            subarrays.insert(indices); // Если сумма 0 и такого подмассива ещё не было, добавляем к результату
         
         return;
     }
 
+    //Для каждого не использованного до этого момента значения запускаем свою "ветвь" рекурсии
     for (int i = 0; i < N; i ++) {
         if (indices.find(i) == indices.end()) { // O(log K) * N - поиск по значению
             std::set<int> next_indices = indices; // (32 (заголовок) + 4 * k (int-ы)) * n байт
@@ -56,30 +58,32 @@ void get_k_subarray(const int& K, int currentLevel, const int* array, std::set<s
     }
 
     // Итоговая сложность алгоритма:
-    // для O(N * log K) рекурсия вызывается K раз, следовательно сложность - O((N log K)^K), что можно апроксимировать до O(N^K)
+    // для O(N * log K) рекурсия вызывается K раз, 
+    // следовательно сложность - O((N log K)^K), что можно апроксимировать до O(N^K)
     
     // Суммарные затраты памяти:
-    // (68 + 4 * k) * n + (32 + 4 * k) * n = (100 + 8 * k) * n байт
+    // (68 + 4 * k) * n + (32 + 4 * k) * k * n = (68 + 36 * k + 4 * k^2) * n байт
 }
 
 int test_passed = 0;
 int test_failed = 0;
 
+// Главная тестирующая функция
 void assertEqual(const int* array, std::set<std::set<int>> real_result, std::set<std::set<int>> expected_result, const int& k, const bool mode, const std::string& testName) {
     bool condition = true;
 
-    if (mode) {
-        condition = (real_result == expected_result);
+    if (mode) { // Строгая проверка ответа
+        condition = (real_result == expected_result); // Проверяем полное совпадение реального и ожидаемого результата
     }
 
-    else {
+    else { // Мягкая проверка ответа
         for (const auto& inner_set : real_result) {
             int tmp_sum = 0;
 
             for (int value : inner_set)
                 tmp_sum += array[value];
             
-            if (tmp_sum != 0 || inner_set.size() != k) {
+            if (tmp_sum != 0 || inner_set.size() != k) { // Проверяем равенство 0 суммы каждого подмассива и длину всех подмассивов
                 condition = false;
                 break;
             }    
@@ -95,11 +99,13 @@ void assertEqual(const int* array, std::set<std::set<int>> real_result, std::set
     }
 }
 
+// Вывод отчёта о тестах
 void report() {
     std::cout << "\nTests passed: " << test_passed << "\n";
     std::cout << "Tests not passed: " << test_failed << "\n";
 }
 
+// Функция вывода множества
 void display_set(std::set<std::set<int>> target_set) {
      for (const auto& innerSet : target_set) {
         std::cout << "{ ";
@@ -111,6 +117,7 @@ void display_set(std::set<std::set<int>> target_set) {
     }
 }
 
+// Простые тесты из примера
 void trivial_tests() {
     std::set<int> indices;
     std::set<std::set<int>> subarrays;
@@ -165,9 +172,11 @@ void trivial_tests() {
     report();
 }
 
+// Большой тест на данных из generate_dataset
+// (работает очень долго)
 void big_test() {
     std::vector<int> numbers;
-    read_csv("../numbers.csv", numbers);
+    read_csv("../data/numbers.csv", numbers);
 
     int arr[numbers.size()];
 
@@ -183,20 +192,21 @@ void big_test() {
 
     get_k_subarray(k, 0, arr, subarrays, N, indices);
 
-    display_set(subarrays);
+    // display_set(subarrays);
 
     std::set<std::set<int>> expected_result_4;
 
-    //assertEqual(subarrays, expected_result_4, k, false, "Test: 4");
+    assertEqual(arr, subarrays, expected_result_4, k, false, "Test: 4");
 }
 
+// Вычисление времени работы алгоритма  
 void test_time() {
     std::set<int> indices;
     std::set<std::set<int>> subarrays;
 
-    for (int i = 6; i <= 25; i ++) {
+    for (int i = 6; i <= 25; i ++) { // Проверяем для всех длин массива от 6 до 25
         int arr[i];
-        for (int j = 0; j < i; j ++) {
+        for (int j = 0; j < i; j ++) { // Заполняем массив
             if (j % 2 == 0)
                 arr[j] = 1;
             else
@@ -207,27 +217,27 @@ void test_time() {
 
         int N = sizeof(arr) / sizeof(arr[0]);
 
-        auto start = std::chrono::high_resolution_clock::now();
+        auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта
 
-        get_k_subarray(k, 0, arr, subarrays, N, indices);
+        get_k_subarray(k, 0, arr, subarrays, N, indices); // Запускаем алгоритм
 
-        auto end = std::chrono::high_resolution_clock::now();
+        auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
 
         // Calculate the duration
         std::chrono::duration<double> duration = end - start;
 
         std::set<std::set<int>> tmp_expected_result;
 
-        assertEqual(arr, subarrays, tmp_expected_result, k, false, "Test: " + std::to_string(i));
+        assertEqual(arr, subarrays, tmp_expected_result, k, false, "Test: " + std::to_string(i)); // Проверяем корректность результата
 
-        std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl;
+        std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl; // Выводим время работы
     }
 }
 
 int main() {    
-    trivial_tests();
+    //trivial_tests();
 
-    //big_test();
+    big_test();
 
     //test_time();
 
