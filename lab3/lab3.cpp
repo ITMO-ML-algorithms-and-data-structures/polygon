@@ -14,7 +14,7 @@ vector<int> freqCount(vector<string> inputArray)
     2. Объявляем массив outputArray типа vector c Элементами int и с размером равным размеру inputArray
     */
     unordered_map<string, int> frequencyMap; //O(1) - для объявления переменной
-    vector<int> outputArray (inputArray.size()); //O(N) - для выделения памяти
+    vector<int> outputArray (inputArray.size()); //O(1) - для выделения памяти O(1) - для объявления переменной
     /*
     1. Проходимся по значениям массива, помещая их в константу word типа string
     2. Увеличиваем значение на 1 по ключу word в хэш-таблице
@@ -27,12 +27,13 @@ vector<int> freqCount(vector<string> inputArray)
     Цикл: каждый элемент входящего массива проеобразуется через хэш-таблицу в частоту появлений и это значение заносится 
     в результирующий массив по соответствующему индексу
     */
-    for (int i = 0; i < (int) inputArray.size(); i++) //O(N) - цикл
+    for (int i = 0; i < (int) inputArray.size(); i++) //O(1) - однократно память под переменную i +  (O(1) + O(1) + O(1) операции)
+    //O(N) - цикл
     {
-        outputArray[i] = frequencyMap[inputArray[i]]; //O(1) - доступ к элементам unordered_map
+        outputArray[i] = frequencyMap[inputArray[i]]; //O(1) + O(1) + O(1) + O(1) - два взятия по индексу,  доступ к элементу unordered_map
     }
     return outputArray;
-} //Итог: O(N) + O(N) + O(N)= O(N)
+} //Итог: O(N) + O(N) = O(N)
 
 //Тесты cassert
 /*void test_freqCount() 
@@ -71,7 +72,7 @@ int main()
         if(str.size() > 0){ // O(1) + O(1) - размер и сравнение
             input_array.push_back(str); // O(1) - добавление строки в вектор
         } else {
-            cerr << "Файл пуст" << endl; // O(1) - вывод сообщения об ошибке
+            cerr << "Файл пуст" << endl; // O(1) + O(1) - вывод сообщения об ошибке
         }
     }
 
@@ -84,9 +85,9 @@ int main()
 
     if (out.is_open()) // O(1) - проверка, открыт ли файл
     {
-        for (const int& count : result) // O(k) - k - количество элементов в result
+        for (const int& count : result) // O(N) - цикл
         {
-            out << count << " "; // O(1) для каждой записи, итого O(k)
+            out << count << " "; // O(1) + O(1) для каждой записи
         }
     }
     out.close(); // O(1) - закрытие файла
