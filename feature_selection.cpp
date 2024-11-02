@@ -25,8 +25,8 @@ std::ostream& operator<<(std::ostream &out, std::vector <T> &a) {
     return out;
 }
 
-std::vector<int> feature_selection()
-{
+// В общем сложность составляет примерно O(n!*n*((n*m)+(n^2*m+n^3)+m)), память около 2*n*m*n^2*8 байт
+std::vector<int> feature_selection() {
     // path to *.csv file
     const char* path = "WineQT.csv";
 
@@ -40,32 +40,35 @@ std::vector<int> feature_selection()
     std::cout << "Full score: " << full_score << "\n\n";
     std::vector<int> min_features;
 
-    // Перебираем битмаску выбранных признаков
-    for (int mask = 1; mask < (1 << 11); mask++) {
-        std::vector<int> features;
-        for (int i = 0; i < 11; i++)
-            if (mask & (1 << i)) // Если i бит равен 1, то возьмем признак
-                features.push_back(i);
-        features.push_back(11); // Целевая переменная
+    // Перебираем все перестановки признаков и их количество за O(n!*n)
+    std::vector<int> cur_features;
+    for (int i = 0; i < 8; i++)
+        cur_features.push_back(i);
+    do {
+        std::vector<int> features = {11}; // Целевая переменная
+        for (int i = 0; i < 8; i++) {
+            features.push_back(cur_features[i]);
 
-        // Переводим в нужный тип данных
-        arma::uvec indices(features.size());
-        for (int i = 0; i < features.size(); i++) {
-            indices[i] = static_cast<arma::uword>(features[i]);
-        }
-        arma::mat selectedFeatures = dataset.rows(indices);
+            // Переводим в нужный тип данных
+            arma::uvec indices(features.size());
+            for (int i = 0; i < features.size(); i++) {
+                indices[i] = static_cast<arma::uword>(features[i]);
+            }
+            // Составление новой матрицы с данными за O(n*m), размера n*m*8 байт.
+            arma::mat selectedFeatures = dataset.rows(indices);
 
-        // Обучить модель (черный ящик), и получить метрику качество
-        score = evaluate_dataset(selectedFeatures, (int)features.size() - 1);
+            // Обучить модель (черный ящик), и получить метрику качество. Примерно O(n^2*m+n^3) через стандартную реализацию
+            score = evaluate_dataset(selectedFeatures, 0);
 
-        features.pop_back(); // Убираем целевую переменную
-        if (full_score * 0.9 < score) { // Ухудшение не более чем на 10%
-            if (min_features.empty() || min_features.size() > features.size()) {
-                std::cout << "New score: " << score << '\n' << "Features: " << features << "\n\n";
-                min_features = features;
+            features.pop_back(); // Убираем целевую переменную
+            if (full_score * 0.9 < score) { // Ухудшение не более чем на 10%
+                if (min_features.empty() || min_features.size() > features.size()) {
+                    std::cout << "New score: " << score << '\n' << "Features: " << features << "\n\n";
+                    min_features = features;
+                }
             }
         }
-    }
+    } while (std::next_permutation(cur_features.begin(), cur_features.end())); // Берем следующую перестановку
 
     return min_features;
 }
