@@ -42,11 +42,11 @@ std::vector<int> feature_selection() {
 
     // Перебираем все перестановки признаков и их количество за O(n!*n)
     std::vector<int> cur_features;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 11; i++)
         cur_features.push_back(i);
     do {
         std::vector<int> features = {11}; // Целевая переменная
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 11; i++) {
             features.push_back(cur_features[i]);
 
             // Переводим в нужный тип данных
