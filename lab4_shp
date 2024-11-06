@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// проверяем, можно ли разделить массив на две части с одинаковой суммой
+bool canSplit(const vector<int>& nums, int idx, int sum1, int sum2, vector<int>& part1, vector<int>& part2) {
+    if (idx == nums.size()) {
+        return sum1 == sum2;  // сравниваем суммы двух частей
+    }
+
+    part1.push_back(nums[idx]);
+    if (canSplit(nums, idx + 1, sum1 + nums[idx], sum2, part1, part2)) {
+        return true;  // если получилось
+    }
+    part1.pop_back();  // отменяем добавление
+
+    part2.push_back(nums[idx]);
+    if (canSplit(nums, idx + 1, sum1, sum2 + nums[idx], part1, part2)) {
+        return true;  // если получилось
+    }
+    part2.pop_back();  // отменяем добавление
+
+    return false;  // не удалось разделить
+}
+
+// основная функция для проверки разделения
+bool canDivide(const vector<int>& nums, vector<int>& part1, vector<int>& part2) {
+    int total = 0;
+    for (int num : nums) {
+        total += num;  // считаем общую сумму
+    }
+
+    if (total % 2 != 0) {
+        return false;  // если сумма нечетная, разделить нельзя
+    }
+
+    return canSplit(nums, 0, 0, 0, part1, part2);  // ищем разделение
+}
+
+int main() {
+    vector<int> arr = {1, 5, 11, 5};  // пример массива
+    vector<int> part1, part2;  // части для хранения результатов
+
+    if (canDivide(arr, part1, part2)) {
+        cout << "массив можно разделить на две части с равной суммой:" << endl;
+        cout << "часть 1: ";
+        for (int num : part1) {
+            cout << num << " ";
+        }
+        cout << endl;
+        cout << "часть 2: ";
+        for (int num : part2) {
+            cout << num << " ";
+        }
+        cout << endl;
+    } else {
+        cout << "массив нельзя разделить на две части с равной суммой." << endl;
+    }
+
+    return 0;
+}
