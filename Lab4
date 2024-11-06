@@ -1,0 +1,194 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <chrono>
+#include <iomanip>
+#include <cassert>
+
+using namespace std;
+
+// Функция для расчёта суммы отклонений от среднего значения в кластере
+double calculateClusterCost(const vector<double>& cluster) {
+    if (cluster.empty()) return 0; // Проверка на пустой кластер
+
+    double mean = 0;  // Память: O(1)
+
+    for (double val : cluster) { // Сложность: O(N), где N — количество элементов в кластере
+        mean += val; // Суммируем значения
+    }
+    mean /= cluster.size(); // Память: O(1)
+
+    double cost = 0; // Память: O(1)
+
+    for (double val : cluster) { // Сложность: O(N)
+        cost += abs(val - mean); // Сумма абсолютных отклонений от среднего
+    }
+
+    return cost; // Память: O(1)
+}
+
+// Рекурсивная функция для поиска оптимального разбиения
+void findOptimalPartition(const vector<double>& arr, int index, int k, vector<vector<double>>& current_set, double current_metric, double& min_metric, vector<vector<double>>& best_set) {
+    // Базовый случай: если достигли конца массива и создали K кластеров
+    if (index == arr.size() && current_set.size() == k) {
+        if (current_metric < min_metric) { // Если текущая стоимость меньше минимальной
+            min_metric = current_metric; // Обновление минимальной стоимости
+            best_set = current_set; // Сохранение лучшего разбиения
+        }
+        return; // Выход из функции
+    }
+
+    // Условия выхода из функции, если количество кластеров превышает K или индекс выходит за размер массива
+    if (current_set.size() > k || index >= arr.size()) return; // O(1)
+
+    // Пробуем добавить текущий элемент в существующий кластер
+    for (int i = 0; i < current_set.size(); i++) { // Сложность: O(K), где K — текущее количество кластеров
+        current_set[i].push_back(arr[index]); // Добавляем элемент в кластер
+        // Вычисляем новую стоимость для кластера с добавленным элементом
+        double add_metric = calculateClusterCost(current_set[i]); // Сложность: O(N)
+
+        // Рекурсия для следующего элемента
+        findOptimalPartition(arr, index + 1, k, current_set, current_metric + add_metric, min_metric, best_set); // Временная сложность O(2^N)
+        current_set[i].pop_back(); // Возврат к предыдущему состоянию (удаляем элемент)
+    }
+
+    // Пробуем создать новый кластер с текущим элементом
+    if (current_set.size() < k) {
+        current_set.push_back({ arr[index] }); // Создаем новый кластер и добавляем в него элемент
+        findOptimalPartition(arr, index + 1, k, current_set, current_metric, min_metric, best_set); // Рекурсивный вызов
+        current_set.pop_back(); // Возврат к предыдущему состоянию (удаляем пустой кластер)
+    }
+}
+
+// Функция основного разбиения
+vector<vector<double>> cluster_array(const vector<double>& arr, int k) {
+    vector<vector<double>> best_set; // Лучший набор кластеров
+    vector<vector<double>> current_set; // Текущий набор кластеров
+    double min_metric = 1e9; // Инициализация минимальной стоимости разбиения
+
+    findOptimalPartition(arr, 0, k, current_set, 0, min_metric, best_set); // Запускаем рекурсивную функцию для разбиения
+    return best_set; // Возвращаем лучший набор кластеров
+}
+
+// Итоговая сложность: O(2^N)
+
+
+void print_vector(const vector<double>& vec) {
+    cout << "[";
+    for (size_t j = 0; j < vec.size(); j++) {
+        cout << fixed << setprecision(1) << vec[j]; // Выводим элементы кластера с точностью до одного знака после запятой
+        if (j < vec.size() - 1) cout << " , ";
+    }
+    cout << "] ";
+}
+
+// Функция тестирования кластеризации
+void test() {
+    {
+        std::vector<double> arr = { 1.0,100.0, 2.0, 3.0, 4.0, 5.0, 99.0,1000.0 };
+        std::vector<std::vector<double>> res;
+        auto start = chrono::high_resolution_clock::now();
+        res = cluster_array(arr, 7);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+
+        assert(res.size() == 7);
+        std::cout << "Test 1: " << "Time: " << duration.count() / 1e6 << " seconds" << "\n";
+        std::cout << "Кластеры: ";
+        for (const auto& cluster : res) {
+            print_vector(cluster);
+        }
+        std::cout << "\n";
+
+    }
+
+    {
+        std::vector<double> arr = { 1.1,1.2,1.5, 2.1,1.5,2.3, 3.4,3.9, 3.9,4.0,4.1, 5.9, 5.8, 5.9, 11.0 };
+        std::vector<std::vector<double>> res;
+        auto start = chrono::high_resolution_clock::now();
+        res = cluster_array(arr, 7);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+
+        assert(res.size() == 7);
+        std::cout << "Test 2: " << "Time: " << duration.count() / 1e6 << " seconds" << "\n";
+        std::cout << "Кластеры: ";
+        for (const auto& cluster : res) {
+            print_vector(cluster);
+        }
+        std::cout << "\n";
+    }
+
+
+    {
+        std::vector<double> arr = { 0.5, 0.9, -99.3, 88.0, -71.0, 8.0, -441.7,20.7, 8.0, 4.0, 5.0, -98.0, 49.0, 88.0, -71.0, 4.0 };
+        std::vector<std::vector<double>> res;
+        auto start = chrono::high_resolution_clock::now();
+        res = cluster_array(arr, 7);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+
+        assert(res.size() == 7);
+        std::cout << "Test 3: " << "Time: " << duration.count() / 1e6 << " seconds" << "\n";
+        std::cout << "Кластеры: ";
+        for (const auto& cluster : res) {
+            print_vector(cluster);
+        }
+        std::cout << "\n";
+    }
+    {
+        std::vector<double> arr = { -1.5, 0.0, 1.7,0.6,0.9, 8.0, -1.0, 4.0, 5.0, 7.0};
+        std::vector<std::vector<double>> res;
+        auto start = chrono::high_resolution_clock::now();
+        res = cluster_array(arr, 7);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+
+        assert(res.size() == 7);
+        std::cout << "Test 4: " << "Time: " << duration.count() / 1e6 << " seconds" << "\n";
+        std::cout << "Кластеры: ";
+        for (const auto& cluster : res) {
+            print_vector(cluster);
+        }
+        std::cout << "\n";
+    }
+    {
+        std::vector<double> arr = {-88.0,1.5, 2.1,1.5,2.3, 3.4,3.9, 3.9,4.0,4.1, -3.0, -441.7,2.7,4.0,-63.0, 1.7,0.7, 8.0, 3.2, 4.2, 1.7,0.9, 8.0, -84.0, 25.5};
+        std::vector<std::vector<double>> res;
+        auto start = chrono::high_resolution_clock::now();
+        res = cluster_array(arr, 7);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+
+        assert(res.size() == 7);
+        std::cout << "Test 5: " << "Time: " << duration.count() / 1e6 << " seconds" << "\n";
+        std::cout << "Кластеры: ";
+        for (const auto& cluster : res) {
+            print_vector(cluster);
+        }
+        std::cout << "\n";
+    }
+    {
+        std::vector<double> arr = { 3.0, 3.0, 88.0, -31.0, 1.7,0.9, 82.0, -1.0, 4.0, 2.5, 3.0, 32.0, -93.0,  88.0, -63.0, 1.7,0.7, 8.0, -98.0, 49.0, 88.0, -71.0, 4.0, 3.2, 4.2, 59.0, 57.0, 5.0, 511.0, 25.0 };
+        std::vector<std::vector<double>> res;
+        auto start = chrono::high_resolution_clock::now();
+        res = cluster_array(arr, 7);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+
+        assert(res.size() <= 7);
+        std::cout << "Test 666: " << "Time: " << duration.count() / 1e6 << " seconds" << "\n";
+        std::cout << "Кластеры: ";
+        for (const auto& cluster : res) {
+            print_vector(cluster);
+        }
+        std::cout << "\n";
+    }
+
+    std::cout << "Все тесты пройдены!" << "\n";
+}
+
+int main() {
+    setlocale(LC_ALL, "Ru");
+    test();
+}
