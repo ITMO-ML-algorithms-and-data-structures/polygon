@@ -1,12 +1,14 @@
 #include <iostream>
-#include <vector>
+#include <fstream>
 #include <string>
+#include <vector>
 #include <unordered_map>
 
+/* Есть массив, нужно подсчитать кол-во уникальных значений и заменить каждое значение кол-вом */
+
 std::vector<int> CountUniqueValues(int size, std::vector<std::string> arr) {
-	// Подсчитать кол-во уникальных значений и заменить каждое значение кол-вом
-	
-	std::unordered_map<std::string, int> input;
+
+	std::unordered_map<std::string, int> input; // O(1)
 	// Создаём хэш-таблицу для подсчёта кол-ва уникальных значений
 
 	for (int i = 0; i < arr.size(); i++) {
@@ -15,7 +17,7 @@ std::vector<int> CountUniqueValues(int size, std::vector<std::string> arr) {
 	}
 	// Сложность цикла: O(arr.size())
 
-	std::vector<int> output(size);
+	std::vector<int> output(size); // O(1)
 	// Создаём вектор для вывода результата размера size
 	
 	for (int i = 0; i < size; i++) {
@@ -25,6 +27,8 @@ std::vector<int> CountUniqueValues(int size, std::vector<std::string> arr) {
 	}
 	// Сложность цикла: O(size)
 
+	// Итоговая сложность функции = O(1 + arr.size() + 1 + size) = 
+	// = O(arr.size() + size + 2) ~= O(n)
 	return output;
 }
 
@@ -64,36 +68,34 @@ void test() {
 int main() {
 	test();
 
-	int size; // O(1) - выделение памяти
-	std::cout << "Enter size: ";
-	std::cin >> size; // O(1) - присваивание
+	std::ifstream file("input.txt");
+	// Открытие файла для ввода массива
 
-	if (size < 0) {
-		std::cout << "The size cannot be negative.";
+	if (file.is_open()) {
+		std::cout << "File was opened\n";
+	}
+	else {
+		std::cout << "File was not opened\n";
 		return 1;
-	}
+	} // Проверка открытия файла
 
-	std::vector<std::string> arr(size); // O(1) - выделение памяти)
+	std::string st0;
+	file >> st0;
+	// Вписывание первой строки в st0
+	
+	int size = std::stoi(st0); 
+	// Преобразование первой строки в int
+	
+	std::vector<std::string> arr;
 
-	for (int i = 0; i < size; i++) {
-		std::cout << "Enter element " << (i + 1) << ": ";
-		std::cin >> arr[i];
-	}
-	// Сложность цикла: O(size)
+	do {
+		std::string st;
+		file >> st;
+		arr.push_back(st);
+	} while (!file.eof());
+	// Добавление элементов построчно в arr
 
-	std::vector<int> result = CountUniqueValues(size, arr);
-
-	std::cout << "Result: { ";
-	for (int i = 0; i < size; i++) {
-		std::cout << result[i] << " ";
-	}
-	// Сложность цикла: O(size)
-	std::cout << " }";
-
-	// Сложность алгоритма:
-	// O(N) - в худшем случае если все элементы одинаковы
-	// O(K) - средний случай, где 1 < K < N если есть повторяющиеся элементы
-	// O(N) - лучший случай при условии что все элементы уникальны
-
-	return 0;
+	for (int element : CountUniqueValues(size, arr)) {
+		std::cout << element << " ";
+	} // Вывод результата
 }
