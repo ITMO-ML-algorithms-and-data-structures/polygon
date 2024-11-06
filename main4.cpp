@@ -12,10 +12,8 @@ std::vector<int> dec2bin(int decimal, int len) {
     return binary;
 }
 
-int main() {
-    std::vector<std::vector<int>> data = {{2, 3}, {3, 4}, {4, 5}};
-    int weight_limit = 5;
-
+// Ассимптотика O(2 ^ (N + 1))
+int find_dec_mask(std::vector<std::vector<int>> &data, int weight_limit) {
     int len = data.size();
     int max_dec = pow(2, len);
 
@@ -36,13 +34,85 @@ int main() {
             max_price_dec = i;
         }
     }
-    std::cout << max_price << endl;
-    std::vector<int> mask = dec2bin(max_price_dec, len);
-    for (int i = 0; i < len; i++) {
-        std::cout << mask[i] << " ";
-    }
-    return 0;
+    return max_price_dec;
 }
 
-// Ассимптотика O(2 ^ (N + 1))
+void test() {
+    std::vector<std::vector<int>> data = {{2, 3}, {3, 4}, {4, 5}};
+    int wlimit = 5;
+    int price = 0;
+    int len = data.size();
+    std::vector<int> mask = dec2bin(find_dec_mask(data, wlimit), len);
+    for (int i = 0; i < len; i++) {
+        price += data[i][1] * mask[i];
+    }
+    if (price == 7) {
+        std::cout << "OK" << std::endl;
+    } else {
+        std::cout << "Error" << std::endl;
+    }
+
+
+    data = {{1, 35}, {16, 22}, {10, 100}, {2, 77}, {4, 24}};
+    wlimit = 23;
+    price = 0;
+    len = data.size();
+    mask = dec2bin(find_dec_mask(data, wlimit), len);
+    for (int i = 0; i < len; i++) {
+        price += data[i][1] * mask[i];
+    }
+    if (price == 236) {
+        std::cout << "OK" << std::endl;
+    } else {
+        std::cout << "Error" << std::endl;
+    }
+
+
+    data = {{2, 10}, {3, 15}, {5, 40}, {7, 50}, {1, 3}, {4, 20}, {1, 5}};
+    wlimit = 15;
+    price = 0;
+    len = data.size();
+    mask = dec2bin(find_dec_mask(data, wlimit), len);
+    for (int i = 0; i < len; i++) {
+        price += data[i][1] * mask[i];
+    }
+    if (price == 105) {
+        std::cout << "OK" << std::endl;
+    } else {
+        std::cout << "Error" << std::endl;
+    }
+
+    data =  {{6, 30}, {3, 14}, {4, 16}, {2, 9}, {5, 20}, {1, 3}};    
+    wlimit = 10;
+    price = 0;
+    len = data.size();
+    mask = dec2bin(find_dec_mask(data, wlimit), len);
+    for (int i = 0; i < len; i++) {
+        price += data[i][1] * mask[i];
+    }
+    if (price == 47) {
+        std::cout << "OK" << std::endl;
+    } else {
+        std::cout << "Error" << std::endl;
+    }
+
+
+}
+
+
+int main() {
+    test();
+    std::vector<std::vector<int>> data = {{2, 3}, {3, 4}, {4, 5}};
+    int wlimit = 5;
+    int price = 0;
+    int len = data.size();
+    std::vector<int> mask = dec2bin(find_dec_mask(data, wlimit), len);
+    for (int i = 0; i < len; i++) {
+        price += data[i][1] * mask[i];
+        std::cout << mask[i] << " ";
+    }
+    std::cout << std::endl << price;
+}
+
+
 
