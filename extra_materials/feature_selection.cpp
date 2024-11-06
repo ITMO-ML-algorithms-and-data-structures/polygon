@@ -68,7 +68,7 @@ int feature_selection() {
     }
 
     std::vector<int> nums; //создаем индексы всех столбцов для перебора
-    for (int i = 0; i < dataset.n_rows - 7; i++) { //O(n)
+    for (int i = 0; i < dataset.n_rows - 2; i++) { //O(n)
         nums.push_back(i);
     }
 
