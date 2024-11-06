@@ -12,7 +12,6 @@ std::vector<int> dec2bin(int decimal, int len) {
     return binary;
 }
 
-// Ассимптотика O(2 ^ (N + 1))
 int find_dec_mask(std::vector<std::vector<int>> &data, int weight_limit) {
     int len = data.size();
     int max_dec = pow(2, len);
