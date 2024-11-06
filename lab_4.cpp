@@ -122,7 +122,6 @@ int main() {
         for (auto element : set_i) cout << element << ' ';
         cout << '\n';
     }
-
     in.close();
 
     return 0;
