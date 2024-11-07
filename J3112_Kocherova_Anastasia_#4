@@ -1,0 +1,73 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include <chrono>  // Для работы с временем
+#include <iomanip> // Для форматирования вывода
+
+using namespace std;
+using namespace chrono;  // Для удобства использования chrono
+
+// Рекурсивная функция для поиска подмассивов
+void findSubmas(int start, int N, int K, const vector<int>& arr, vector<int>& current, set<vector<int>>& uniqueSubmas) {
+    //Этот блок кода проверяет, накопились ли индексы в векторе current до размера 
+    //Если current.size() равен K, это означает, что мы собрали подмассив нужного размера, и можно проверить его сумму.
+    if (current.size() == K) {
+        int sum = 0;
+        for (int idx : current) {
+            sum += arr[idx];
+        }
+        if (sum == 0) {
+            uniqueSubmas.insert(current); // Вставляем в set, чтобы исключить дубликаты
+        }
+        return;
+    }
+
+    for (int i = start; i < N; ++i) {
+        current.push_back(i);
+        findSubmas(i + 1, N, K, arr, current, uniqueSubmas);
+        current.pop_back(); // Откат
+    }
+}
+
+int main() {
+    // Чтение данных из файла data_1.txt
+    ifstream inputFile("data_1.txt");
+    vector<int> arr;
+    int num;
+    
+    while (inputFile >> num) {
+        arr.push_back(num);
+        if (inputFile.peek() == ',') {
+            inputFile.ignore();
+        }
+    }
+    
+    int N = arr.size();
+    int K = 5;  // Размер подмассива
+
+    set<vector<int>> uniqueSubmas; // Для хранения уникальных подмассивов
+    vector<int> current;              // Для хранения текущего подмассива (по индексам)
+
+    auto start_time = high_resolution_clock::now();
+
+    findSubmas(0, N, K, arr, current, uniqueSubmas);
+
+    auto end_time = high_resolution_clock::now();
+
+    auto duration = duration_cast<milliseconds>(end_time - start_time);
+
+    ofstream outputFile("result4.txt");
+    for (const auto& subarray : uniqueSubmas) {
+        for (int idx : subarray) {
+            outputFile << idx << " "; // Записываем индексы
+        }
+        outputFile << endl;
+    }
+
+    // Выводим время работы алгоритма
+    cout << "Время работы алгоритма: " << duration.count() << " миллисекунд." << endl;
+
+    return 0;
+}
