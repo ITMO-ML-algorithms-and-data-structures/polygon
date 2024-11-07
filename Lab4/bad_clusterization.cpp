@@ -96,7 +96,7 @@ double partition_score(const std::vector<double>& vector, const std::vector<std:
 // Высчитывается как разность между размерами самого большого и самого маленького кластеров
 // Сложность - о(1) * 6 = о(1)
 // Память - 16 байт
-int uniformity_score(const std::vector<std::vector<int>> partition) {
+int uniformity_score(const std::vector<std::vector<int>>& partition) {
 
     size_t min_len = std::numeric_limits<int>::max(), max_len = 0; // Переменный для хранения максимального и минимального размеров кластеров, память - 8 * 2 = 16 байт
     for (int i = 0; i < partition.size(); i++) { // Проходим по всем кластерам
