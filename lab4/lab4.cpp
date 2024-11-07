@@ -1,26 +1,27 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <numeric>
 #include <chrono>
 #include <random>
-#include <cassert>
 #include <limits>
 
 
 // Средние значение элементов кластера
 double meanCluster(const std::vector<double>& cluster) {
-    double sum = std::accumulate(cluster.begin(), cluster.end(), 0.0);
-    int sizeCluster = cluster.size();
+    double sum = 0; // 10 байт
+    int sizeCluster = cluster.size(); // 8 байт
+    for (int i = 0; i < sizeCluster; ++i) {
+        sum += cluster[i];
+    }
     return sum / sizeCluster;
 }
 
 
 // Метрика для кластера
 double metricCluster(const std::vector<double>& cluster) {
-    int sizeCluster = cluster.size();
-    double sum = 0.0;
-    double mean = meanCluster(cluster);
+    int sizeCluster = cluster.size(); // 8 байт
+    double sum = 0.0; // 10 байт
+    double mean = meanCluster(cluster); // 10 байт
     for (int i = 0; i < sizeCluster; ++i){
         sum += fabs(cluster[i] - mean);
     }
@@ -36,8 +37,8 @@ double metricCluster(const std::vector<double>& cluster) {
 // minMetric - метрика для оптимального кластера на данный момент
 void getOptimalClusters(int index, const std::vector<double>& array, std::vector<std::vector<double>> curClusters,
 std::vector<std::vector<double>>& optimalClusters, double& minMetric) {
-    int sizeArray = array.size(); // Кол-во эл-ов массива
-    int numClusters = curClusters.size(); // Кол-во кластеров
+    int sizeArray = array.size(); // Кол-во эл-ов массива 4 байта
+    int numClusters = curClusters.size(); // Кол-во кластеров 4 байта
 
     if (index == sizeArray) { // Если рассмотрели все эл-ы
         // Проверка, чтобы все кластеры были не пустые
@@ -51,7 +52,7 @@ std::vector<std::vector<double>>& optimalClusters, double& minMetric) {
         }
 
         // Общая метрика для кластеров
-        double metricSum = 0.0;
+        double metricSum = 0.0; // 10 байт
         for (int i = 0; i < numClusters; ++i) {
             metricSum += metricCluster(curClusters[i]);
         }
@@ -68,7 +69,7 @@ std::vector<std::vector<double>>& optimalClusters, double& minMetric) {
     // Если он пустой - не имеет смысла
     // заполнять след, так как порядок
     // не имеет смысла
-    bool previousClusterWasEmpty = false;
+    bool previousClusterWasEmpty = false; // 1 байт
     for (int i = 0; i < numClusters; ++i){
         if (previousClusterWasEmpty) {
             break;
@@ -86,13 +87,12 @@ std::vector<std::vector<double>>& optimalClusters, double& minMetric) {
 }
 
 
-void test(int numClusters)
+void test(int numClusters, int sizeArray)
 {
     std::random_device rd;
     std::mt19937 seed(rd());
 
-    int sizeArray = 11;
-    std::vector<double> array(sizeArray);
+    std::vector<double> array(sizeArray); // 8 * N байт
 
     for (int i = 0; i < sizeArray; ++i) array[i] = rd() % 999999;
 
@@ -100,11 +100,11 @@ void test(int numClusters)
     for (int i : array) std::cout << i << " ";
 
     // Разбиения на кластеры
-    std::vector<std::vector<double>> clusters(numClusters, std::vector<double>());
+    std::vector<std::vector<double>> clusters(numClusters, std::vector<double>()); // 8 * 5 * N = 40 * N байт
     // Метрика для кластеров
-    double metricClusters = std::numeric_limits<double>::max();
+    double metricClusters = std::numeric_limits<double>::max(); // 10 байт
 
-    getOptimalClusters(0, array, clusters, clusters, metricClusters);
+    getOptimalClusters(0, array, clusters, clusters, metricClusters); // O(4.5^N) т. к. в среднем примерно 4.5 вызова функции рекурсивно
 
     // Вывод разбиения на кластеры
     std::cout << "\n| ";
@@ -112,7 +112,7 @@ void test(int numClusters)
         for (double j : i){
             std::cout << j << " ";
         }
-        std::cout << "| ";
+        std::cout << "| ";  
     }
 
     // Вывод метрики
@@ -123,7 +123,7 @@ void test(int numClusters)
 int main() {
     auto start = std::chrono::high_resolution_clock::now();
 
-    test(5);
+    test(5, 11); // 5 - кол-во кластеров
     
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
