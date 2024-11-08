@@ -20,7 +20,7 @@ int main()
     }
 
     string dataSetElement; // 40 байт
-    vector<int> arrayToProcess; // 8 + 8 = 16 байт
+    vector<int> arrayToProcess; // 24 байта
 
     while (getline(dataSet, dataSetElement, ',')) {
         arrayToProcess.push_back(stoi(dataSetElement));
@@ -35,7 +35,8 @@ int main()
             for (int k3 = k2 + 1; k3 < arrayToProcessSize - 1; k3++) { //4 байта
                 for (int k4 = k3 + 1; k4 < arrayToProcessSize - 0; k4++) { //4 байта
                     if ((arrayToProcess[k1] + arrayToProcess[k2] + arrayToProcess[k3] + arrayToProcess[k4]) == 0) { // O(1) + O(1) + O(1) + O(1) 
-                        result << "[" << k1 << ", " << k2 << ", " << k3 << ", " << k4 << "]\n"; //Сложность цикла O(N^4)
+                        result << "[" << k1 << ", " << k2 << ", " << k3 << ", " << k4 << "]\n";
+                        //Сложность цикла O(N^4)
                     }
                 }
             }
