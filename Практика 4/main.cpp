@@ -6,7 +6,7 @@
 
 using namespace std;
 
-bool isCover(const vector<set<int>> sets, set<int> universe, vector<int> combination) {
+bool isCover(vector<set<int>> sets, set<int> universe, vector<int> combination) {
     for (int index : combination) {
         for (int item : sets[index]) { 
             universe.erase(item);
