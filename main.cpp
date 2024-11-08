@@ -1,4 +1,4 @@
-//Поиск подмассивов размера K в массиве размера N, сумма элементов которых равна нулю
+//Поиск подмассивов размера K в массиве размера N, сумма элементов которых равна нулю, K = 5, N до 25
 #include <iostream>
 #include <vector>
 #include <chrono>
@@ -107,29 +107,9 @@ void time(int arr[], int N, int K) {
     cout << duration.count() << " milliseconds\n";
 }
 
-void times_for_different_K(int arr[], int N) {
-    for (int K = 1; K < 6; K++) {
-        time(arr, N, K);
-    }
-}
-
-void asimptotika(int N) {
-    int a = 0;
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            for (int z = 0; z < N; z++) {
-                for (int d = 0; d < N; d++) {
-                    for (int e = 0; e < 170; e++) {
-                        a++;
-                    }
-                }
-            }
-        }
-    }
-}
 
 int main() {
-    /*int test = 0;
+    int test = 0;
     int arr1[] {1,-1,2,-2};
     int arr2[] {1,-1,2,-3};
     int arr3[] {1,1,-1,-1};
@@ -140,27 +120,18 @@ int main() {
     int arr8[] {1,2,3,-2,5,6,7,8,9,10,-1,12,13,-2,15};
     int arr9[] {1,2,3,-2,5,6,7,8,9,10};
     int arr10[] {1,2,3,-2,5};
-    auto start = chrono::high_resolution_clock::now();
     assertEqual(subarrays_with_sum_0(arr1, 4, 2),{{0,1},{2,3}}," test1 from task");
-    auto end = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-    cout << duration.count() << " milliseconds\n";
     assertEqual(subarrays_with_sum_0(arr2,4,3),{{0,2,3}}," test2 from task");
     assertEqual(subarrays_with_sum_0(arr3,4,2),{{0,2},{0,3},{1,2},{1,3}}," test3 from task");
     assertEqual(subarrays_with_sum_0(arr4, 1, 1),{{0},}," {0}");
     assertEqual(subarrays_with_sum_0(arr5, 4, 2),{}," without solutions");
-    assertEqual(subarrays_with_sum_0(arr6, 25, 5),{{0,1,10,13,24},{2,3}}," test1 from task");*/
-    /*times_for_different_K(arr6, 25);
-    times_for_different_K(arr7, 20);
-    times_for_different_K(arr8, 15);
-    times_for_different_K(arr9, 10);
-    times_for_different_K(arr10, 5);*/
-    auto start = chrono::high_resolution_clock::now();
-    auto end = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-    cout << duration.count() << " milliseconds\n";
-
-    //report();
+    assertEqual(subarrays_with_sum_0(arr6, 25, 5),{{0,1,10,13,24},{2,3}}," test1 from task");
+    time(arr6, 25, 5);
+    time(arr7, 20, 5);
+    time(arr8, 15, 5);
+    time(arr9, 10, 5);
+    time(arr10, 5, 5);
+    report();
     return 0;
 
 }
