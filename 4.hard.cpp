@@ -83,18 +83,7 @@ vector<vector<double>> cluster5(vector<double>& arr) {
 bool test(vector<double> arr, vector<vector<double>> solution) {
     return (cluster5(arr) == solution);
 }
-void hui(const std::vector<std::vector<double>>& vec) {
-    for (const auto& innerVec : vec) {
-        std::cout << "{ ";
-        for (int num : innerVec) {
-            std::cout << num << " ";
-        }
-        std::cout << "}" << std::endl;
-    }
-}
 int main() {
-    vector<double> arr = { 1, 3, -3321, 5, 6, 82, 1555, -1123123, 234234, 33221 };
-    hui(cluster5(arr));
     cout << test({ 2, 3, 4, 5, 6, 82, 100 }, { {2}, {3}, {82}, {100}, {4, 5, 6} });
     cout << test({ 1, 3, 4, 5, 6, 82, 1555, -1123123 }, { {-1123123}, {1}, {82}, {1555}, {3, 4, 5, 6} });
     cout << test({ 1, 3, -3321, 5, 6, 82, 1555, -1123123, 234234, -11111, 223321 }, { {-1123123}, {-3321}, {33221}, {234234}, {1, 3, 5, 6, 82, 1555} });
