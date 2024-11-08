@@ -58,7 +58,7 @@ void check_feature_score(arma::mat &dataset, std::vector<int> &current_features,
     //print_feature_evaluation(current_features, score);
 
     // Условие для улучшения: Если RMSE меньше на 10% по сравнению с лучшим результатом
-    if (score > best_score * threshold) {
+    if (score < best_score * threshold) {
         cur_best_score = score;
         best_features = std::set<int>(current_features.begin(), current_features.end());
         //std::cout << "New best score found!" << std::endl;
@@ -106,32 +106,36 @@ void run_tests() {
 
     // Тест 1: Начинаем с минимального набора признаков
     std::cout << "Test 1: Starting with a minimal feature set" << std::endl;
-    std::vector<int> current_features = {0}; // Начинаем с первого признака
-    best_score = std::numeric_limits<float>::max(); // Сбросим начальное значение
-    check_feature_score(dataset, current_features, 1, 0.90); // 10% улучшения
+    std::vector<int> current_features = {0};
+    best_score = std::numeric_limits<float>::max();
+    check_feature_score(dataset, current_features, 1, 0.90);
     std::cout << "Best score after test 1: " << best_score << std::endl;
 
     // Тест 2: Начинаем с заранее заданного набора признаков
     std::cout << "Test 2: Starting with a predefined set of features" << std::endl;
-    current_features = {0, 1, 2}; // Пример набора признаков
-    best_score = std::numeric_limits<float>::max(); // Сбросим начальное значение
-    check_feature_score(dataset, current_features, 3, 0.90); // 10% улучшения
+    current_features = {0, 1, 2};
+    best_score = std::numeric_limits<float>::max();
+    check_feature_score(dataset, current_features, 3, 0.90);
     std::cout << "Best score after test 2: " << best_score << std::endl;
 
     // Тест 3: Проверяем, что набор признаков не меняется, если RMSE уже оптимален
     std::cout << "Test 3: Best score is already found" << std::endl;
-    current_features = {0, 2}; // Предположим, что это уже оптимальный набор
-    best_score = 0.0005f; // Устанавливаем фиктивный лучший результат
-    check_feature_score(dataset, current_features, 2, 0.90); // 10% улучшения
+    current_features = {0, 1, 2, 3};
+    best_score = 0.0005f;
+    check_feature_score(dataset, current_features, 2, 0.90);
+    std::set<int> set_from_vector(current_features.begin(), current_features.end());
+    if(best_features != set_from_vector) {
+        std::cout << "Test 3 passed!" << std::endl;
+    }
     std::cout << "Best score after test 3: " << best_score << std::endl;
 
     // Тест 4: Проверка порога улучшения
     std::cout << "Test 4: Checking improvement threshold" << std::endl;
-    current_features = {0, 1, 2, 3, 4, 5, 6}; // Пример начального набора признаков
-    float initial_score = 0.0005f; // Начальный score
-    best_score = initial_score; // Устанавливаем начальный score
-    check_feature_score(dataset, current_features, 2, 0.90); // 10% улучшения
-    if (best_score > initial_score) {
+    current_features = {0, 1, 2, 3, 4, 5, 6};
+    float initial_score = 0.0005f;
+    best_score = initial_score;
+    check_feature_score(dataset, current_features, 2, 0.90);
+    if (best_score < initial_score) {
         std::cout << "Improvement found!" << std::endl;
     } else {
         std::cout << "No improvement" << std::endl;
