@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <chrono>
 #include <random>
-#include <limits>
 
 
 // Средние значение элементов кластера
@@ -13,7 +12,7 @@ double meanCluster(const std::vector<double>& cluster) {
     for (int i = 0; i < sizeCluster; ++i) {
         sum += cluster[i];
     }
-    return sum / sizeCluster;
+    return double(sum / sizeCluster);
 }
 
 
@@ -87,17 +86,14 @@ std::vector<std::vector<double>>& optimalClusters, double& minMetric) {
 }
 
 
-void test(int numClusters, int sizeArray)
+void test(std::vector<double> array, int sizeArray, int numClusters)
 {
-    std::random_device rd;
-    std::mt19937 seed(rd());
-
-    std::vector<double> array(sizeArray); // 8 * N байт
-
-    for (int i = 0; i < sizeArray; ++i) array[i] = double(rd() % 999999);
+    // array - 8 * N байт, в худшем 200 байт
+    auto start = std::chrono::high_resolution_clock::now();
 
     // Вывод массива
-    for (int i : array) std::cout << i << " ";
+    std::cout << "Размер массива: " << sizeArray << "\n";
+    for (double i : array) std::cout << i << ", ";
 
     // Разбиения на кластеры
     std::vector<std::vector<double>> clusters(numClusters, std::vector<double>()); // 8 * 5 * N = 40 * N байт
@@ -117,16 +113,31 @@ void test(int numClusters, int sizeArray)
 
     // Вывод метрики
     std::cout << "\nМетрика: " << metricClusters;
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "\nВремя выполнения программы: " << duration.count() << " секунд" << "\n\n";
+}
+
+
+// Генерация случайного массива длины size
+std::vector<double> randArray(const int& size) {
+    std::vector<double> arr(size);
+    std::random_device rd;
+    std::mt19937 seed(rd());
+
+    for (int i = 0; i < size; ++i) arr[i] = seed() % 999999;
+
+    return arr;
 }
 
 
 int main() {
-    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<double> arr {1.1, 1.2, 1.3, 1.9, 2.0, 2.5, 2.9, 3.1, 4.2, 4.4, 5.2, 6.4};
+    int size = arr.size();
+    test(arr, size, 5); // 5 - кол-во кластеров
+    test(arr, size, 5); // 5 - кол-во кластеров
+    test(arr, size, 5); // 5 - кол-во кластеров
 
-    test(5, 11); // 5 - кол-во кластеров
-    
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "\nВремя выполнения программы: " << duration.count() << " секунд" << "\n";
     return 0;
 }
