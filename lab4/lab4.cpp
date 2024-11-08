@@ -42,7 +42,7 @@ std::vector<std::vector<double>>& optimalClusters, double& minMetric) {
 
     if (index == sizeArray) { // Если рассмотрели все эл-ы
         // Проверка, чтобы все кластеры были не пустые
-        bool anyNoneEmpty = std::any_of(curClusters.begin(), curClusters.end(),
+        bool anyNoneEmpty = std::any_of(curClusters.begin(), curClusters.end(), // 1 байт
         [](std::vector<double> value) -> bool { // Лямбда-функция, чтоб весело было)
             return value.size() == 0;
         });
@@ -94,7 +94,7 @@ void test(int numClusters, int sizeArray)
 
     std::vector<double> array(sizeArray); // 8 * N байт
 
-    for (int i = 0; i < sizeArray; ++i) array[i] = rd() % 999999;
+    for (int i = 0; i < sizeArray; ++i) array[i] = double(rd() % 999999);
 
     // Вывод массива
     for (int i : array) std::cout << i << " ";
