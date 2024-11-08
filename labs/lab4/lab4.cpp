@@ -2,80 +2,93 @@
 #include <vector>
 
 
+/*** Функция, генерирующая все возможные комбинации элементов массива ***/
 void generate_combinations(const std::vector<int>& array, int start, std::vector<int>& current, std::vector<std::vector<int>>& combinations) {
+    // добавляем текущую комбинацию в набор
     combinations.push_back(current); // O(1)
 
+    // Проходимся по элементам массива, начиная с индекса start, добавляем текущий элемент в текущую комбинацию
     for (int i = start; i < array.size(); ++i) { // O(1) для выделения памяти для i, сравнения и инкремента
         current.push_back(array[i]); // O(1)
-        generate_combinations(array, i + 1, current, combinations); // рекурсивный вызов функции, с помощью него мы перебираем все возможные комбинации элементов array, каждый элемент либо входит либо не входит в конкретный набор, получаем сложность O(2^N)
+        // Рекурсивно вызываем функцию для генерации комбинаций, начиная с следующего элемента
+        generate_combinations(array, i + 1, current, combinations); // перебираем все возможные комбинации элементов array, каждый элемент либо входит либо не входит в конкретный набор, получаем сложность O(2^N)
+        // Удаляем последний добавленный элемент, чтобы вернуться к предыдущему положению
         current.pop_back(); // O(1)
     }
 }
 // итог по функции generate_combinations: O(2^N)
 
 
+/*** Функция для получения всех комбинаций элементов заданного массива ***/
 std::vector<std::vector<int>> get_all_combinations(const std::vector<int>& array) {
+    // Создаём вектор, где будут все комбинации, и вектор для хранения текущей комбинации
     std::vector<std::vector<int>> combinations; // O(1) - инициализация вектора
     std::vector<int> current; // O(1)
 
+    // Вызываем функцию для генерации комбинаций, начиная с индекса 0, и потом возвращаем вектор со всеми комбинациями
     generate_combinations(array, 0, current, combinations); // вызов функции, сложность которой O(2^N), значит получаем O(2^N) и для get_all_combinations
     return combinations; // O(1)
 }
 // итог по функции get_all_combinations: O(2^N)
 
 
+/*** Функция, принимающая вектор со всеми комбинациями, проходящаяся по ним и возвращающая ответ на задачу о рюкзаке ***/
 std::vector<std::vector<int>> backpack(std::vector<std::vector<int>>& data, int limit) {
+    // Создаём векторы, хранящие вес и стоимость каждого предмета
     std::vector<int> weigths; // O(1)
     std::vector<int> costs; // O(1)
 
-    // цикл: O(N), проход по всем элементам в data
+    // проходимся по data и заполняем векторы с весом и стоимостью. Цикл: O(N)
     for (const auto& item : data) {
         weigths.push_back(item[0]); // O(1) N раз
         costs.push_back(item[1]); // O(1) N раз
     }
 
-    // получаем O(2^N), тк get_all_combinations имеет эту сложность
+    // получаем все возможные комбинации весов и стоимостей, каждой i-ой комбинации весов будет соответствовать i-ая комбинация стоимостей
     std::vector<std::vector<int>> all_var_weigth = get_all_combinations(weigths); // O(2^N)
     std::vector<std::vector<int>> all_var_cost = get_all_combinations(costs); // O(2^N)
+    // получаем O(2^N), тк get_all_combinations имеет эту сложность
     
+    // задаём переменную для хранения макс стоимости и вектор для хранения результата
     int res_cost = -1; // O(1)
     std::vector<int> res_pack; // O(1)
     
+    // проходимся циклом по всем 2^N комбинациям, получаем O(2^N)
     for (int k = 0; k < size(all_var_cost); k++) {
-        // проходимся по all_var_cost, поэтому цикл выполняется 2^N раз ==> получаем O(2^N)
+        // получаем текущие наборы веса и стоимости
         std::vector<int> curr_weight = all_var_weigth[k]; // O(1)
         std::vector<int> curr_cost = all_var_cost[k]; // O(1)
 
+        // суммируем вес для текущей комбинации
         int weigth_sum = 0; // O(1)
-        // цикл: O(K), пробегаемся по текущей комбинации, где К элементов
+        // цикл: O(K), пробегаемся по текущей комбинации, где К элементов, К от 0 до N
         for (int sum_elem : curr_weight) {
             weigth_sum += sum_elem; // O(1)
         }
         
-        if (weigth_sum <= limit) { // O(1), проверка условия
-            int cost_sum = 0; // O(1)
+        // а теперь суммируем стоимость текущей комбинации
+        int cost_sum = 0; // O(1)
+        // цикл: O(K), пробегаемся по текущей комбинации, где К элементов, К от 0 до N
+        for (int cost_elem : curr_cost) {
+            cost_sum += cost_elem; // O(1)
+        }
 
-            // цикл: O(К), пробегаемся по текущей комбинации. Если есть хотя бы один предмет с весом меньше чем limit, то получим вложенность циклов ==> O(2^N) * O(К). O(2^N) * O(N) получим не всегда, тк для набора из N элементов может не выполниться if, и общая сложность будет меньше
-            for (int cost_elem : curr_cost) {
-                cost_sum += cost_elem; // O(1)
-            }
-
-            if (cost_sum > res_cost) { // O(1), проверка условия
-                res_cost = cost_sum; // O(1)
-                res_pack = curr_weight; // O(1)
-            }
+        // проверяем условия: перезаписываем результат, если не вышли за лимит веса и если стоимость больше текущей
+        if ((cost_sum > res_cost) and (weigth_sum <= limit)) { // O(1)
+            res_cost = cost_sum; // O(1)
+            res_pack = curr_weight; // O(1)
         }
     }
-    // итог по циклу for: O(K * 2^N), где K - от 1 до N
-
+    // итог по циклу for: O(N * 2^N), сначала пробегаемся по 2^N значениям, также имеем вложенный цикл, который каждый раз перебирает до N значений
+    // результат: первый элемент это вектор с итоговой стоимостью, а второй - это вектор с итоговой комбинацией весов
     return {{res_cost}, res_pack}; // O(1)
 }
-// итог по функции backpack: O(K * 2^N), где K - от 1 до N
+// итог по функции backpack: O(N * 2^N)
 
 
+/*** Функция, выводящая ответ к задаче ***/
 void result_output(std::vector<std::vector<int>> res) {
     std::cout << "Items: [ "; // O(1)
-
     // цикл: O(N), пробегаем по всем значениям из res[1]
     for (int weight : res[1]) {
         std::cout << weight << " "; // O(1) N раз
@@ -87,7 +100,7 @@ void result_output(std::vector<std::vector<int>> res) {
 
 
 int main() {
-    // Тестируем для различных случаев
+    // Результаты для различных случаев
 
     // Данные из условия
     std::cout << "Test 1" << std::endl;
