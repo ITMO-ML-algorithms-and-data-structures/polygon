@@ -1,18 +1,17 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <cmath>
-#include <algorithm>
-#include <unordered_map>
 #include <sstream>
 using namespace std;
+
 double bestMetric = 1e9;
 vector<double> v;
 int n, k;
+
 int get_cluster_sum(vector<double> &vec)
 {
     double sum = 0;
-    for(auto i: vec)
+    for (auto i : vec)
     {
         sum += i;
     }
@@ -26,45 +25,44 @@ int getClusterMetric(vector<double> &cluster)
     double sum = get_cluster_sum(cluster);
     double mean = sum / cluster.size();
     double metric = 0;
-    for(int i = 0; i < cluster.size(); i++)
+    for (int i = 0; i < cluster.size(); i++)
         metric += abs(cluster[i] - mean);
-    
+
     return metric;
 }
 
-
 void printClusters(vector<vector<double>> &cluster)
 {
-    for(int i = 0; i < cluster.size(); i++)
+    for (int i = 0; i < cluster.size(); i++)
     {
-        for(int j = 0; j < cluster[i].size(); j++)
+        for (int j = 0; j < cluster[i].size(); j++)
             cout << cluster[i][j] << " ";
         cout << endl;
     }
 }
 
-
 int getClustersMetric(vector<vector<double>> &arr_cluster)
 {
     double metric = 0;
     int cntOfElements = 0;
-    for(int i = 0; i < arr_cluster.size(); i++)
+    for (int i = 0; i < arr_cluster.size(); i++)
     {
-        if(arr_cluster[i].size() == 0) 
+        if (arr_cluster[i].size() == 0)
             return 1e9;
         metric += getClusterMetric(arr_cluster[i]);
         cntOfElements += arr_cluster[i].size();
     }
-    if(cntOfElements != v.size())
+    if (cntOfElements != v.size())
     {
         return 1e9;
     }
     return metric;
 }
+
 int getCountOfEmptyClusters(vector<vector<double>> &arr_cluster)
 {
     int count = 0;
-    for(int i = 0; i < arr_cluster.size(); i++)
+    for (int i = 0; i < arr_cluster.size(); i++)
     {
         count += 1 ? (arr_cluster[i].size() >= 0) : 0;
     }
@@ -73,28 +71,29 @@ int getCountOfEmptyClusters(vector<vector<double>> &arr_cluster)
 
 void alg(vector<vector<double>> &arr_cluster, int idx, int cntOfEmptyClusters)
 {
-    for(int i = idx; i < v.size(); i++)
+    for (int i = idx; i < v.size(); i++)
     {
-        if(v.size() - i - cntOfEmptyClusters < 0) // v.size() - i - кол-во свободных элементов в v, которые мы можем положить в кластеры
+        if (v.size() - i - cntOfEmptyClusters < 0) // v.size() - i - кол-во свободных элементов в v, которые мы можем положить в кластеры
         {
             return;
         }
-        for(int j = 0; j < arr_cluster.size(); j++)
+        for (int j = 0; j < arr_cluster.size(); j++)
         {
             arr_cluster[j].push_back(v[i]);
-            alg(arr_cluster, i + 1, 0 - 1);
+            alg(arr_cluster, i + 1, cntOfEmptyClusters - 1);
             arr_cluster[j].pop_back();
-            if(arr_cluster[j].size() == 0)
+            if (arr_cluster[j].size() == 0)
                 return;
         }
     }
     double metric = getClustersMetric(arr_cluster);
-    if(metric < bestMetric)
+    if (metric < bestMetric)
     {
         bestCluster = arr_cluster;
         bestMetric = metric;
     }
 }
+
 void printMistake(vector<vector<double>> &arr_cluster, vector<vector<double>> &expected, int &n_test)
 {
     cerr << "TEST " << n_test << " FAILED" << '\n';
@@ -104,10 +103,12 @@ void printMistake(vector<vector<double>> &arr_cluster, vector<vector<double>> &e
     printClusters(expected);
     return;
 }
+
 void test(vector<vector<double>> &arr_cluster, fstream &expected, int &n_test)
 {
     vector<vector<double>> result_cluster;
     string s = "";
+
     while (getline(expected, s, '\n'))
     {
         result_cluster.push_back({});
@@ -118,45 +119,56 @@ void test(vector<vector<double>> &arr_cluster, fstream &expected, int &n_test)
             result_cluster.back().push_back(stod(number));
         }
     }
-    if(arr_cluster.size() != result_cluster.size())
+    
+    if (arr_cluster.size() != result_cluster.size())
     {
-        
+
         printMistake(arr_cluster, result_cluster, n_test);
         return;
     }
-    for(int i = 0; i < arr_cluster.size(); i++)
+
+    for (int i = 0; i < arr_cluster.size(); i++)
     {
-        if(arr_cluster[i].size() != result_cluster[i].size())
+        if (arr_cluster[i].size() != result_cluster[i].size())
         {
             printMistake(arr_cluster, result_cluster, n_test);
-            return;    
+            return;
         }
-        for(int j = 0; j < arr_cluster[i].size(); j++)
+
+        for (int j = 0; j < arr_cluster[i].size(); j++)
         {
-            if(arr_cluster[i][j] != result_cluster[i][j])
+            if (arr_cluster[i][j] != result_cluster[i][j])
             {
                 printMistake(arr_cluster, result_cluster, n_test);
                 return;
             }
         }
     }
+
     cout << "test " << n_test << " accepted" << '\n';
     printClusters(arr_cluster);
 }
+
+
 void run(fstream &input, fstream &expected, int n_test)
 {
     input >> n >> k;
     v.resize(n, 0);
     vector<vector<double>> arr_cluster(k, vector<double>());
+
     bestCluster.resize(k, vector<double>());
     bestMetric = 1e9;
+
     for (int i = 0; i < n; i++)
     {
         input >> v[i];
     }
+
     alg(arr_cluster, 0, k);
     test(bestCluster, expected, n_test);
 }
+
+
 int main()
 {
     vector<string> input = {
@@ -164,13 +176,13 @@ int main()
         "C:\\Users\\Huawei\\Desktop\\input_2.txt",
         "C:\\Users\\Huawei\\Desktop\\input_3.txt",
     };
-    vector<string> expected = 
-    {
-        "C:\\Users\\Huawei\\Desktop\\expected_1.txt",
-        "C:\\Users\\Huawei\\Desktop\\expected_2.txt",
-        "C:\\Users\\Huawei\\Desktop\\expected_3.txt",
-    };
-    for(int i = 0; i < input.size(); i++)
+    vector<string> expected =
+        {
+            "C:\\Users\\Huawei\\Desktop\\expected_1.txt",
+            "C:\\Users\\Huawei\\Desktop\\expected_2.txt",
+            "C:\\Users\\Huawei\\Desktop\\expected_3.txt",
+        };
+    for (int i = 0; i < input.size(); i++)
     {
         fstream in;
         in.open(input[i]);
