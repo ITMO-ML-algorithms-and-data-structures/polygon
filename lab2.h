@@ -1,19 +1,16 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
-string func(int g,vector<int>a,int h){
-    int ran,t;
-    for(int i = 0;i < h;i++){ // мешаем рандомно i элемент с любым j >= i |o(4n) если h = n
-        ran = rand() % (g - i) + i;
-        t = a[i];
-        a[i] = a[ran];
-        a[ran] = t;
-    }
+string func(int g, vector<int>a, int h) {
     string ansarr;
-    for (int ans : vector<int>(a.begin(), a.begin() + h)){//создаем строку с ответом | o(n)
-        ansarr += to_string(ans);
-        ansarr += ' ';
+    srand(static_cast<unsigned int>(time(0)));//o(n)
+    for (int i = 0; i < h; i++) {
+        int ran = rand() % (g - i) + i; // Выбираем случайный индекс
+        ansarr += to_string(a[ran]) + ' ';
+        a[ran] = a[i]; // Перемещаем текущее значение в случайную позицию
     }
     ansarr.pop_back();
     return ansarr;
