@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <vector>
 #include <limits>
+#include <chrono>
 using namespace std;
 
 // Функция для расчета метрики по массиву
@@ -31,7 +32,6 @@ double metric(const vector<double>& comb) {
     return sum / comb.size(); // Возвращаем среднее значение
 }
 
-
 // Функция для записи значений из файла в динамический массив
 double* readArrayFromFileToDynamicArray(const string& filename, int& size) {
     vector<double> dynamicArray;  // Использование vector для динамического массива
@@ -48,68 +48,72 @@ double* readArrayFromFileToDynamicArray(const string& filename, int& size) {
     return result;
 }
 
-// Генерация всех возможных сочетаний массивов (комбинаций)
-void generateCombinations(double* arr, int size, vector<vector<double>>& combinations, int depth = 0, vector<double> currentCombination = {}) {
-    if (depth == 5) { // Предполагаем, что мы ищем 5 массивов
-        combinations.push_back(currentCombination);
-        return;
-    }
-    for (int i = 0; i < size; ++i) {
-        currentCombination.push_back(arr[i]); // Добавляем текущий элемент в комбинацию
-        generateCombinations(arr, size, combinations, depth + 1, currentCombination);
-        currentCombination.pop_back(); // Убираем последний добавленный элемент
+// Функция для генерации подмассивов
+void generateSubarrays(double* arr, int size, const int subarraySize, vector<vector<double>>& subarrays) {
+    // Создаем все возможные подмассивы указанного размера
+    for (int i = 0; i <= size - subarraySize; ++i) {
+        subarrays.push_back(vector<double>(arr + i, arr + i + subarraySize));
     }
 }
 
+// Основная функция для создания 5 подмассивов с минимальной метрикой
 double** finalDevelopmentClusters(double* arr, int size) {
-    std::vector<std::vector<double>> combinations; // Для хранения всех сочетаний
-    generateCombinations(arr, size, combinations); // Генерация всех комбинаций
+    if (size < 5) return nullptr; // Проверка на недостаточное количество элементов
 
-    double** ans = nullptr; // Результат
-    double minMetricValue = std::numeric_limits<double>::max(); // Инициализация большой метрики
+    // Массив указателей для результатов
+    double** ans = new double*[5];
 
-    // Для каждой комбинации
-    for (const auto& comb : combinations) {
-        double currentMetric = metric(comb);
-        if (currentMetric < minMetricValue) {
-            minMetricValue = currentMetric;
+    // Генерируем подмассивы длины 1
+    vector<vector<double>> subarrays;
+    generateSubarrays(arr, size, 1, subarrays); // Здесь используем подмассивы длины 1
 
-            // Освобождаем предыдущий массив, если он был выделен
-            if (ans != nullptr) {
-                for (int i = 0; i < 5; ++i) {
-                    delete[] ans[i]; // Освобождаем память для каждой строки
+    // Параметры для поиска минимальных метрик
+    double minMetricValues[5];
+    fill_n(minMetricValues, 5, numeric_limits<double>::max());
+
+    // Поиск 5 подмассивов с минимальной метрикой
+    for (const auto& comb : subarrays) {
+        double currentMetric = calculate(comb.data(), comb.size());
+        for (int i = 0; i < 5; ++i) {
+            if (currentMetric < minMetricValues[i]) {
+                // Сдвиг метрик, чтобы освободить место для новой
+                for (int j = 4; j > i; --j) {
+                    minMetricValues[j] = minMetricValues[j - 1];
+                    ans[j] = ans[j - 1];
                 }
-                delete[] ans; // Освобождаем память для массива указателей
-            }
-
-            // Создаем новый массив для хранения результатов
-            ans = new double*[5]; // Предполагается, что мы хотим хранить 5 массивов
-            for (int i = 0; i < 5; ++i) {
-                ans[i] = new double[comb.size()]; // Выделяем память под массивы
-                std::copy(comb.begin(), comb.end(), ans[i]); // Копируем данные
+                // Сохраняем новый подмассив с минимальной метрикой
+                ans[i] = new double[comb.size()];
+                copy(comb.begin(), comb.end(), ans[i]);
+                minMetricValues[i] = currentMetric;
+                break; // Прерывание текущего цикла, так как мы нашли место для новой метрики
             }
         }
     }
 
-    return ans; // Возвращаем наилучшее решение
+    return ans; // Возвращаем массив с 5 подмассивами с минимальной метрикой
 }
 
 
 // Преобразование double** в string
 string doubleArrayToString(double** array, int rows, int cols) {
-    ostringstream oss;
+    string res;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            oss << fixed << setprecision(2) << array[i][j];
+            // Форматируем строку с двумя знаками после запятой
+            string formatted = to_string(array[i][j]);
+            // Правильное форматирование с двумя знаками после запятой
+            formatted = formatted.substr(0, formatted.find('.') + 3); // Обрезаем до двух знаков после запятой
+
+            res += formatted;
             if (j < cols - 1) {
-                oss << " ";
+                res += " ";
             }
         }
         if (i < rows - 1) {
-            oss << " ";
+            res += " ";
         }
     }
-    return oss.str();
+    return res;
 }
 
 // Функция для проверки ответов
@@ -126,21 +130,21 @@ string result_check_test(int number_line, string current_line_test) {
 
 // Главная функция
 int main() {
+    auto start = chrono::high_resolution_clock::now();
     int size = 0;
     ifstream stream_test("test.txt");
     if (!stream_test.is_open()) {
         cout << "Ошибка открытия файла: test.txt" << endl;
         return 1;
     }
-
     string current_line_test;
     int number_line = 0;
     while (getline(stream_test, current_line_test)) {
         number_line++;
         double* arr = readArrayFromFileToDynamicArray("test.txt", size);
         double** result = finalDevelopmentClusters(arr, size);
-        cout << result_check_test(number_line, doubleArrayToString(result, 1, 5)) << endl;
-        //cout << doubleArrayToString(result, 1, 5);
+        cout << result_check_test(number_line, doubleArrayToString(result, 5, 1)) << endl;
+        cout << doubleArrayToString(result, 5, 1) << endl;
         delete[] arr; // Освобождение памяти
 
         // Освобождение памяти результата
@@ -149,8 +153,12 @@ int main() {
                 delete[] result[i]; // Освобождение памяти для каждого массива
             }
             delete[] result; // Освобождение памяти для указателя на массив
+            result = nullptr; // Обязательно обнуляем указатель для предотвращения двойного освобождения
         }
     }
     stream_test.close();
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "Время выполнения: " << duration.count() << " секунд" << endl;
     return 0;
 }
