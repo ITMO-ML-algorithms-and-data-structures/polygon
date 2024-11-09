@@ -1,0 +1,159 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <cmath>
+#include <typeinfo>
+
+
+//решил основываться на стохастике и кластеризации, как начальную границу взял среднее значение,  
+float Distanse( list <int> input, float board){//Считаем MAE
+    int MAE;
+    for (int number:input){
+        MAE+=abs(board-number);
+    }
+    return abs(MAE);
+}
+
+//metric for cluster
+float MAE (list <int> input){
+    int sum=0;
+    for (int n:input){
+        sum+=n;
+    } 
+    float center=sum/input.size();
+    float mae=0;
+    for (int n:input){
+        mae+=abs(n-center);
+    }
+    return mae;
+}
+//get 2 cluster 
+pair <list <int>,list <int>> get_clusters(list <int> input){
+    int sum=0;
+    int max=0;
+    for (int number:input){
+        sum+=number;
+        if (max<abs(number)){
+            max=abs(number);
+        }
+    }
+    int mean=round(1.0*sum/input.size());
+    float optuna=mean; // та самая граница (в моей голове это выглядит как график точек)
+    float min_distanse=Distanse(input,mean);
+    
+    for (int i=0; i<max; i++){
+        float distanse_plus=Distanse(input,float(mean+i));//считаем для среднего с шагом +
+        float distanse_minus=Distanse(input,float(mean-i));//считаем для среднего с шагом -
+        
+        if (min_distanse>distanse_plus){
+            min_distanse=distanse_plus;
+            optuna=mean+i;
+        }
+        
+        else if (min_distanse>distanse_minus){
+            min_distanse=distanse_minus;
+            optuna=mean-i;
+        }
+    } 
+    
+    list <int> cluster1; 
+    list <int> cluster2;
+    
+    int max_elem1=0;
+    int min_elem2=1000;
+    
+    if (input.size()==2){
+        cluster1.push_back(input.front());
+        cluster2.push_back(input.back());
+    }
+    else{
+        
+        for (int number:input){
+            
+            if (number<optuna){//сравнение границы с элементом
+                cluster1.push_back(number);
+                
+                if (max_elem1<number){
+                    max_elem1=number;
+                }
+            }
+            
+            else if (number>optuna){
+                cluster2.push_back(number);
+                if (min_elem2>number){
+                    min_elem2=number;
+                }
+            }
+        }
+    }
+    
+    auto check_optuna{find(begin(input), end(input), optuna) };//проверка, входит ли прямая в исходный массив
+    if (check_optuna != end(input)){
+    if (abs(optuna-max_elem1)>abs(optuna-min_elem2)){
+        cluster2.push_front(optuna);
+    }
+    else{
+        cluster1.push_back(optuna);
+    }
+    }
+    pair <list <int>,list <int>> result (cluster1, cluster2);
+    return result;
+}
+
+vector <vector <int>> get_3_clusters(list <int> input){
+    vector <vector <int>> ans;
+    pair <list <int>,list <int>> r=get_clusters(input);
+    pair <list <int>,list <int>> cluster1=get_clusters(r.first);
+    pair <list <int>,list <int>> cluster2=get_clusters(r.second);
+    
+    list <int> merge=cluster1.second;//for 1_23_4
+    for (int n:cluster2.first){
+        merge.push_back(n); 
+    }
+    //1 exident 
+    float metric_12_3_4=MAE(cluster2.first)+MAE(r.first)+MAE(cluster2.second);
+    //2 exident
+    float metric_1_2_34=MAE(cluster1.second)+MAE(cluster1.first)+MAE(r.second);
+    //3 exident
+    float metric_1_23_4=MAE(merge)+MAE(cluster1.first)+MAE(cluster2.second);
+    
+    if (metric_12_3_4<=metric_1_2_34 && metric_12_3_4<=metric_1_23_4){
+        for (int elem:r.first){
+            ans[0].push_back(elem);
+        }
+        for (int elem1:cluster2.first){
+            ans[1].push_back(elem1);
+        }
+        for (int elem2:cluster2.second){
+            ans[2].push_back(elem2);
+        }
+    }
+    else if (metric_1_23_4<=metric_1_2_34 && metric_1_23_4<=metric_12_3_4){
+        for (int elem:cluster1.first){
+            ans[0].push_back(elem);
+        }
+        for (int elem1:merge){
+            ans[1].push_back(elem1);
+        }
+        for (int elem2:cluster2.second){
+            ans[2].push_back(elem2);
+        }
+    }
+    
+    else if (metric_1_2_34<=metric_1_23_4 && metric_1_2_34<=metric_12_3_4){
+        for (int elem:cluster1.first){
+            ans[0].push_back(elem);
+        }
+        for (int elem1:cluster1.second){
+            ans[1].push_back(elem1);
+        }
+        for (int elem2:r.second){
+            ans[2].push_back(elem2);
+        }
+    }
+    return (ans);
+}
+
+int main() {
+    list <int> input{1,2,4,5,7,8,100};//input
+    vector<vector<int>> clustes = get_3_clusters(input);
+}
