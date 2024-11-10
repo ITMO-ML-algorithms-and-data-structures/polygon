@@ -36,7 +36,7 @@ int main() {
 
     std::vector<int> out = label_encoder(arr, size);
 
-
+    print_vector("Encoded vector: ", out);
 
     return 0;
 }
