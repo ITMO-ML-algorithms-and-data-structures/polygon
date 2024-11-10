@@ -30,7 +30,6 @@ std::vector<int> label_encoder(const std::string arr[], const int size) {
     return out;
 }
 int main() {
-
     const std::string arr[] {"red", "green", "yellow", "yellow"};
     const int size = 4;
 
