@@ -1,41 +1,64 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <string>
 
-int main(){
-
-    //создание хэш-таблицы для хранения кол-ва повторений слов
-    std::unordered_map<std::string, int> frequancyMap; //время - O(1); память - O(n), где n - кол-во уникальных строк + n*4 байта + длина каждой строки + 3 * 1 байт (нуль-терминатор)
-
-    //создание вектора строк
-    std::vector<std::string> inputArray = {"Orange", "Red", "Green", "Orange"}; //время - О(1); память - О(1)
+// Функция для подсчета повторений слов в массиве
+std::vector<int> count(const std::vector<std::string>& inputArray) {
+    std::unordered_map<std::string, int> frequencyMap;
     
-    //размер вектора 
-    std::cout << inputArray.size() << std::endl; //время - О(1) + О(1) + О(1); память - 4 байта
-     
-    //время - O(n)
-    //считаем повторения слов
-    for (const std::string& word : inputArray){ //время - O(1)
-        frequancyMap[word]++;
+    // Считаем повторения слов
+    for (const std::string& word : inputArray) {
+        frequencyMap[word]++;
     }
 
-    //время - O(n)
-    //заменяем слова на число их повторений 
-    for (std::string& word : inputArray){ //время - O(1)
-        word = std::to_string(frequancyMap[word]);
+    // Заменяем слова на число их повторений
+    std::vector<int> result;
+    for (const std::string& word : inputArray) {
+        result.push_back(frequencyMap[word]);
     }
 
-    //время - O(n)
-    //выводим кол-во повторений каждого слова
-    for (const std::string& count : inputArray){ //время - - O(1)
-        std::cout << count << " "; //время - O(1) + O(1) + O(1)
-    }
-
-    return 0;
-
+    return result;
 }
 
-//подсчет памяти:
-//3 + 3*4 + 6 + 3 + 5 + 3 + 4 = 36 байт
+// Функция для проверки результата теста и вывода соответствующего сообщения
+void asert(bool ans) {
+    if (ans) {
+        std::cout << "The test is passed" << '\n';
+    } else {
+        std::cout << "The test is not passed" << '\n';
+    }
+}
 
-//время - O(n)
+// Тесты
+void runTests() {
+    // Тест 1
+    std::vector<std::string> inputArray_1 = {"Orange", "Orange", "Orange", "Orange"};
+    std::vector<int> expected_output_1 = {4, 4, 4, 4};
+    std::vector<int> result_1 = count(inputArray_1);
+    asert(result_1 == expected_output_1);
+
+    // Тест 2
+    std::vector<std::string> inputArray_2 = {"Red", "Green", "Red", "Blue", "Green"};
+    std::vector<int> expected_output_2 = {2, 2, 2, 1, 2};
+    std::vector<int> result_2 = count(inputArray_2);
+    asert(result_2 == expected_output_2);
+
+    // Тест 3
+    std::vector<std::string> inputArray_3 = {" ", " ", " ", " ", " "};
+    std::vector<int> expected_output_3 = {5, 5, 5, 5, 5};
+    std::vector<int> result_3 = count(inputArray_3);
+    asert(result_3 == expected_output_3);
+
+    // Тест 4 - пустой массив
+    std::vector<std::string> inputArray_4 = {};
+    std::vector<int> expected_output_4 = {};
+    std::vector<int> result_4 = count(inputArray_4);
+    asert(result_4 == expected_output_4);
+}
+
+int main() {
+    runTests();
+    
+    return 0;
+}
