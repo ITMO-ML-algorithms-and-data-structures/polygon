@@ -32,31 +32,35 @@ void read_csv(const std::string& filename, std::vector<int>& intArray) { // Фу
     file.close();
 }
 
-void bucketSort(std::vector<int>& arr) {
-    // Создаем ведра
-    int n = arr.size();
-    std::vector<std::vector<int>> buckets(n);
-
-    // Разделяем элементы на ведра
-    for (int num : arr) {
-        int bucketIndex = n * num; // Преобразуем число в индекс ведра
-        if (bucketIndex >= n) {
-            bucketIndex = n - 1; // Убедимся, что индекс не выходит за пределы
+void bucketSort(std::vector<int>& arr, int n) {
+    // Найти максимальное значение в массиве
+    int maxValue = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > maxValue) {
+            maxValue = arr[i];
         }
-        buckets[bucketIndex].push_back(num);
     }
 
-    // Сортировка каждого ведра
-    for (auto& bucket : buckets) {
-        std::sort(bucket.begin(), bucket.end());
+    // Создать векторы (ведра) для bucket sort
+    int bucketCount = maxValue / 10 + 1; // Количество ведер
+    std::vector<std::vector<int>> buckets(bucketCount);
+
+    // Разделить массив на ведра
+    for (int i = 0; i < n; i++) {
+        int bucketIndex = arr[i] / 10; // Индекс ведра
+        buckets[bucketIndex].push_back(arr[i]);
     }
 
-    // Объединяем ведра
-    arr.clear();
-    for (const auto& bucket : buckets) {
-        arr.insert(arr.end(), bucket.begin(), bucket.end());
+    // Отсортировать каждое ведро и собрать результат
+    int index = 0;
+    for (int i = 0; i < bucketCount; i++) {
+        std::sort(buckets[i].begin(), buckets[i].end()); // Сортируем ведро
+        for (int j = 0; j < buckets[i].size(); j++) {
+            arr[index++] = buckets[i][j]; // Собрать отсортированные элементы
+        }
     }
 }
+
 
 int main() {
     for (int i = 1000; i <= 1000000; i *= 10) {
@@ -64,10 +68,11 @@ int main() {
         std::string tmp_file = std::to_string(i) + ".csv";
 
         read_csv(tmp_file, arr);
+        int n = arr.size();
 
         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
 
-        bucketSort(arr);
+        bucketSort(arr, n);
 
         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
         std::chrono::duration<double> duration = end - start;
