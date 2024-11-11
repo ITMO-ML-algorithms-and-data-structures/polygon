@@ -43,7 +43,7 @@ int main() {
 
     outFile.close();  // Закрываем файл
 
-    std::cout << "Массив натуральных чисел был сохранен в " << filename << std::endl;
+    std::cout << "Array has been saved to " << filename << std::endl;
 
     return 0;
 }
