@@ -61,7 +61,7 @@ void print_clusters(vector<double> cluster1, vector<double> cluster2, double sco
 int main() {
     //array of int. change to double
     // double arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 100, 101, 5};
-    double arr[] = {0, 1, 2, 3, 4, 5, 6.9 }; //N * 8 bytes
+    double arr[] = {0, 1, 2, 3, 4, 5, 6.9, 7}; //N * 8 bytes
 
     int N = sizeof(arr) / sizeof(arr[0]);
     int num_clusters = 2;
