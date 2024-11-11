@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <algorithm> // Для std::sort
 #include <fstream>
 #include <sstream>
 #include <chrono>
 
 void read_csv(const std::string& filename, std::vector<int>& intArray) { // Функция чтения чисел из csv в массив
-    std::ifstream file(filename);
+ std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename << std::endl;
         return;
@@ -31,48 +32,29 @@ void read_csv(const std::string& filename, std::vector<int>& intArray) { // Фу
     file.close();
 }
 
-void merge(std::vector<int>& arr, int left, int mid, int right) {
-    int start2 = mid + 1;
+void bucketSort(std::vector<int>& arr) {
+    // Создаем ведра
+    int n = arr.size();
+    std::vector<std::vector<int>> buckets(n);
 
-    // Если первый элемент меньше или равен последнему элементу второго подмассива, ничего не делаем
-    if (arr[mid] <= arr[start2]) {
-        return;
-    }
-
-    // Слияние двух подмассивов
-    while (left <= mid && start2 <= right) {
-        if (arr[left] <= arr[start2]) {
-            left ++;
-        } else {
-            int value = arr[start2];
-            int index = start2;
-
-            // Сдвигаем все элементы на одно место вправо
-            while (index != left) {
-                arr[index] = arr[index - 1];
-                index --;
-            }
-            arr[left] = value;
-
-            // Обновляем индексы
-            left ++;
-            mid ++;
-            start2 ++;
+    // Разделяем элементы на ведра
+    for (int num : arr) {
+        int bucketIndex = n * num; // Преобразуем число в индекс ведра
+        if (bucketIndex >= n) {
+            bucketIndex = n - 1; // Убедимся, что индекс не выходит за пределы
         }
+        buckets[bucketIndex].push_back(num);
     }
-}
 
-void inPlaceMergeSort(std::vector<int>& arr, int left, int right) {
-    // Рекурсивное деление массива на подмассивы
-    if (left < right) {
-        int mid = left + (right - left) / 2;
+    // Сортировка каждого ведра
+    for (auto& bucket : buckets) {
+        std::sort(bucket.begin(), bucket.end());
+    }
 
-        // Рекурсивная сортировка левой и правой половин
-        inPlaceMergeSort(arr, left, mid);
-        inPlaceMergeSort(arr, mid + 1, right);
-
-        // Слияние отсортированных подмассивов
-        merge(arr, left, mid, right);
+    // Объединяем ведра
+    arr.clear();
+    for (const auto& bucket : buckets) {
+        arr.insert(arr.end(), bucket.begin(), bucket.end());
     }
 }
 
@@ -82,16 +64,16 @@ int main() {
         std::string tmp_file = std::to_string(i) + ".csv";
 
         read_csv(tmp_file, arr);
-        int n = arr.size();
 
         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
 
-        inPlaceMergeSort(arr, 0, n - 1);
+        bucketSort(arr);
 
         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
         std::chrono::duration<double> duration = end - start;
         std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl; // Выводим время работы
     }
+
 
     return 0;
 }
