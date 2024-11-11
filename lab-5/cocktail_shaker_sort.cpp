@@ -31,24 +31,44 @@ void read_csv(const std::string& filename, std::vector<int>& intArray) { // Фу
     file.close();
 }
 
-void shellSort(std::vector<int>& arr) {
-    int n = arr.size();
-    
-    // Начинаем с большого интервала и уменьшаем его
-    for (int gap = n / 2; gap > 0; gap /= 2) {
-        // Основной цикл для сортировки подмассива
-        for (int i = gap; i < n; i++) {
-            // Сохраняем текущее значение
-            int temp = arr[i];
-            int j;
+void cocktailShakerSort(std::vector<int>& arr) {
+    bool swapped = true;
+    int start = 0;
+    int end = arr.size() - 1;
 
-            // Сдвигаем элементы arr[0..i-gap], которые превышают temp, на один
-            // место вперед, чтобы сделать место для temp
-            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                arr[j] = arr[j - gap];
+    while (swapped) {
+        // Сбрасываем флаг swapped
+        swapped = false;
+
+        // Прямой проход
+        for (int i = start; i < end; ++i) {
+            if (arr[i] > arr[i + 1]) {
+                std::swap(arr[i], arr[i + 1]);
+                swapped = true;
             }
-            arr[j] = temp;
         }
+
+        // Если ничего не было обменяно, массив уже отсортирован
+        if (!swapped) {
+            break;
+        }
+
+        // Уменьшаем конец для следующей итерации
+        --end;
+
+        // Сбрасываем флаг swapped для обратного прохода
+        swapped = false;
+
+        // Обратный проход
+        for (int i = end; i > start; --i) {
+            if (arr[i] < arr[i - 1]) {
+                std::swap(arr[i], arr[i - 1]);
+                swapped = true;
+            }
+        }
+
+        // Увеличиваем начало для следующей итерации
+        ++start;
     }
 }
 
@@ -71,7 +91,7 @@ int main() {
         // printArray(arr);
         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
 
-        shellSort(arr);
+        cocktailShakerSort(arr);
 
         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
         std::chrono::duration<double> duration = end - start;
