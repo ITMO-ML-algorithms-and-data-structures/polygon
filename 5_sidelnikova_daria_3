@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <random> // для генератора случайных чисел
+#include <ctime> // для std::time
+#include <algorithm> // Для std::swap
+#include <cassert>//для тестов
+
+// Перемешиваем массив алгоритмом Фишера-Йетса//делала не через rand
+void shuffleFY(std::vector<int>& arr) {
+    if (arr.empty()) {//проверяем для пустого                   // O(1)
+        return;                                             // O(1)
+    }
+    // Инициализация генератора случайных чисел
+    std::mt19937/* гениратор псевдослучайных чисел Мерсена Твистера(обладает хорошей статистической случайностью)*/ gen(static_cast<unsigned int>(std::time/*функциф которая возвращаеи системное время с 1 янв 1970г*/(nullptr/*результат записывается в возвращаемое значение*/)));// O(1)
+//проходим по массиву от конца к началу
+    for (int i = arr.size() - 1; i > 0; --i) {// Внешний цикл: O(n), где n - длина массива
+        // Генерируем случайный индекс от 0 до i включительно
+        std::uniform_int_distribution<>/*станартно int*/ dist(0, i);//uniform_int_distribution - класс используется для генерации равномерно распределенных целых чисел в заданном диапазоне.// O(1)
+        int j = dist(gen);                                          // O(1)
+        // Меняем местами элементы с индексами i и j
+        std::swap(arr[i], arr[j]);                          // O(1)
+    }
+}
+//Общая сложность: О(n), где - n длина массива arr
+
+//тесты:
+
+void test1() { //проверка на пустой массив              // O(1)
+    std::vector<int> emptyArray;                        // O(1)
+    shuffleFY(emptyArray);                           // O(1)
+    assert(emptyArray.empty());                         // O(1)
+}
+//Общая сложность: O(1)
+
+void test2() {//проверка массива с одним элементом      // O(1)
+    std::vector<int> singleElementArray = {42};         // O(1)
+    shuffleFY(singleElementArray);                     // O(1)
+    assert(singleElementArray.size() == 1 && singleElementArray[0] == 42);// O(1)
+}
+//Общая сложность: O(1)
+
+void test3() {//проверка для маленького массива// O(1)
+    std::vector<int> smallArray = {1, 2, 3, 4, 5}; // O(1) (так как фиксированное число элементов)
+    shuffleFY(smallArray);// O(m), где m - длина smallArray (в данном случае 5)
+    bool isPermutation = true;// O(1)
+    for (int i = 1; i <= 5; ++i) {// Внутренний цикл: O(m)
+        if (std::find(smallArray.begin(), smallArray.end(), i) == smallArray.end()) {// Поиск элемента: O(m)
+            isPermutation = false;// O(1)
+            break;
+        }
+    }
+    assert(isPermutation);// O(1)
+}
+//Общая сложность: O(m^2), где m – длина массива smallArray. В данном случае m=5, поэтому фактически это будет O(25) или просто O(1), так как константы игнорируются.
+
+void test4(){
+    const int N = 10000;                        // O(1)
+    std::vector<int> largeArray(N);             // O(N)
+    for (int i = 0; i < N; ++i) {               // O(N)
+        largeArray[i] = i;                          // O(1)
+    }
+    //оригинальный массив
+    std::vector<int> originalArray = largeArray;            // O(N), копирование массива
+    // Перемешиваем массив
+    shuffleFY(largeArray);                  // O(N)
+
+    // Проверяем, что порядок элементов изменился
+    bool isPermutation = false;                 // O(1)
+    for (int i = 0; i < N; ++i) {                   // O(N)
+        if (largeArray[i] != originalArray[i]) {
+            isPermutation = true;                   // O(1)
+            break;
+        }
+    }
+    assert(isPermutation);                          // O(1)
+}
+//Общая сложность: O(N), где N – длина массива largeArray (в данном случае 10,000).
+int main(){
+    test1();// O(1)
+    test2();// O(1)
+    test3();// O(1)(смотри выше)
+    test4();// O(N)
+    return 0;// O(1)
+}
