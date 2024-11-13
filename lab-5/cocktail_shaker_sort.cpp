@@ -36,14 +36,18 @@ void cocktailShakerSort(std::vector<int>& arr) {
     int start = 0;
     int end = arr.size() - 1;
 
+    // Количество проходов:
+    // Лучший случай - О(1)
+    // Худший и средий случай - О(N)
     while (swapped) {
         // Сбрасываем флаг swapped
         swapped = false;
 
         // Прямой проход
+        // Количество проходов - в среднем О(N / 2)
         for (int i = start; i < end; ++i) {
             if (arr[i] > arr[i + 1]) {
-                std::swap(arr[i], arr[i + 1]);
+                std::swap(arr[i], arr[i + 1]); // память O(1) - меняем местами значения в веторе
                 swapped = true;
             }
         }
@@ -60,9 +64,10 @@ void cocktailShakerSort(std::vector<int>& arr) {
         swapped = false;
 
         // Обратный проход
+        // Количество проходов - в среднем О(N / 2)
         for (int i = end; i > start; --i) {
             if (arr[i] < arr[i - 1]) {
-                std::swap(arr[i], arr[i - 1]);
+                std::swap(arr[i], arr[i - 1]); // память O(1) - меняем местами значения в веторе
                 swapped = true;
             }
         }
@@ -70,6 +75,12 @@ void cocktailShakerSort(std::vector<int>& arr) {
         // Увеличиваем начало для следующей итерации
         ++start;
     }
+
+    // Итого:
+    // Временная сложность:
+    // Лучший случай - О(N), средний и худший - О(N ^ 2)
+    // Память:
+    // Во всех случаях - О(1), т.к. только меняем местами 2 значения
 }
 
 // Функция для вывода массива
@@ -81,24 +92,51 @@ void printArray(const std::vector<int>& arr) {
 }
 
 int main() {
-    for (int i = 1000; i <= 1000000; i *= 10) {
-        std::vector<int> arr;
-        std::string tmp_file = std::to_string(i) + ".csv";
+    // for (int i = 1000; i <= 1000000; i *= 10) {
+    //     std::vector<int> arr;
+    //     std::string tmp_file = std::to_string(i) + ".csv";
+
+    //     read_csv(tmp_file, arr);
+
+    //     auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
+
+    //     cocktailShakerSort(arr);
+
+    //     auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
+    //     std::chrono::duration<double> duration = end - start;
+    //     std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl; // Выводим время работы
+    // }
+    //  for (int i = 1000; i <= 1000000; i *= 10) {
+    //     for (int j = 1; j <= 9; j ++) {
+    //         std::vector<int> arr;        
+    //         std::string tmp_file = std::to_string(i * j) + ".csv";
+
+    //         read_csv(tmp_file, arr);
+
+    //         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
+
+    //         cocktailShakerSort(arr);
+
+    //         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
+    //         std::chrono::duration<double> duration = end - start;
+    //         std::cout << i * j << " " << duration.count() << std::endl; // Выводим время работы
+    //     }
+    // }
+    for (int i = 1; i <= 50; i ++) {
+        std::vector<int> arr;        
+        std::string tmp_file = "100000_" + std::to_string(i) + ".csv";
 
         read_csv(tmp_file, arr);
 
-        // std::cout << "Input array: ";
-        // printArray(arr);
+        int n = arr.size();
+
         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
 
         cocktailShakerSort(arr);
 
         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
         std::chrono::duration<double> duration = end - start;
-        std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl; // Выводим время работы
-
-        // std::cout << "Sorted array: ";
-        // printArray(arr);
+        std::cout << duration.count() << std::endl; // Выводим время работы
     }
 
     return 0;

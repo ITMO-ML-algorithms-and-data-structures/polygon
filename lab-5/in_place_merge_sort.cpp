@@ -40,6 +40,7 @@ void merge(std::vector<int>& arr, int left, int mid, int right) {
     }
 
     // Слияние двух подмассивов
+    // Количество проходов - О(N / 2) 
     while (left <= mid && start2 <= right) {
         if (arr[left] <= arr[start2]) {
             left ++;
@@ -49,7 +50,7 @@ void merge(std::vector<int>& arr, int left, int mid, int right) {
 
             // Сдвигаем все элементы на одно место вправо
             while (index != left) {
-                arr[index] = arr[index - 1];
+                arr[index] = arr[index - 1]; // память O(1) - основное отличие от обычной Merge sort
                 index --;
             }
             arr[left] = value;
@@ -68,20 +69,61 @@ void inPlaceMergeSort(std::vector<int>& arr, int left, int right) {
         int mid = left + (right - left) / 2;
 
         // Рекурсивная сортировка левой и правой половин
-        inPlaceMergeSort(arr, left, mid);
+        // Количество уровней рекурсии - О(log N) во всех случаях
+        inPlaceMergeSort(arr, left, mid); 
         inPlaceMergeSort(arr, mid + 1, right);
 
         // Слияние отсортированных подмассивов
         merge(arr, left, mid, right);
     }
+
+    // Итого:
+    // Временная сложность:
+    // Лучший случай - О(log N), средний и худший - О(N * log N)
+    // Память:
+    // Во всех случаях - О(1), т.к. только сдвигаем все значения в массиве по очереди
 }
 
 int main() {
-    for (int i = 1000; i <= 1000000; i *= 10) {
+    // for (int i = 1000; i <= 1000000; i *= 10) {
+    //     std::vector<int> arr;        
+    //     std::string tmp_file = std::to_string(i) + ".csv";
+
+    //     read_csv(tmp_file, arr);
+    //     int n = arr.size();
+
+    //     auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
+
+    //     inPlaceMergeSort(arr, 0, n - 1);
+
+    //     auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
+    //     std::chrono::duration<double> duration = end - start;
+    //     std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl; // Выводим время работы
+    // }
+//    for (int i = 1000; i <= 1000000; i *= 10) {
+//         for (int j = 1; j <= 9; j ++) {
+//             std::vector<int> arr;        
+//             std::string tmp_file = std::to_string(i * j) + ".csv";
+
+//             read_csv(tmp_file, arr);
+
+//             int n = arr.size();
+
+//             auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
+
+//             inPlaceMergeSort(arr, 0, n - 1);
+
+//             auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
+//             std::chrono::duration<double> duration = end - start;
+//             std::cout << i * j << " " << duration.count() << std::endl; // Выводим время работы
+//         }
+//     }
+    for (int i = 1; i <= 50; i ++) {
         std::vector<int> arr;        
-        std::string tmp_file = std::to_string(i) + ".csv";
+        std::string tmp_file = "100000_" + std::to_string(i) + ".csv";
 
         read_csv(tmp_file, arr);
+
         int n = arr.size();
 
         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
@@ -90,7 +132,7 @@ int main() {
 
         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
         std::chrono::duration<double> duration = end - start;
-        std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl; // Выводим время работы
+        std::cout << duration.count() << std::endl; // Выводим время работы
     }
 
     return 0;

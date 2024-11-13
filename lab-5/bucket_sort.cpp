@@ -35,7 +35,8 @@ void read_csv(const std::string& filename, std::vector<int>& intArray) { // Фу
 void bucketSort(std::vector<int>& arr, int n) {
     // Найти максимальное значение в массиве
     int maxValue = arr[0];
-    for (int i = 1; i < n; i++) {
+    // Поиск макс значения - O(N)
+    for (int i = 1; i < n; i ++) {
         if (arr[i] > maxValue) {
             maxValue = arr[i];
         }
@@ -43,31 +44,77 @@ void bucketSort(std::vector<int>& arr, int n) {
 
     // Создать векторы (ведра) для bucket sort
     int bucketCount = maxValue / 10 + 1; // Количество ведер
-    std::vector<std::vector<int>> buckets(bucketCount);
+    std::vector<std::vector<int>> buckets(bucketCount); // память O(k) - создаем вектор "ведер"
 
     // Разделить массив на ведра
-    for (int i = 0; i < n; i++) {
+    // Проходим по массиву - О(N)
+    for (int i = 0; i < n; i ++) {
         int bucketIndex = arr[i] / 10; // Индекс ведра
-        buckets[bucketIndex].push_back(arr[i]);
+        buckets[bucketIndex].push_back(arr[i]); // память О(N * k)
     }
 
     // Отсортировать каждое ведро и собрать результат
     int index = 0;
-    for (int i = 0; i < bucketCount; i++) {
+    // Проход по всем вёдрам - О(k)
+    for (int i = 0; i < bucketCount; i ++) {
+        // Сложность std::sort
+        // Время - (N / k) * log (N / k) во всех случаях
+        // Память - log (N / k) во всех случаях
         std::sort(buckets[i].begin(), buckets[i].end()); // Сортируем ведро
-        for (int j = 0; j < buckets[i].size(); j++) {
+        // Проход по всем элементам ведра - О(N / k)
+        for (int j = 0; j < buckets[i].size(); j ++) {
             arr[index++] = buckets[i][j]; // Собрать отсортированные элементы
         }
     }
+
+    // Итого:
+    // Временная сложность:
+    // Лучший случай - О(N), средний и худший - О(N * k)
+    // Память:
+    // Во всех случаях - О(N * k)
 }
 
 
 int main() {
-    for (int i = 1000; i <= 1000000; i *= 10) {
+    // for (int i = 1000; i <= 1000000; i *= 10) {
+    //     std::vector<int> arr;        
+    //     std::string tmp_file = std::to_string(i) + ".csv";
+
+    //     read_csv(tmp_file, arr);
+    //     int n = arr.size();
+
+    //     auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
+
+    //     bucketSort(arr, n);
+
+    //     auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
+    //     std::chrono::duration<double> duration = end - start;
+    //     std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl; // Выводим время работы
+    // }
+    // for (int i = 1000; i <= 1000000; i *= 10) {
+    //     for (int j = 1; j <= 9; j ++) {
+    //         std::vector<int> arr;        
+    //         std::string tmp_file = std::to_string(i * j) + ".csv";
+
+    //         read_csv(tmp_file, arr);
+
+    //         int n = arr.size();
+
+    //         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
+
+    //         bucketSort(arr, n);
+
+    //         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
+    //         std::chrono::duration<double> duration = end - start;
+    //         std::cout << i * j << " " << duration.count() << std::endl; // Выводим время работы
+    //     }
+    // }
+    for (int i = 1; i <= 50; i ++) {
         std::vector<int> arr;        
-        std::string tmp_file = std::to_string(i) + ".csv";
+        std::string tmp_file = "100000_" + std::to_string(i) + ".csv";
 
         read_csv(tmp_file, arr);
+
         int n = arr.size();
 
         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта    
@@ -76,7 +123,7 @@ int main() {
 
         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
         std::chrono::duration<double> duration = end - start;
-        std::cout << "Execution time for " << i << " : " << duration.count() << " seconds" << std::endl; // Выводим время работы
+        std::cout << duration.count() << std::endl; // Выводим время работы
     }
 
 
