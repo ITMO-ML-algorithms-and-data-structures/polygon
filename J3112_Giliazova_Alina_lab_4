@@ -1,0 +1,100 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <sstream>
+#include <string>
+using namespace std;
+
+//проверка является ли сумма элементов по заданным индексам равной 0
+bool isZeroSum(const vector<int>& arr, const vector<int>& indices) {
+    int sum = 0;
+    for (int idx : indices) {
+        sum += arr[idx];
+    }
+    return sum == 0;
+}
+
+//генерация всех комбинаций размера K с использованием рекурсивного подхода
+void findCombinations(const vector<int>& arr, int N, int K, vector<vector<int>>& result) {
+    vector<int> combination;
+    vector<int> indices(N);
+    for (int i = 0; i < N; ++i) {
+        indices[i] = i;
+    }
+
+    function<void(int, int)> generate = [&](int start, int depth) {
+        if (depth == 0) {
+            //проверяем равна ли сумма подмассива нулю
+            if (isZeroSum(arr, combination)) {
+                result.push_back(combination);
+            }
+            return;
+        }
+
+        for (int i = start; i <= N - depth; ++i) {
+            combination.push_back(indices[i]);
+            generate(i + 1, depth - 1);
+            combination.pop_back();
+        }
+    };
+
+    //генерация комбинаций
+    generate(0, K);
+}
+
+
+bool readArrayFromFile(const string& filename, vector<int>& arr, int& K) {
+    ifstream inputFile(filename);
+
+    string line;
+    if (getline(inputFile, line)) {
+        stringstream ss(line);
+        string token;
+        while (getline(ss, token, ',')) {
+            try {
+                arr.push_back(stoi(token));
+            } catch (const invalid_argument& e) {
+                cerr << "Некорректное значение в файле: " << token << endl;
+                return false;
+            }
+        }
+    }
+
+    inputFile.close();
+
+    if (!arr.empty()) {
+        K = arr.back();
+        arr.pop_back();
+        return true;
+    }
+
+    return false;
+}
+
+int main() {
+    string filename = "nulls.txt";
+    vector<int> arr;
+    int K;
+
+    if (!readArrayFromFile(filename, arr, K)) {
+        return 1;
+    }
+
+    vector<vector<int>> result;
+
+    //находим все комбинации размера K
+    findCombinations(arr, arr.size(), K, result);
+
+    for (const auto& indices : result) {
+        cout << "[";
+        for (size_t i = 0; i < indices.size(); ++i) {
+            cout << indices[i];
+            if (i < indices.size() - 1) {
+                cout << ", ";
+            }
+        }
+        cout << "]\n";
+    }
+
+    return 0;
+}
