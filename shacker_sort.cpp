@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
-
+#include <algorithm>
 
 // Функция сортировки шейкер-сортом
 void shakerSort(std::vector<int>& arr) {
@@ -94,27 +94,39 @@ void test(std::vector<int>& arr) {
     report();
 }
 
-int main() {
-    auto start = std::chrono::high_resolution_clock::now();
+// Функция для запуска основной программы несколько раз и записи времени выполнения в файл
+void runTestsMultipleTimes(int numRuns) {
+    std::ofstream outputFile("C:\\Users\\R1300-W-1-Stud\\Documents\\execution_times.txt", std::ios::out | std::ios::trunc);
 
-    // Пример массива для сортировки
-    std::vector<int> arr = load_data();
-
-    // Вызов функции тестирования
-    test(arr);
-
-    // Вывод отсортированного массива (не рекомендуется на больших данных)
-    std::cout << "Отсортированный массив: ";
-    for (int val : arr) {
-        std::cout << val << " ";
+    if (!outputFile) {
+        std::cerr << "Ошибка открытия файла для записи.\n";
+        return;
     }
-    std::cout << std::endl;
 
-    // Выводим время выполнения программы
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff = end - start;
+    for (int i = 0; i < numRuns; ++i) {
+        auto start = std::chrono::high_resolution_clock::now();
 
-    std::cout << "Time execution: " << diff.count() << " seconds";
+        // Загружаем данные
+        std::vector<int> arr = load_data();
+
+        // Вызов функции тестирования
+        test(arr);
+
+        // Вычисление времени выполнения
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff = end - start;
+
+        // Записываем время выполнения в файл
+        outputFile << diff.count() << " \n";
+    }
+
+    outputFile.close();
+    std::cout << "Execution times have been saved to execution_times.txt.\n";
+}
+
+int main() {
+    // Запуск программы 50 раз и запись времени выполнения в файл
+    runTestsMultipleTimes(50);
 
     return 0;
 }
