@@ -4,6 +4,8 @@
 #include <sstream>
 #include <chrono>
 #include <algorithm>
+#include <string>
+#include <algorithm>
 
 // Функция сортировки шейкер-сортом
 void shakerSort(std::vector<int>& arr) {
@@ -11,7 +13,7 @@ void shakerSort(std::vector<int>& arr) {
     int right = arr.size() - 1;
     bool swapped = true;
 
-    while (left < right && swapped) {
+    while (left < right&& swapped) {
         swapped = false;
 
         // Проход слева направо
@@ -34,22 +36,6 @@ void shakerSort(std::vector<int>& arr) {
     }
 }
 
-// Функция считывающая датасет
-std::vector<int> load_data() {
-    std::vector<int> data;
-    std::ifstream file("C:\\Users\\R1300-W-1-Stud\\Documents\\ata.txt");
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream ss(line);
-        std::string item;
-        while (std::getline(ss, item, '\t')) {
-            int item1 = std::stoi(item); // Используем int, так как массив должен быть типа int
-            data.push_back(item1);
-        }
-    }
-    return data;
-}
-
 // Тесты
 int test_passed = 0;
 int test_failed = 0;
@@ -70,7 +56,7 @@ void report() {
     std::cout << "Tests not passed total: " << test_failed << "\n";
 }
 
-// Функция тестирования
+// Функция тестирования в худшем и лучшем случае работы алгоритма
 void test(std::vector<int>& arr) {
     // Тест 1: Проверка размера массива
     assertEqual(arr.size() <= 1e6, "Test input data by condition (size <= 1e6)");
@@ -94,9 +80,30 @@ void test(std::vector<int>& arr) {
     report();
 }
 
-// Функция для запуска основной программы несколько раз и записи времени выполнения в файл
+
+
+// Функция считывающая датасет 1e4 или 1e5
+std::vector<int> load_data() {
+    std::vector<int> data;
+    std::ifstream file("1e4.txt");
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
+        std::string item;
+        while (std::getline(ss, item, '\t')) {
+            int item1 = std::stoi(item);
+            data.push_back(item1);
+        }
+    }
+    return data;
+}
+
+
+
+// Функция для запуска основной программы numRuns  раз с датасетом в 1е4 и 1е5 и записи времени выполнения в файл.
+//Нужно чтоб получить данные для построения таблицы 
 void runTestsMultipleTimes(int numRuns) {
-    std::ofstream outputFile("C:\\Users\\R1300-W-1-Stud\\Documents\\execution_times.txt", std::ios::out | std::ios::trunc);
+    std::ofstream outputFile("C:\\Users\\admin\\Downloads\\execution_time.txt", std::ios::out | std::ios::trunc);
 
     if (!outputFile) {
         std::cerr << "Ошибка открытия файла для записи.\n";
@@ -108,9 +115,6 @@ void runTestsMultipleTimes(int numRuns) {
 
         // Загружаем данные
         std::vector<int> arr = load_data();
-
-        // Вызов функции тестирования
-        test(arr);
 
         // Вычисление времени выполнения
         auto end = std::chrono::high_resolution_clock::now();
@@ -124,9 +128,65 @@ void runTestsMultipleTimes(int numRuns) {
     std::cout << "Execution times have been saved to execution_times.txt.\n";
 }
 
+
+
+//Функция для чтения файла в каждой строке которого содержится датасет размера от 1е3 до 1е6 с шагом по тысячу
+void processFile(const std::string& inputFile, const std::string& outputFile) {
+    std::ifstream inFile(inputFile); // Открываем входной файл
+    std::ofstream outFile(outputFile, std::ios::app); // Открываем выходной файл для добавления данных
+
+    // Проверяем, открылись ли файлы успешно
+    if (!inFile.is_open()) {
+        std::cerr << "Не удалось открыть файл для чтения: " << inputFile << std::endl;
+        return;
+    }
+    if (!outFile.is_open()) {
+        std::cerr << "Не удалось открыть файл для записи: " << outputFile << std::endl;
+        return;
+    }
+
+    std::string line;
+
+    // Чтение строк из входного файла
+    while (std::getline(inFile, line)) {
+        size_t lineLength = line.length(); // Определяем длину строки
+
+        auto start = std::chrono::high_resolution_clock::now(); // Начало измерения времени
+
+        // Разбираем строку на целые числа
+        std::istringstream lineStream(line);
+        int number;
+        std::vector<int> arr1;
+        while (lineStream >> number) {
+            arr1.push_back(number);
+        }
+        std::vector<int> arr;
+        std::ranges::copy(arr1, std::back_inserter(arr));
+        //тут массив нами проинициализирован поэтому функция сортировки начнет свое выполнение и время будет верным
+        auto end = std::chrono::high_resolution_clock::now(); // Конец измерения времени
+        std::chrono::duration<double> duration = end - start; // Вычисление времени выполнения в секундах
+
+        // Запись времени выполнения в выходной файл
+        outFile << "Длина строки " << lineLength << ": " << duration.count() << " секунд" << std::endl;
+    }
+
+    // Закрытие файлов
+    inFile.close();
+    outFile.close();
+
+    std::cout << "Обработка завершена. Результаты записаны в файл: " << outputFile << std::endl;
+}
+
+
 int main() {
     // Запуск программы 50 раз и запись времени выполнения в файл
     runTestsMultipleTimes(50);
+
+    std::string inputFile = "C:\\Users\\admin\\Downloads\\random_numbers.txt";  // Имя входного файла
+    std::string outputFile = "C:\\Users\\admin\\Downloads\\time_line_chart.txt"; // Имя выходного файла
+
+    // Вызов функции для обработки файла
+    processFile(inputFile, outputFile);
 
     return 0;
 }
