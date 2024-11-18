@@ -6,12 +6,8 @@
 
 ### Для начала работы
 1. Сделайте форк репозитория. Кнопочка Fork (в правом верхнем углу) 
-2. Скопируйте репозиторий   
+2. Скопируйте репозиторий (кнопочка Code и там клонируете ссылку)
 ![alt text](imgs/copy_repo.png)  
-
-```bash
-git clone https://github.com/ITMO-ML-algorithms-and-data-structures/polygon.git
-```  
 
 3. Представьтесь, это важно
 ```bash
