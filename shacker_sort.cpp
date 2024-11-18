@@ -150,10 +150,10 @@ void test(std::vector<int>& arr) {
 
 
 
-//Функция для чтения файла в каждой строке которого содержится датасет размера от 1е3 до 1е6 с шагом по тысячу
+// Функция для чтения данных из CSV файла и измерения времени сортировки каждой строки
 void processFile(const std::string& inputFile, const std::string& outputFile) {
-    std::ifstream inFile(inputFile); // Открываем входной файл
-    std::ofstream outFile(outputFile, std::ios::app); // Открываем выходной файл для добавления данных
+    std::ifstream inFile(inputFile);
+    std::ofstream outFile(outputFile, std::ios::app);
 
     // Проверяем, открылись ли файлы успешно
     if (!inFile.is_open()) {
@@ -165,30 +165,26 @@ void processFile(const std::string& inputFile, const std::string& outputFile) {
         return;
     }
 
-    std::string line;
+    std::string line; // Переменная для чтения строк из файла
 
-    // Чтение строк из входного файла
+    // Чтение строк из входного CSV файла
     while (std::getline(inFile, line)) {
-        size_t lineLength = line.length(); // Определяем длину строки
-
-        auto start = std::chrono::high_resolution_clock::now(); // Начало измерения времени
-
-        // Разбираем строку на целые числа
+        // Разбираем строку на числа, разделенные запятыми
         std::istringstream lineStream(line);
-        int number;
-        std::vector<int> arr1;
-        while (lineStream >> number) {
-            arr1.push_back(number);
-        }//Нельзя сразу инициализировать фкк так как начнет выполнение программа сортировки
+        std::string item;
         std::vector<int> arr;
-        std::ranges::copy(arr1, std::back_inserter(arr));
-        //тут массив нами проинициализирован сразу целиком поэтому функция сортировки начнет свое выполнение и время будет верным
-        shakerSort(arr);
-        auto end = std::chrono::high_resolution_clock::now(); // Конец измерения времени
-        std::chrono::duration<double> duration = end - start; // Вычисление времени выполнения в секундах
 
-        // Запись времени выполнения в выходной файл
-        outFile << "Длина строки " << lineLength << ": " << duration.count() << " секунд" << std::endl;
+        // Разбиваем строку на элементы и добавляем в вектор
+        while (std::getline(lineStream, item, ',')) {
+            int number = std::stoi(item);
+            arr.push_back(number);
+        }
+
+        auto start = std::chrono::high_resolution_clock::now();
+        shakerSort(arr);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        outFile << arr.size() << ' ' << duration.count()  << std::endl;
     }
 
     // Закрытие файлов
@@ -203,10 +199,9 @@ int main() {
     //// Запуск программы 50 раз и запись времени выполнения в файл
     //runTestsMultipleTimes(100);
 
-    std::string inputFile = "C:\\Users\\admin\\Downloads\\random_numbers.txt";  // Имя входного файла
-    std::string outputFile = "C:\\Users\\admin\\Downloads\\time_line_chart.txt"; // Имя выходного файла
+    std::string inputFile = "C:\\Users\\R1300-W-1-Stud\\PycharmProjects\\pythonProject\\random_numbers.csv";
+    std::string outputFile = "C:\\Users\\R1300-W-1-Stud\\Downloads\\time_line_char.txt";
 
-    // Вызов функции для обработки файла
     processFile(inputFile, outputFile);
 
     return 0;
