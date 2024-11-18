@@ -1,0 +1,26 @@
+#include <iostream> // O(1)
+#include <fstream> // O(1)
+#include <unordered_set> // O(1)
+using namespace std; // O(1)
+int main() {
+    ifstream file("num.txt"); // O(1)
+
+    unordered_set<int> only_numbers; // O(1)
+    int num; // O(1) 
+
+    while (file >> num) { // O(n) так как происходит чтение каждого числа в файле, поэтому цикл выполняется n раз 
+            only_numbers.insert(num); // O(1)
+            // cout << num << ' '; // O(1)
+
+    }
+    file.close(); // O(1)
+    for (int unik : only_numbers)
+        cout << unik << ' ';
+
+    return 0;
+
+
+
+
+}
+// Вывод: сложность всей программы O(n)
