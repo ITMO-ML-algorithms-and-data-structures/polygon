@@ -1,10 +1,6 @@
 #include "execute.h"
-#include <fstream>
-#include <iostream>
 
-
-void execute_str_to_str_function(std::string &input_file_name, std::string &output_file_name,
-                                 std::string (&exec_function)(const std::string &)) {
+std::string string_from_file(const std::string &input_file_name) {
     std::ifstream input_file;
     input_file.open(input_file_name);
     std::string line;
@@ -13,9 +9,10 @@ void execute_str_to_str_function(std::string &input_file_name, std::string &outp
         line += tmp + ' ';
     }
     input_file.close();
+    return line;
+}
 
-    line = exec_function(line);
-
+void string_to_file(const std::string &line, const std::string &output_file_name) {
     std::ofstream output_file;
     output_file.open(output_file_name);
     output_file << line;
@@ -23,51 +20,48 @@ void execute_str_to_str_function(std::string &input_file_name, std::string &outp
 }
 
 
-bool check_answer(std::string &answer_file_name, std::string &prog_result_file_name,
+bool check_answer(const std::string &answer_file_name, const std::string &prog_result_file_name,
                   bool (&compare_function)(const std::string &, const std::string &)) {
-    std::ifstream answer_file, prog_result_file;
-    answer_file.open(answer_file_name);
-    prog_result_file.open(prog_result_file_name);
-    std::string answer, prog_result, tmp;
-    while (answer_file >> tmp) {
-        answer += tmp + ' ';
-    }
-    while (prog_result_file >> tmp) {
-        prog_result += tmp + ' ';
-    }
-    answer_file.close();
-    prog_result_file.close();
-
-    if (compare_function(answer, prog_result)) {
-        std::cout << "OK" << std::endl;
-        return true;
-    }
-    std::cout << "WRONG ANSWER" << std::endl;
-    return false;
+    const std::string answer = string_from_file(answer_file_name);
+    const std::string prog_result = string_from_file(prog_result_file_name);
+    return compare_function(answer, prog_result);
 }
 
 
-void tester(const size_t file_count, std::string (&exec_function)(const std::string &), const std::string &test_path,
+std::pair<bool, double> test(const size_t i,
+                             std::pair<std::string, double> (&exec_function)(const std::string &),
+                             const std::string &test_path,
+                             bool (&compare_function)(const std::string &, const std::string &)) {
+    const std::string input_file_name = test_path + "test" + std::to_string(i) + ".txt";
+    const std::string output_file_name = test_path + "output" + std::to_string(i) + ".txt";
+
+    const std::string input = string_from_file(input_file_name);
+
+    const std::pair<std::string, double> result = exec_function(input);
+
+    string_to_file(result.first, output_file_name);
+
+    const std::string answer_file_name = test_path + "answer" + std::to_string(i) + ".txt";
+    const std::string prog_result_file_name = test_path + "output" + std::to_string(i) + ".txt";
+
+    return {check_answer(answer_file_name, prog_result_file_name, compare_function), result.second};
+}
+
+void print_result(const std::pair<bool, double> result, const size_t i) {
+    std::cout << "TEST " << i << ": " << (result.first ? "OK" : "WRONG ANSWER") << std::endl;
+    std::cout << "TIME: " << result.second << " SECONDS" << std::endl << std::endl;
+}
+
+void tester(const size_t file_count,
+            std::pair<std::string, double> (&exec_function)(const std::string &),
+            const std::string &test_path,
             bool (&compare_function)(const std::string &, const std::string &)) {
     size_t right_answers = 0;
 
-    for (int i = 0; i < file_count; i++) {
-        std::string input_file_name = test_path + "test" + std::to_string(i) + ".txt";
-        std::string output_file_name = test_path + "output" + std::to_string(i) + ".txt";
-
-        clock_t start = clock();
-        execute_str_to_str_function(input_file_name, output_file_name, exec_function);
-        clock_t end = clock();
-
-        std::string answer_file_name = test_path + "answer" + std::to_string(i) + ".txt";
-        std::string prog_result_file_name = test_path + "output" + std::to_string(i) + ".txt";
-
-        std::cout << "TEST " << i << ": ";
-
-        check_answer(answer_file_name, prog_result_file_name, compare_function) ? right_answers++ : 0;
-
-        std::cout << "TIME: " << (double) (end - start) / CLOCKS_PER_SEC << " SECONDS" << std::endl << std::endl;
+    for (size_t i = 0; i < file_count; i++) {
+        std::pair<bool, double> result = test(i, exec_function, test_path, compare_function);
+        print_result(result, i);
+        right_answers += result.first;
     }
-
     std::cout << "Right answers: " << right_answers << "/" << file_count << std::endl;
 }

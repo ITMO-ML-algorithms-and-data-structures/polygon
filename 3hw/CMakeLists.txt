@@ -4,5 +4,5 @@ project(3hw)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(3hw
-    3hw.cpp
-    ../execute.cpp)
+        3hw.cpp
+        ../execute.cpp)
