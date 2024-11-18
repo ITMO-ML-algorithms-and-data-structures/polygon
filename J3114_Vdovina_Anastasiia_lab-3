@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+#include <cstdlib>
+#include <ctime>
+#include <cassert>
+#include <fstream>
+
+std::vector<int> Array_sampling(const std::vector<int>& lst, int k) {
+    std::vector<int> ls; // O(1)
+    std::unordered_set<int> uni_el; // O(1)
+    int i = 0; // O(1)
+
+    while (i != k) {
+        int rndm_indx = std::rand() % lst.size(); // O(1)
+
+        if (i == 0) {
+            ls.push_back(lst[rndm_indx]); // O(1)
+            uni_el.insert(lst[rndm_indx]); // O(N) (в худшем случае)
+            i++; // O(1)
+        } else if (uni_el.find(lst[rndm_indx]) == uni_el.end()) {
+            ls.push_back(lst[rndm_indx]); // O(1)
+            uni_el.insert(lst[rndm_indx]); // O(N) (в худшем случае)
+            i++; // O(1)
+        }
+    }
+    return ls; // O(1)
+}
+
+bool tests() {
+    for (int i = 0; i < 20; i++) {
+        int n = std::rand() % 10000;
+        std::vector<int> a;
+        for (int j = 0; j < n; j++) {
+            a.push_back(std::rand() % 100000);
+        }
+
+        int k = 1 + std::rand() % (n - 2);
+        std::vector<int> res1 = Array_sampling(a, k);
+        std::vector<int> res2 = Array_sampling(a, k);
+        if (res1.size() != k && res2.size() != k && (res1 == res2)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    std::srand(static_cast<unsigned>(std::time(0)));
+    
+    std::ifstream inputFile("input.txt");
+
+    std::vector<int> sample_list;
+    int number;
+    while (inputFile >> number) {
+        sample_list.push_back(number);
+    }
+    inputFile.close();
+
+    int k = 3;
+
+    std::vector<int> result = Array_sampling(sample_list, k);
+
+    std::cout << "Sampled Array: ";
+    for (int num : result) {
+        std::cout << num << " ";
+    }
+    std::cout << '\n';
+
+    if (tests() == true) {
+        std::cout << "OK";
+    } else {
+        assert(false);
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
