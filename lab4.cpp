@@ -23,6 +23,7 @@ double Count_Rast(const vector<double>& cluster) {
     }
     return ves; // Память: O(1)
 }
+// Сложность О(N)
 
 // Поиск лучшего разбиения
 void Itog_claster(const vector<double>& arr, int index, int k, vector<vector<double>>& now_set, double now_rast, double& min_rast, vector<vector<double>>& best_set) {
@@ -43,7 +44,7 @@ void Itog_claster(const vector<double>& arr, int index, int k, vector<vector<dou
         now_set[i].push_back(arr[index]);
         double add_rast = Count_Rast(now_set[i]); // Сложность: O(N)
 
-        Itog_claster(arr, index + 1, k, now_set, now_rast + add_rast, min_rast, best_set); // Сложность: O(2^N)
+        Itog_claster(arr, index + 1, k, now_set, now_rast + add_rast, min_rast, best_set); // Сложность: O(K^N), где К - количество кластеров
         now_set[i].pop_back();
     }
 
@@ -68,7 +69,7 @@ vector<vector<double>> make_cluster(const vector<double>& arr, int k) {
 
 }
 
-// Cложность: O(2^N)
+// Cложность: O(K^N*N), так какна каждом уровне рекурсии мы выполняем подсчет отклонений от общего значения
 
 // Функция вывода вектора
 void print_vector(const vector<double>& vec) {
