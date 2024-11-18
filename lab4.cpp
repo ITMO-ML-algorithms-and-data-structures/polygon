@@ -12,20 +12,20 @@ int sumArray(const vector<int>& arr) {
 }
 
 bool findSubset(vector<int>& arr, int n, int target, vector<int>& subset, bool& found) {
-    if (found) return true; // Если уже нашли решение, останавливаемся
+    if (found) return true;
     if (target == 0) {
-        found = true; // Отмечаем, что решение найдено
+        found = true;
         return true;
     }
     if (n == 0 || target < 0) return false;
 
-    // Пробуем включить текущий элемент
+    
     subset.push_back(arr[n - 1]);
     if (findSubset(arr, n - 1, target - arr[n - 1], subset, found)) {
         return true;
     }
 
-    // Пробуем исключить текущий элемент
+    
     subset.pop_back();
     return findSubset(arr, n - 1, target, subset, found);
 }
@@ -44,7 +44,7 @@ void splitArray(vector<int>& arr) {
 
     if (findSubset(arr, static_cast<int>(arr.size()), target, subset1, found)) {
         vector<int> subset2;
-        unordered_map<int, int> count; // Для подсчёта оставшихся элементов
+        unordered_map<int, int> count; 
         for (int num : subset1) {
             count[num]++;
         }
