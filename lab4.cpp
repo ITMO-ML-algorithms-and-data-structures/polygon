@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 using namespace std;
-
 
 int sumArray(const vector<int>& arr) {
     int sum = 0;
@@ -11,26 +11,28 @@ int sumArray(const vector<int>& arr) {
     return sum;
 }
 
-
-bool findSubset(vector<int>& arr, int n, int target, vector<int>& subset) {
-    if (target == 0) return true;
+bool findSubset(vector<int>& arr, int n, int target, vector<int>& subset, bool& found) {
+    if (found) return true;
+    if (target == 0) {
+        found = true;
+        return true;
+    }
     if (n == 0 || target < 0) return false;
+
     
     subset.push_back(arr[n - 1]);
-    if (findSubset(arr, n - 1, target - arr[n - 1], subset)) {
+    if (findSubset(arr, n - 1, target - arr[n - 1], subset, found)) {
         return true;
     }
 
     
     subset.pop_back();
-    return findSubset(arr, n - 1, target, subset);
+    return findSubset(arr, n - 1, target, subset, found);
 }
-
 
 void splitArray(vector<int>& arr) {
     int totalSum = sumArray(arr);
 
-    
     if (totalSum % 2 != 0) {
         cout << "Невозможно разделить массив на две равные части." << endl;
         return;
@@ -38,29 +40,25 @@ void splitArray(vector<int>& arr) {
 
     int target = totalSum / 2;
     vector<int> subset1;
+    bool found = false;
 
-    
-    if (findSubset(arr, static_cast<int>(arr.size()), target, subset1)) {
-        
+    if (findSubset(arr, static_cast<int>(arr.size()), target, subset1, found)) {
         vector<int> subset2;
+        unordered_map<int, int> count; 
+        for (int num : subset1) {
+            count[num]++;
+        }
         for (int num : arr) {
-            bool found = false;
-            for (int& selected : subset1) {
-                if (num == selected) {
-                    found = true;
-                    selected = -1;
-                    break;
-                }
-            }
-            if (!found) {
+            if (count[num] > 0) {
+                count[num]--;
+            } else {
                 subset2.push_back(num);
             }
         }
 
-        
         cout << "Часть 1: ";
         for (int num : subset1) {
-            if (num != -1) cout << num << " ";
+            cout << num << " ";
         }
         cout << endl;
 
@@ -79,3 +77,4 @@ int main() {
     splitArray(arr);
     return 0;
 }
+
