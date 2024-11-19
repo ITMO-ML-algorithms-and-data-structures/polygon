@@ -14,7 +14,7 @@ void string_to_file(const std::string &line, const std::string &output_file_name
 bool check_answer(const std::string &answer_file_name, const std::string &prog_result_file_name,
                   bool (&compare_function)(const std::string &, const std::string &));
 
-std::pair<bool, double> test(const size_t i,
+std::pair<bool, double> test(const size_t file_index,
                              std::pair<std::string, double> (&exec_function)(const std::string &),
                              const std::string &test_path,
                              bool (&compare_function)(const std::string &, const std::string &));

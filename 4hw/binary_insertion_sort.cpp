@@ -28,15 +28,25 @@ void binary_insertion_sort(std::vector<long long> &v) {
 
         while (j >= l) {
             // сдвигаем элементы большие вставляемого вправо
-            // O(i - l)
+            // O(i - l) - время
             v[j + 1] = v[j];
             if (j == 0) break;
             --j;
         }
 
-        v[j + 1] = key;
+        l == 0 ? v[0] = key : v[j + 1] = key;
         // вставляем вставляемый элемент
     }
+    // время:
+    // перебор * (бинарный поиск + сдвиг)
+    // в отличие от стандартной сортировки:
+    // перебор * (сравнение + сдвиг)
+
+    // худший случай O(n^2)
+    // средний случай O(n^2)
+    // лучший случай O(n * log n)
+
+    // память O(1)
 }
 
 std::pair<std::string, double> execute_binary_insertion_sort(const std::string &input) {

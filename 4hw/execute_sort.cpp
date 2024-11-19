@@ -11,22 +11,20 @@ bool compare_function(const std::string &s1, const std::string &s2) {
 }
 
 int main() {
-    for (int i = 1000; i <= 1000; i += 100000) {
-        std::vector<long long> dataset = generate_integer_dataset(i);
+    std::vector<double> times;
 
+    for (int i = 0; i <= 1e6; i += 1000) {
         std::ofstream dataset_file( "test0.txt");
-        for (const long long &j: dataset) {
+        for (const long long &j: generate_integer_dataset(i)) {
             dataset_file << j << " ";
         }
         dataset_file.close();
-        sort(dataset.begin(), dataset.end());
 
-        std::ofstream answer_file("answer0.txt");
-        for (const long long &j: dataset) {
-            answer_file << j << " ";
-        }
-        answer_file.close();
 
-        tester(1, execute_binary_insertion_sort, "", compare_function);
+        std::cout << i << ' ' << test(0,
+                execute_binary_insertion_sort,
+                "",
+                compare_function).second << std::endl;
     }
+
 }

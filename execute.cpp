@@ -28,12 +28,12 @@ bool check_answer(const std::string &answer_file_name, const std::string &prog_r
 }
 
 
-std::pair<bool, double> test(const size_t i,
+std::pair<bool, double> test(const size_t file_index,
                              std::pair<std::string, double> (&exec_function)(const std::string &),
                              const std::string &test_path,
                              bool (&compare_function)(const std::string &, const std::string &)) {
-    const std::string input_file_name = test_path + "test" + std::to_string(i) + ".txt";
-    const std::string output_file_name = test_path + "output" + std::to_string(i) + ".txt";
+    const std::string input_file_name = test_path + "test" + std::to_string(file_index) + ".txt";
+    const std::string output_file_name = test_path + "output" + std::to_string(file_index) + ".txt";
 
     const std::string input = string_from_file(input_file_name);
 
@@ -41,8 +41,8 @@ std::pair<bool, double> test(const size_t i,
 
     string_to_file(result.first, output_file_name);
 
-    const std::string answer_file_name = test_path + "answer" + std::to_string(i) + ".txt";
-    const std::string prog_result_file_name = test_path + "output" + std::to_string(i) + ".txt";
+    const std::string answer_file_name = test_path + "answer" + std::to_string(file_index) + ".txt";
+    const std::string prog_result_file_name = test_path + "output" + std::to_string(file_index) + ".txt";
 
     return {check_answer(answer_file_name, prog_result_file_name, compare_function), result.second};
 }
@@ -52,10 +52,8 @@ void print_result(const std::pair<bool, double> result, const size_t i) {
     std::cout << "TIME: " << result.second << " SECONDS" << std::endl << std::endl;
 }
 
-void tester(const size_t file_count,
-            std::pair<std::string, double> (&exec_function)(const std::string &),
-            const std::string &test_path,
-            bool (&compare_function)(const std::string &, const std::string &)) {
+void tester(const size_t file_count, std::pair<std::string, double> (&exec_function)(const std::string &),
+            const std::string &test_path, bool (&compare_function)(const std::string &, const std::string &)) {
     size_t right_answers = 0;
 
     for (size_t i = 0; i < file_count; i++) {
