@@ -7,4 +7,5 @@ add_executable(4hw
     binary_insertion_sort.cpp
     execute_sort.cpp
     ../execute.cpp
-        binary_insertion_sort.h)
+        binary_insertion_sort.h
+        smooth_sort.cpp)
