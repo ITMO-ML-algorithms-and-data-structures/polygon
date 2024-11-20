@@ -3,7 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include "../execute.h"
-#include "binary_insertion_sort.h"
+#include "smooth_sort.h"
 #include "../generate_dataset.cpp"
 
 bool compare_function(const std::string &s1, const std::string &s2) {
@@ -15,16 +15,24 @@ int main() {
 
     for (int i = 0; i <= 1e6; i += 1000) {
         std::ofstream dataset_file( "test0.txt");
-        for (const long long &j: generate_integer_dataset(i)) {
+        std::vector<long long> v = generate_integer_dataset(i);
+        for (const long long &j : v) {
             dataset_file << j << " ";
         }
         dataset_file.close();
 
+        std::ofstream answer_file("answer0.txt");
+        std::sort(v.begin(), v.end());
+        for (const long long &j : v) {
+            answer_file << j << " ";
+        }
+        answer_file.close();
 
-        std::cout << i << ' ' << test(0,
-                execute_binary_insertion_sort,
-                "",
-                compare_function).second << std::endl;
+        std::cout << i << " " << test(0,execute_smooth_sort,"",compare_function).second << std::endl;
+
+        // tester(1,execute_smooth_sort,
+        //         "",
+        //         compare_function);
     }
 
 }
