@@ -71,6 +71,8 @@ void filter_information_gain(arma::mat &dataset, double procent) {
   dataset.shed_rows(sheded_rows);
 }
 
+
+
 int feature_selection() {
   // path to *.csv file
   // Будьте осторожны с путем. Сейчас вы в папке, но файл находится на уровень
@@ -91,7 +93,7 @@ int feature_selection() {
   // Тут нужно перебрать все комбинации (глупый цикл - это просто заглушка)
   for (int i = 0; i < 1; i++) {
     std::cout << dataset.n_rows;
-    filter_information_gain(dataset, 0.01);
+    filter_information_gain(dataset, 1);
     std::cout << '\n' << dataset.n_rows << '\n';
     // Обучить модель (черный ящик), и получить метрику качество
     score = evaluate_dataset(dataset, dataset.n_rows - 2, dataset.n_rows - 1);
