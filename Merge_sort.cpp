@@ -1,61 +1,38 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <sstream>
 #include <chrono>
-#include <algorithm>
-#include <string>
-#include <algorithm>
-#include <iostream>
-#include <vector>
+#include <random>
+#include <future>
 
-// Функция для проверки отсортированности массива
-bool isSorted(const std::vector<int>& arr, int left, int right) {
-    for (int i = left + 1; i <= right; ++i) {
-        if (arr[i] < arr[i - 1]) {
-            return false;
-        }
-    }
-    return true;
-}
 
-// Функция для слияния двух отсортированных частей
-void merge(std::vector<int>& arr, int left, int mid, int right) {
-    // Проверка отсортированности подмассива перед слиянием
-    if (isSorted(arr, left, right)) {
-        std::cout << "Subarray from " << left << " to " << right << " is already sorted, skipping merge.\n";
-        return;  // Если отсортировано, пропускаем слияние
-    }
+void merge(std::vector<int>& arr, int left, int mid, int right) { // массив по ссылки поэтому 12 байт
+   
 
-    int n1 = mid - left + 1;  // Размер левого подмассива
-    int n2 = right - mid;     // Размер правого подмассива
-
-    // Создаем временные массивы для левой и правой части
-    std::vector<int> L(n1), R(n2);
-
-    // Копируем данные в временные массивы L[] и R[]
-    for (int i = 0; i < n1; i++)
+    int n1 = mid - left + 1; //4 Байта
+    int n2 = right - mid;     //4 байта
+ 
+    std::vector<int> L(n1), R(n2); //О(н)
+ 
+    for (int i = 0; i < n1; i++)//O("<n/2")
         L[i] = arr[left + i];
-    for (int i = 0; i < n2; i++)
+    for (int i = 0; i < n2; i++)////O("<n/2") 
         R[i] = arr[mid + 1 + i];
 
-    // Индексы для левый, правой части и основного массива
-    int i = 0, j = 0, k = left;
+    int i = 0, j = 0, k = left;// 12 байт
 
-    // Слияние временных массивов обратно в основной массив arr[]
-    while (i < n1 && j < n2) {
+    while (i < n1 && j < n2) {//<
         if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
+            arr[k] = L[i];//O(1)*"<n/2"  и меньше сравнения
+            i++;//O(1)*"<n/2"  и меньше прибавление
         }
-        else {
+        else {//аналогично предыдущему
             arr[k] = R[j];
             j++;
         }
         k++;
     }
-
-    // Копирование оставшихся элементов в arr[], если они есть
+    //Аналогично линейно
     while (i < n1) {
         arr[k] = L[i];
         i++;
@@ -67,20 +44,18 @@ void merge(std::vector<int>& arr, int left, int mid, int right) {
         k++;
     }
 }
-
-// Рекурсивная функция сортировки слиянием
-void mergeSort(std::vector<int>& arr, int left, int right) {
+void mergeSort(std::vector<int>& arr, int left, int right) {//Ветор передан ссылкой ,но мы посчитаем его тут ,а не в осовной программе
+    //О(n) по числу инициализированных элементов
     if (left < right) {
-        int mid = left + (right - left) / 2;  // Находим середину массива
-
-        // Рекурсивно сортируем левую и правую половины
+        int mid = left + (right - left) / 2; 
+        //Рекурсивные вызовы массивов на половину меньших предыдущих будет log _2 n  вызовов так как 
+        //мы решаем уравнение n/(2**кол-во вызовов)=1 
         mergeSort(arr, left, mid);
         mergeSort(arr, mid + 1, right);
-
-        // Сливаем отсортированные половины
+        //Мы уже посчитали ,что у функции слияния линейная сложность => она тоже вызывется рекурсивно log_2 n раз
         merge(arr, left, mid, right);
     }
-}
+}//Итого: O(n+n)*O(log_2 n) => O(N)*O(log N)
 
 
 
@@ -122,7 +97,7 @@ void test(std::vector<int>& arr) {
     mergeSort(arr, 0, arr.size() - 1);
     assertEqual(arr == arr_sorted, "Test: Array is already sorted, shakerSort should not change it");
 
-    // Тест 3: Л
+    // Тест 3: Любой массив
     mergeSort(arr, 0, arr.size() - 1);
     assertEqual(arr_r == arr_sorted, "Test: All class array");
 
@@ -179,49 +154,68 @@ void test(std::vector<int>& arr) {
 //}
 
 
+// Функция для генерации массива случайных чисел
+std::vector<int> generateRandomArray(int size) {
+    std::vector<int> arr(size);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 10000);
 
-// Функция для чтения данных из CSV файла и измерения времени сортировки каждой строки
-void processFile(const std::string& inputFile, const std::string& outputFile) {
-    std::ifstream inFile(inputFile);
+    for (int i = 0; i < size; ++i) {
+        arr[i] = dis(gen);
+    }
+    return arr;
+}
+
+// Функция для измерения времени сортировки
+double measureSortTime(std::vector<int>& arr) {
+    auto start = std::chrono::high_resolution_clock::now();
+    mergeSort(arr,0,arr.size()-1);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    return duration.count();
+}
+
+// Функция, которая генерирует массив и измеряет время сортировки
+void processArrayAndSaveTime(int size, const std::string& outputFile) {
+    // Генерация массива
+    std::vector<int> arr = generateRandomArray(size);
+
+    // Измерение времени сортировки
+    double duration = measureSortTime(arr);
+
+    // Запись времени выполнения в файл
     std::ofstream outFile(outputFile, std::ios::app);
-
-    // Проверяем, открылись ли файлы успешно
-    if (!inFile.is_open()) {
-        std::cerr << "Не удалось открыть файл для чтения: " << inputFile << std::endl;
-        return;
+    if (outFile.is_open()) {
+        outFile << size << " " << duration << "\n";
+        outFile.close();
     }
-    if (!outFile.is_open()) {
-        std::cerr << "Не удалось открыть файл для записи: " << outputFile << std::endl;
-        return;
+    else {
+        std::cerr << "Не удалось открыть файл для записи!" << std::endl;
     }
+}
 
-    std::string line; // Переменная для чтения строк из файла
+// Функция для параллельной обработки массивов
+void processArraysInParallel(int numArrays, const std::string& outputFile) {
+    std::vector<std::future<void>> futures;
 
-    // Чтение строк из входного CSV файла
-    while (std::getline(inFile, line)) {
-        // Разбираем строку на числа, разделенные запятыми
-        std::istringstream lineStream(line);
-        std::string item;
-        std::vector<int> arr;
+    for (int i = 1; i <= numArrays; ++i) {
+        int size = i * 100000; // Размер массива = i * 100000
+        futures.push_back(std::async(std::launch::async, processArrayAndSaveTime, size, outputFile));
 
-        // Разбиваем строку на элементы и добавляем в вектор
-        while (std::getline(lineStream, item, ',')) {
-            int number = std::stoi(item);
-            arr.push_back(number);
+        // Ограничиваем количество параллельных потоков (например, 4 потока одновременно)
+        if (futures.size() >= 4) {
+            for (auto& fut : futures) {
+                fut.get(); // Ждем завершения всех потоков
+            }
+            futures.clear(); // Очищаем список
         }
-
-        auto start = std::chrono::high_resolution_clock::now();
-        mergeSort(arr, 0, arr.size() - 1);
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end - start;
-        outFile << arr.size() << ' ' << duration.count() << std::endl;
     }
 
-    // Закрытие файлов
-    inFile.close();
-    outFile.close();
-
-    std::cout << "Обработка завершена. Результаты записаны в файл: " << outputFile << std::endl;
+    // Ждем завершения всех оставшихся потоков
+    for (auto& fut : futures) {
+        fut.get();
+    }
 }
 
 
@@ -229,11 +223,13 @@ int main() {
     //// Запуск программы 100 раз и запись времени выполнения в файл
     //runTestsMultipleTimes(100);
 
-    std::string inputFile = "C:\\Users\\R1300-W-1-Stud\\PycharmProjects\\pythonProject\\random_numbers.csv";
-    std::string outputFile = "C:\\Users\\R1300-W-1-Stud\\Downloads\\time_line_char.txt";
+    std::string outputFile = "C:\\Users\\admin\\Downloads\\shaker_sort_times.txt";
 
-    processFile(inputFile, outputFile);
+    // Запуск параллельной обработки массивов
+    processArraysInParallel(10, outputFile);
 
-    return 0;
+    std::cout << "Обработка завершена. Результаты записаны в файл: " << outputFile << std::endl;
+
+    
 }
 
