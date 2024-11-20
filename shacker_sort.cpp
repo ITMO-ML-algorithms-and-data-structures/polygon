@@ -1,11 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include <sstream>
 #include <chrono>
-#include <algorithm>
-#include <string>
-#include <algorithm>
+#include <random>
+#include <future>
 
 // Функция сортировки шейкер-сортом
 void shakerSort(std::vector<int>& arr) {
@@ -36,67 +34,130 @@ void shakerSort(std::vector<int>& arr) {
     }
 }
 
+////Функция для создания среднего по сложности случая (массив на половину отсортирован на половину осортирован по убыванию)
+//void sortArrayHalves(std::vector<int>& arr) {
+//    // Находим середину массива
+//    size_t mid = arr.size() / 2;
+//
+//    // Сортируем первую половину (по возрастанию)
+//    std::sort(arr.begin(), arr.begin() + mid);
+//
+//    // Сортируем вторую половину (по убыванию)
+//    std::sort(arr.begin() + mid, arr.end(), std::greater<int>());
+//}
+//
+//
+//// Тесты
+//int test_passed = 0;
+//int test_failed = 0;
+//
+//void assertEqual(bool condition, const std::string& testName) {
+//    if (condition) {
+//        std::cout << "[PASSED] " << testName << "\n";
+//        test_passed++;
+//    }
+//    else {
+//        std::cout << "[NOT PASSED] " << testName << "\n";
+//        test_failed++;
+//    }
+//}
+//
+//void report() {
+//    std::cout << "\nTests passed total: " << test_passed << "\n";
+//    std::cout << "Tests not passed total: " << test_failed << "\n";
+//}
+//
+//// Функция тестирования в худшем и лучшем случае работы алгоритма
+//void test(std::vector<int>& arr) {
+//    // Тест 1: Проверка размера массива
+//    assertEqual(arr.size() <= 1e6, "Test input data by condition (size <= 1e6)");
+//
+//    // Копируем массив для дальнейших проверок
+//    std::vector<int> arr_sorted = arr;
+//    std::vector<int> arr_reverse = arr;
+//    std::vector<int> arr_mid_reverse = arr;
+//
+//    // Сортировка для проверки
+//    std::sort(arr_sorted.begin(), arr_sorted.end());
+//    std::sort(arr_reverse.begin(), arr_reverse.end(), std::greater<int>());
+//    sortArrayHalves(arr_mid_reverse);
+//
+//    // Тест 2: Массив уже отсортирован
+//    shakerSort(arr);
+//    assertEqual(arr == arr_sorted, "Test: Array is already sorted, shakerSort should not change it");
+//
+//    // Тест 3: Массив отсортирован в обратном порядке
+//    shakerSort(arr_reverse);
+//    assertEqual(arr_reverse == arr_sorted, "Test: Array is sorted in reverse order, shakerSort should sort it");
+//
+//    //Тест 4: Половина массива по возрастанию ,половина по убыванию
+//    shakerSort(arr_mid_reverse);
+//    assertEqual(arr_mid_reverse == arr_sorted, "Test: Array is sorted in reverse on middle order, shakerSort should sort it");
+//    report();
+//}
 
-//Функция для создания среднего по сложности случая (массив на половину отсортирован на половину осортирован по убыванию)
-void sortArrayHalves(std::vector<int>& arr) {
-    // Находим середину массива
-    size_t mid = arr.size() / 2;
+// Функция для генерации массива случайных чисел
+std::vector<int> generateRandomArray(int size) {
+    std::vector<int> arr(size);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 10000);
 
-    // Сортируем первую половину (по возрастанию)
-    std::sort(arr.begin(), arr.begin() + mid);
-
-    // Сортируем вторую половину (по убыванию)
-    std::sort(arr.begin() + mid, arr.end(), std::greater<int>());
+    for (int i = 0; i < size; ++i) {
+        arr[i] = dis(gen);
+    }
+    return arr;
 }
 
+// Функция для измерения времени сортировки
+double measureSortTime(std::vector<int>& arr) {
+    auto start = std::chrono::high_resolution_clock::now();
+    shakerSort(arr);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    return duration.count();
+}
 
-// Тесты
-int test_passed = 0;
-int test_failed = 0;
+// Функция, которая генерирует массив и измеряет время сортировки
+void processArrayAndSaveTime(int size, const std::string& outputFile) {
+    // Генерация массива
+    std::vector<int> arr = generateRandomArray(size);
 
-void assertEqual(bool condition, const std::string& testName) {
-    if (condition) {
-        std::cout << "[PASSED] " << testName << "\n";
-        test_passed++;
+    // Измерение времени сортировки
+    double duration = measureSortTime(arr);
+
+    // Запись времени выполнения в файл
+    std::ofstream outFile(outputFile, std::ios::app);
+    if (outFile.is_open()) {
+        outFile << size << " " << duration << "\n";
+        outFile.close();
     }
     else {
-        std::cout << "[NOT PASSED] " << testName << "\n";
-        test_failed++;
+        std::cerr << "Не удалось открыть файл для записи!" << std::endl;
     }
 }
 
-void report() {
-    std::cout << "\nTests passed total: " << test_passed << "\n";
-    std::cout << "Tests not passed total: " << test_failed << "\n";
-}
+// Функция для параллельной обработки массивов
+void processArraysInParallel(int numArrays, const std::string& outputFile) {
+    std::vector<std::future<void>> futures;
 
-// Функция тестирования в худшем и лучшем случае работы алгоритма
-void test(std::vector<int>& arr) {
-    // Тест 1: Проверка размера массива
-    assertEqual(arr.size() <= 1e6, "Test input data by condition (size <= 1e6)");
+    for (int i = 1; i <= numArrays; ++i) {
+        int size = i * 100000; // Размер массива = i * 100000
+        futures.push_back(std::async(std::launch::async, processArrayAndSaveTime, size, outputFile));
 
-    // Копируем массив для дальнейших проверок
-    std::vector<int> arr_sorted = arr;
-    std::vector<int> arr_reverse = arr;
-    std::vector<int> arr_mid_reverse = arr;
+        // Ограничиваем количество параллельных потоков (например, 4 потока одновременно)
+        if (futures.size() >= 4) {
+            for (auto& fut : futures) {
+                fut.get(); // Ждем завершения всех потоков
+            }
+            futures.clear(); // Очищаем список
+        }
+    }
 
-    // Сортировка для проверки
-    std::sort(arr_sorted.begin(), arr_sorted.end());
-    std::sort(arr_reverse.begin(), arr_reverse.end(), std::greater<int>());
-    sortArrayHalves(arr_mid_reverse);
-
-    // Тест 2: Массив уже отсортирован
-    shakerSort(arr);
-    assertEqual(arr == arr_sorted, "Test: Array is already sorted, shakerSort should not change it");
-
-    // Тест 3: Массив отсортирован в обратном порядке
-    shakerSort(arr_reverse);
-    assertEqual(arr_reverse == arr_sorted, "Test: Array is sorted in reverse order, shakerSort should sort it");
-
-    //Тест 4: Половина массива по возрастанию ,половина по убыванию
-    shakerSort(arr_mid_reverse);
-    assertEqual(arr_mid_reverse == arr_sorted, "Test: Array is sorted in reverse on middle order, shakerSort should sort it");
-    report();
+    // Ждем завершения всех оставшихся потоков
+    for (auto& fut : futures) {
+        fut.get();
+    }
 }
 
 
@@ -148,61 +209,16 @@ void test(std::vector<int>& arr) {
 //    std::cout << "Execution times have been saved to execution_times.txt.\n";
 //}
 
-
-
-// Функция для чтения данных из CSV файла и измерения времени сортировки каждой строки
-void processFile(const std::string& inputFile, const std::string& outputFile) {
-    std::ifstream inFile(inputFile);
-    std::ofstream outFile(outputFile, std::ios::app);
-
-    // Проверяем, открылись ли файлы успешно
-    if (!inFile.is_open()) {
-        std::cerr << "Не удалось открыть файл для чтения: " << inputFile << std::endl;
-        return;
-    }
-    if (!outFile.is_open()) {
-        std::cerr << "Не удалось открыть файл для записи: " << outputFile << std::endl;
-        return;
-    }
-
-    std::string line; // Переменная для чтения строк из файла
-
-    // Чтение строк из входного CSV файла
-    while (std::getline(inFile, line)) {
-        // Разбираем строку на числа, разделенные запятыми
-        std::istringstream lineStream(line);
-        std::string item;
-        std::vector<int> arr;
-
-        // Разбиваем строку на элементы и добавляем в вектор
-        while (std::getline(lineStream, item, ',')) {
-            int number = std::stoi(item);
-            arr.push_back(number);
-        }
-
-        auto start = std::chrono::high_resolution_clock::now();
-        shakerSort(arr);
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = end - start;
-        outFile << arr.size() << ' ' << duration.count()  << std::endl;
-    }
-
-    // Закрытие файлов
-    inFile.close();
-    outFile.close();
-
-    std::cout << "Обработка завершена. Результаты записаны в файл: " << outputFile << std::endl;
-}
-
-
 int main() {
     //// Запуск программы 50 раз и запись времени выполнения в файл
     //runTestsMultipleTimes(100);
 
-    std::string inputFile = "C:\\Users\\R1300-W-1-Stud\\PycharmProjects\\pythonProject\\random_numbers.csv";
-    std::string outputFile = "C:\\Users\\R1300-W-1-Stud\\Downloads\\time_line_char.txt";
+    std::string outputFile = "C:\\Users\\admin\\Downloads\\shaker_sort_times.txt";
 
-    processFile(inputFile, outputFile);
+    // Запуск параллельной обработки массивов
+    processArraysInParallel(10, outputFile);
+
+    std::cout << "Обработка завершена. Результаты записаны в файл: " << outputFile << std::endl;
 
     return 0;
 }
