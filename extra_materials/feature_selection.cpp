@@ -1,9 +1,7 @@
 
 #include <armadillo>
 #include <cmath>
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -13,10 +11,26 @@
 #include <mlpack.hpp>
 #include <mlpack/methods/linear_regression/linear_regression.hpp>
 
+/*Дан датасет и некая модель МО (в виде функции). Модель может принимать на вход
+датасет, и возвращает на выход некую оценку, которая ранжируется от 0 до inf.
+
+
+Необходимо перебрать все возможные комбинации признаков и выбрать их минимальное
+количество, при котором оценка уменьшится не меньше чем на 10% от наилучшего
+(когда мы передаем в модель МО все признаки)
+
+Подробнее про идею
+
+Заготовка кода, как и модель "черного ящика" лежит тут. Кто понимает что
+написано, и не боится - тому можно брать это задание*/
+// Ежов Дмитрий j3113 471242
+// lab-4
+// hard+
+
 // Файл в этой же папке, который я написал для задачи. Пока он обучает модель
 // (черный ящик) и возвращает метрику качества (RMSE по умолчанию)
-
 #include "modelling.cpp"
+
 double get_information_gain(arma::mat dataset, arma::uword fi) {
   double res = 0;
   for (auto r = 0; r < dataset.n_rows - 2; r++) {
@@ -38,11 +52,13 @@ bool _cmp(std::pair<arma::uword, double> &a,
   return a.second > b.second;
 }
 void filter_information_gain(arma::mat &dataset, double procent) {
-  std::vector<std::pair<arma::uword, double>> inf_gain(dataset.n_rows);
+  // O(n^3)
+  std::vector<std::pair<arma::uword, double>> inf_gain(dataset.n_rows - 2);
   for (auto fi = 0; fi < dataset.n_rows - 2; fi++) {
     inf_gain[fi] = std::make_pair(fi, get_information_gain(dataset, fi));
   }
   std::sort(inf_gain.begin(), inf_gain.end(), _cmp);
+  std::cout << "\ninformation gain features: \n";
   for (auto i : inf_gain) {
     std::cout << i.first << '\t' << i.second << std::endl;
   }
@@ -51,7 +67,6 @@ void filter_information_gain(arma::mat &dataset, double procent) {
   arma::uvec sheded_rows(count_feature);
   for (auto i = 0; i < sheded_rows.size(); i++) {
     sheded_rows[i] = inf_gain[i].first;
-    std::cout << inf_gain[i].first;
   }
   dataset.shed_rows(sheded_rows);
 }
@@ -76,8 +91,7 @@ int feature_selection() {
   // Тут нужно перебрать все комбинации (глупый цикл - это просто заглушка)
   for (int i = 0; i < 1; i++) {
     std::cout << dataset.n_rows;
-    std::cout << "\n\n\n";
-    filter_information_gain(dataset, 0.4);
+    filter_information_gain(dataset, 0.01);
     std::cout << '\n' << dataset.n_rows << '\n';
     // Обучить модель (черный ящик), и получить метрику качество
     score = evaluate_dataset(dataset, dataset.n_rows - 2, dataset.n_rows - 1);
