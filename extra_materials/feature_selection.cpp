@@ -52,7 +52,6 @@ bool _cmp(std::pair<arma::uword, double> &a,
   return a.second > b.second;
 }
 void filter_information_gain(arma::mat &dataset, double procent) {
-  // O(n^3)
   std::vector<std::pair<arma::uword, double>> inf_gain(dataset.n_rows - 2);
   for (auto fi = 0; fi < dataset.n_rows - 2; fi++) {
     inf_gain[fi] = std::make_pair(fi, get_information_gain(dataset, fi));
