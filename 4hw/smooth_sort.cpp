@@ -12,16 +12,14 @@ std::vector<size_t> create_leonardo_numbers(const size_t n) {
 }
 
 
-void balance_tree(std::vector<long long> &array,
-                  std::vector<size_t> &subtree_size,
-                  const std::vector<size_t> &leonardo_nums,
-                  const size_t position) {
+void balance_tree(std::vector<long long> &array, std::vector<size_t> &subtree_size,
+                  const std::vector<size_t> &leonardo_nums, const size_t position) {
     // O(log n) - время, просеивание дерева
-    if (subtree_size[position] == 0 or subtree_size[position] == 1) return;
+    if (subtree_size[position] == 0 or subtree_size[position] == 1)
+        return;
 
-    const size_t left_child_position = position
-                                       - leonardo_nums[subtree_size[position]]
-                                       + leonardo_nums[subtree_size[position] - 1];
+    const size_t left_child_position =
+            position - leonardo_nums[subtree_size[position]] + leonardo_nums[subtree_size[position] - 1];
 
     const size_t right_child_position = position - 1;
 
@@ -30,33 +28,27 @@ void balance_tree(std::vector<long long> &array,
             std::swap(array[position], array[left_child_position]);
             balance_tree(array, subtree_size, leonardo_nums, left_child_position);
         }
-    }
-    else if (array[right_child_position] > array[position]) {
+    } else if (array[right_child_position] > array[position]) {
         std::swap(array[position], array[right_child_position]);
         balance_tree(array, subtree_size, leonardo_nums, right_child_position);
     }
 }
 
 
-void sort_roots(std::vector<long long> &array,
-                std::vector<size_t> &subtree_size,
-                const std::vector<size_t> &leonardo_nums,
-                size_t position) {
+void sort_roots(std::vector<long long> &array, std::vector<size_t> &subtree_size,
+                const std::vector<size_t> &leonardo_nums, size_t position) {
     size_t prev_root = position - leonardo_nums[subtree_size[position]];
-    size_t left_child_position = position
-                                 + leonardo_nums[subtree_size[position] - 1]
-                                 - leonardo_nums[subtree_size[position]];
+    size_t left_child_position =
+            position + leonardo_nums[subtree_size[position] - 1] - leonardo_nums[subtree_size[position]];
     size_t right_child_position = position - 1;
 
-    while (leonardo_nums[subtree_size[position]] <= position
-           and array[position] < array[prev_root]
-           and (subtree_size[position] < 2 or array[left_child_position] < array[prev_root]
-                and array[right_child_position] < array[prev_root])) {
+    while (leonardo_nums[subtree_size[position]] <= position and array[position] < array[prev_root] and
+           (subtree_size[position] < 2 or
+            array[left_child_position] < array[prev_root] and array[right_child_position] < array[prev_root])) {
         std::swap(array[position], array[prev_root]);
         position = prev_root;
-        left_child_position = position
-                              + leonardo_nums[subtree_size[position] - 1]
-                              - leonardo_nums[subtree_size[position]];
+        left_child_position =
+                position + leonardo_nums[subtree_size[position] - 1] - leonardo_nums[subtree_size[position]];
         right_child_position = position - 1;
         prev_root = position - leonardo_nums[subtree_size[position]];
     }
@@ -123,7 +115,8 @@ void swap_with_max(std::vector<long long> &array, std::vector<size_t> &subtree_s
 
 
 void smooth_sort(std::vector<long long> &array) {
-    if (array.size() <= 1) return;
+    if (array.size() <= 1)
+        return;
 
     const size_t array_length = array.size();
     std::vector<size_t> leonardo_nums = create_leonardo_numbers(array_length);
@@ -138,10 +131,9 @@ void smooth_sort(std::vector<long long> &array) {
         swap_with_max(array, subtree_size, leonardo_nums, i);
     // O(n * log n) - время
 
-    // O(n * log n) - общее время
-    // O(n) - память
-
+    // O(n * log n) - среднее и худшее время
     // O(n) - лучшее время
+    // O(n) - память
 }
 
 
@@ -150,14 +142,16 @@ std::pair<std::string, double> execute_smooth_sort(const std::string &input) {
 
     std::istringstream input_ss(input);
     long long tmp;
-    while (input_ss >> tmp) v.push_back(tmp);
+    while (input_ss >> tmp)
+        v.push_back(tmp);
 
     const size_t start = clock();
     smooth_sort(v);
     const size_t end = clock();
 
     std::ostringstream output_ss;
-    for (const long long &e: v) output_ss << e << ' ';
+    for (const long long &e: v)
+        output_ss << e << ' ';
 
     return {output_ss.str(), (double) (end - start) / CLOCKS_PER_SEC};
 }
