@@ -61,5 +61,5 @@ void tester(const size_t file_count, std::pair<std::string, double> (&exec_funct
         print_result(result, i);
         right_answers += result.first;
     }
-    std::cout << "Right answers: " << right_answers << "/" << file_count << std::endl;
+    std::cout << "Right answers: " << right_answers << "/" << file_count << "\n\n";
 }

@@ -6,8 +6,10 @@ size_t binary_search(const std::vector<long long> &v, size_t left, size_t right,
 
     size_t mid = (left + right) / 2;
 
-    if (key == v[mid]) return mid + 1;
-    if (key > v[mid]) return binary_search(v, mid + 1, right, key);
+    if (key == v[mid])
+        return mid + 1;
+    if (key > v[mid])
+        return binary_search(v, mid + 1, right, key);
     return binary_search(v, left, mid == 0 ? mid : mid - 1, key);
 }
 
@@ -30,7 +32,8 @@ void binary_insertion_sort(std::vector<long long> &v) {
             // сдвигаем элементы большие вставляемого вправо
             // O(i - l) - время
             v[j + 1] = v[j];
-            if (j == 0) break;
+            if (j == 0)
+                break;
             --j;
         }
 
@@ -45,7 +48,6 @@ void binary_insertion_sort(std::vector<long long> &v) {
     // худший случай O(n^2)
     // средний случай O(n^2)
     // лучший случай O(n * log n)
-
     // память O(1)
 }
 
@@ -54,14 +56,16 @@ std::pair<std::string, double> execute_binary_insertion_sort(const std::string &
 
     std::istringstream input_ss(input);
     long long tmp;
-    while (input_ss >> tmp) v.push_back(tmp);
+    while (input_ss >> tmp)
+        v.push_back(tmp);
 
     const size_t start = clock();
     binary_insertion_sort(v);
     const size_t end = clock();
 
     std::ostringstream output_ss;
-    for (const long long &e: v) output_ss << e << ' ';
+    for (const long long &e: v)
+        output_ss << e << ' ';
 
     return {output_ss.str(), (double) (end - start) / CLOCKS_PER_SEC};
 }

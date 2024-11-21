@@ -8,4 +8,6 @@ add_executable(4hw
     execute_sort.cpp
     ../execute.cpp
         binary_insertion_sort.h
-        smooth_sort.cpp)
+        smooth_sort.cpp
+        "counting sort.cpp"
+        "counting sort.h")
