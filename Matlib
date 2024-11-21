@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Пути к файлам с данными
-file_paths = ["C:\\Users\\admin\\Downloads\\shaker_execution_time1e5.txt", "C:\\Users\\admin\\Downloads\\merge_execution_time1e5", "C:\\Users\\admin\\Downloads\\tree_execution_time1e5"]
+file_paths = [r"C:\Users\R1300-W-6-Stud\Downloads\shaker_execution_time1e4.txt", r"C:\Users\R1300-W-6-Stud\Downloads\merge_execution_time1e4.txt", r"C:\Users\R1300-W-6-Stud\Downloads\tree_execution_time1e4.txt"]
 
 # Загрузка данных из файлов
 data = []
