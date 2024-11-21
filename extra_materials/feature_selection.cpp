@@ -10,46 +10,93 @@ g++-14 -O3 -std=c++17 -I/opt/homebrew/include -L/opt/homebrew/lib feature_select
 #include <string>
 #include <sstream>
 #include <vector>
+#include <limits>
 
-// библиотеки которые необходи установить. Читать тут: https://www.mlpack.org/download.html
+// библиотеки которые необходимо установить. Читать тут: https://www.mlpack.org/download.html
 #define MLPACK_PRINT_INFO
 #define MLPACK_PRINT_WARN
 #include <mlpack.hpp>
 #include <mlpack/methods/linear_regression/linear_regression.hpp>
 
-// Файл в этой же папке, который я написал для задачи. Пока он обучает модель (черный ящик)
-// и возвращает метрику качества (RMSE по умолчанию)
+// Файл с функцией обучения модели (черный ящик)
 #include "modelling.cpp"
 
+// Функция бинаризации данных по одному признаку и порогу
+arma::mat binarize_feature(const arma::mat& dataset, int feature_index, double threshold) {
+    arma::mat binary_dataset = dataset; // Создаем копию исходного набора данных
+    binary_dataset.row(feature_index).transform([threshold](double val) {
+        return val > threshold ? 1.0 : 0.0; // Преобразуем значения по порогу
+    });
+    return binary_dataset;
+}
 
-int feature_selection()
+float feature_selection()
 {
-    // path to *.csv file
-    // Будьте осторожны с путем. Сейчас вы в папке, но файл находится на уровень выше
+    // Путь к файлу *.csv
     const char* path = "../data/WineQT.csv";
 
-    // Код, которым можно считать набор данных, который дальше требуется анализировать
+    // Чтение набора данных
     arma::mat dataset;
     if (!mlpack::data::Load(path, dataset)) {
-        // not fatal and not transpose (если false, false, mlpack::data::FileType::AutoDetect)
         throw std::runtime_error("Could not read *.csv!");
     }
 
-    float score;
+    int target_column_index = 11;
+    int id_column_index = 12;
 
-    // Тут нужно перебрать все комбинации (глупый цикл - это просто заглушка)
-    for (int i = 0; i < 1; i++) {
-        // Писать проверку каждой комбинации тут
+    // Вектор для хранения оптимальных порогов для каждого признака
+    std::vector<double> best_thresholds(dataset.n_rows, 0.0);
+    std::vector<float> best_scores(dataset.n_rows, std::numeric_limits<float>::infinity());
 
-        // Обучить модель (черный ящик), и получить метрику качество
-        score = evaluate_dataset(dataset, 11, 12);
+    // Перебираем все признаки
+    for (int feature_index = 0; feature_index < dataset.n_rows; ++feature_index) {
+        if (feature_index == target_column_index || feature_index == id_column_index) {
+            continue; // Пропускаем целевой и ID столбец
+        }
 
-        // Это просто пример вывода для отладки
-        std::cout << "RMSE: " << score << std::endl;
+        // Вычисляем минимальное и максимальное значение признака
+        double min_val = dataset.row(feature_index).min();
+        double max_val = dataset.row(feature_index).max();
+        double step = (max_val - min_val) / 6.0;
+
+        // Перебираем 5 порогов
+        for (int j = 1; j <= 5; ++j) {
+            double threshold = min_val + j * step;
+
+            // Бинаризация текущего признака
+            arma::mat binary_dataset = binarize_feature(dataset, feature_index, threshold);
+
+            // Оценка модели с бинаризованным признаком
+            float score = evaluate_dataset(binary_dataset, target_column_index, id_column_index);
+
+            // Если текущий результат лучше, обновляем лучший результат для данного признака
+            if (score < best_scores[feature_index]) {
+                best_scores[feature_index] = score;
+                best_thresholds[feature_index] = threshold;
+            }
+        }
     }
 
+    // Оценка модели на исходном (не бинаризованном) наборе данных
+    float original_score = evaluate_dataset(dataset, target_column_index, id_column_index);
+    std::cout << "result_score = " << original_score << std::endl;
 
-    return score;
+    // Бинаризация всех признаков с их оптимальными порогами
+    arma::mat final_binary_dataset = dataset;
+    for (int feature_index = 0; feature_index < dataset.n_rows; ++feature_index) {
+        if (feature_index == target_column_index || feature_index == id_column_index) {
+            continue; // Пропускаем целевой и ID столбец
+        }
+
+        // Бинаризуем текущий признак с его оптимальным порогом
+        final_binary_dataset = binarize_feature(final_binary_dataset, feature_index, best_thresholds[feature_index]);
+    }
+
+    // Оценка модели на финальном бинаризованном наборе данных
+    float final_score = evaluate_dataset(final_binary_dataset, target_column_index, id_column_index);
+    std::cout << "best_score = " << final_score << std::endl;
+
+    return final_score;
 }
 
 void run_tests() {
