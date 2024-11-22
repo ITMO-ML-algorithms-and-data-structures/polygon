@@ -7,7 +7,7 @@ public:
         vector<vector<bool>> dp(sLen + 1, vector<bool>(pLen + 1, false)); // O(n*m)
         dp[0][0] = true;
 
-        for (int j = 1; j <= pLen; j++) { // O(m) - ñëîæíîñòü, O(1) - ïàìÿòü
+        for (int j = 1; j <= pLen; j++) { // O(m) - ÑÐ»Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ, O(1) - Ð¿Ð°Ð¼ÑÑ‚ÑŒ
             if (p[j - 1] == '*') {
                 dp[0][j] = dp[0][j - 1];
             }
@@ -26,5 +26,5 @@ public:
 
         return dp[sLen][pLen];
     }
-    // Ñëîæíîñòü - O(n*m), Ïàìÿòü - O(n*m)
+    // Ð¡Ð»Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ - O(n*m), ÐŸÐ°Ð¼ÑÑ‚ÑŒ - O(n*m)
 };
