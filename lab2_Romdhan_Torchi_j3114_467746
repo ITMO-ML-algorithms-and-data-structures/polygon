@@ -1,0 +1,95 @@
+#include <iostream>      // 0 bits
+#include <vector>        // 0 bits
+#include <unordered_map> // 0 bits
+#include <string>        // 0 bits
+#include <fstream>       // 0 bits - for file handling
+#include <sstream>       // 0 bits - for string stream to split words
+
+using namespace std;
+
+vector<int> countOccurrences(const vector<string>& words) {
+    // Hash map to count occurrences of each word
+    unordered_map<string, int> counter;  // 64 bits - memory allocation for the map
+
+    // Count occurrences of each word in the array
+    for (const auto& word : words) {  // 32 bits per iteration - accessing each element
+        counter[word]++;  // 96 bits (64 for map access + 32 increment)
+
+        // Ensure no word has more than 127 occurrences
+        if (counter[word] > 127) {  // 64 bits - comparison
+            cerr << "Error: The word \"" << word << "\" exceeds 127 occurrences." << endl;  // 800 bits - error message
+            exit(1);  // 0 bits - program termination
+        }
+    }
+
+    // Create the result vector with corresponding occurrences
+    vector<int> result;  // 64 bits - memory allocation for result vector
+    result.reserve(words.size());  // N * 32 bits - reserve space for elements
+
+    for (const auto& word : words) {  // 32 bits per iteration - accessing each element
+        result.push_back(counter[word]);  // 64 bits (32 for access + 32 for push)
+    }
+
+    return result;  // 0 bits - returning result vector
+}
+
+int main() {
+    ifstream inputFile("C:\\Users\\ASUS\\CLionProjects\\polygon\\testlab2.txt");  // 64 bits - file stream allocation
+
+    // Check if the file was opened correctly
+    if (!inputFile) {  // 32 bits - condition check
+        cerr << "Error: Unable to open the file." << endl;  // 512 bits - error message
+        return 1;  // 0 bits - termination
+    }
+
+    string line;  // 64 bits - allocation for line
+    int testCaseNumber = 1;  // 32 bits - allocation for testCaseNumber
+
+    // Read each line from the file until the end
+    while (getline(inputFile, line)) {  // 64 bits per line - memory for line content
+        vector<string> words;  // 64 bits - memory allocation for words vector
+        string word;  // 64 bits - allocation for word
+        stringstream ss(line);  // 64 bits - allocation for stringstream
+        bool skipTestCase = false;  // 8 bits - allocation for skip flag
+
+        // Split the line into words
+        while (ss >> word) {  // 32 bits per iteration - accessing each word
+            // Check if the word length exceeds 1000 characters
+            if (word.length() > 1000) {  // 32 bits - condition check
+                cerr << "Test Case #" << testCaseNumber << ": This word has more than 1000 characters." << endl;  // 800 bits - error message
+                skipTestCase = true;  // 8 bits - setting skip flag
+                break;  // Stop further processing of this line
+            }
+            words.push_back(word);  // 32 bits - pushing word into vector
+        }
+
+        // If we set the skip flag, skip further processing for this test case
+        if (skipTestCase) {  // 8 bits - checking skip flag
+            testCaseNumber++;  // 32 bits - incrementing test case number
+            continue;  // Skip to next iteration
+        }
+
+        // Get the array with word occurrences
+        vector<int> result = countOccurrences(words);  // N * 32 bits - storing result
+
+        // Display the result for this test case
+        cout << "Test Case #" << testCaseNumber++ << ": " << endl;  // 0 bits - printing message
+        for (int count : result) {  // 32 bits per iteration - accessing each count
+            cout << count << " ";  // 8 bits - printing each count
+        }
+        cout << endl;  // 0 bits - new line
+    }
+
+    // Close the file after reading
+    inputFile.close();  // 0 bits - closing file
+
+    return 0;  // 0 bits - end of program
+}
+
+// Total bit usage calculation:
+// Initialization: 320 bits + N * 64 bits for vectors
+// Loop operations: N * 160 bits (counting loop) + N * 200 bits (word processing)
+// Comparisons: N * 64 bits
+// Error messages: 800 * M bits, where M is the number of errors displayed
+// Final result display: N * 40 bits
+// Final sum: 320 + N * 464 + 800 * M bits
