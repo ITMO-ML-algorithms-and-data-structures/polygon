@@ -4,6 +4,7 @@
 #include <numeric>
 #include <chrono>
 #include <iomanip> 
+#include <fstream>
 
 using namespace std;
 
@@ -60,7 +61,15 @@ int main() {
     setlocale(LC_ALL, "Ru");
     system("chcp 65001 > nul");
 
-    vector<int> arr = { 1, 1, 2, 2, 3, 3, 4, 4, 3, 3, 6, 6, 7, 7, 8, 8, 1, 1, 10, 10, 3, 3, 5, 5, 7, 7, 3, 3 };
+    ifstream input_file("test.txt");
+
+    vector<int> arr;
+    int value;
+    while (input_file >> value) {
+        arr.push_back(value);
+    }
+    input_file.close();
+
 
     auto start_time = chrono::high_resolution_clock::now();
     auto result = canPartition(arr);
