@@ -1,0 +1,122 @@
+// Функция для чтения данных из файла
+std::vector<int> readFile(const std::string& filename) {
+    std::ifstream file(filename);
+    std::vector<int> data;
+    int value;
+
+    // Проверяем, открылся ли файл
+    if (!file.is_open()) {
+        std::cerr << "Ошибка при открытии файла: " << filename << std::endl;
+        return data; // Возвращаем пустой вектор в случае ошибки
+    }
+
+    // Чтение значений из файла
+    while (file >> value) {
+        data.push_back(value);
+    }
+
+    file.close(); // Закрываем файл
+    return data; // Возвращаем вектор данных
+}
+
+// Функция для записи результатов в файл
+void writeResultsToFile(const std::string& filename, const std::vector<std::string>& results) {
+    std::ofstream outFile(filename);
+    if (!outFile.is_open()) {
+        std::cerr << "Ошибка при открытии файла для записи: " << filename << std::endl;
+        return;
+    }
+
+    // Запись результатов в файл
+    for (const auto& result : results) {
+        outFile << result << std::endl; // Каждое значение на новой строке
+    }
+
+    outFile.close(); // Закрываем файл
+}
+
+// Тестирование времени для всех трех сортировок
+void Test_time(const std::vector<std::string>& filenames,
+    std::vector<std::string>& resultsCocktail,
+    std::vector<std::string>& resultsHeap,
+    std::vector<std::string>& resultsPigeonhole) {
+    for (const std::string& filename : filenames) {
+        // Читаем данные из файла
+        std::vector<int> data = readFile(filename);
+
+        if (data.empty()) continue; // Пропустить пустой вектор
+
+        // Измеряем время сортировки коктейльной встряхиванием
+        auto start = std::chrono::high_resolution_clock::now();
+        cocktailShakerSort(data);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        resultsCocktail.push_back(std::to_string(data.size()) + " - " + std::to_string(elapsed.count()));
+
+        // Читаем данные снова для следующей сортировки
+        data = readFile(filename);
+
+        // Измеряем время сортировки кучей
+        start = std::chrono::high_resolution_clock::now();
+        heapSort(data);
+        end = std::chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        resultsHeap.push_back(std::to_string(data.size()) + " - " + std::to_string(elapsed.count()));
+
+        // Читаем данные снова для следующей сортировки
+        data = readFile(filename);
+
+        // Измеряем время сортировки по карманам
+        start = std::chrono::high_resolution_clock::now();
+        pigeonholeSort(data);
+        end = std::chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        resultsPigeonhole.push_back(std::to_string(data.size()) + " - " + std::to_string(elapsed.count()));
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "Ru");
+
+    // Файлы для тестирования на массиве длиной 10^4
+    std::cout << "Тестирование на массиве длиной 10^4:" << std::endl;
+    std::vector<std::string> box_plot_files_10e4;
+    for (int i = 0; i < 50; i++) {
+        box_plot_files_10e4.push_back("test_input_1000_to_10000/file_" + std::to_string(i) + ".txt");
+    }
+
+    // Векторы для хранения результатов
+    std::vector<std::string> resultsCocktail_10e4;
+    std::vector<std::string> resultsHeap_10e4;
+    std::vector<std::string> resultsPigeonhole_10e4;
+
+    // Запускаем тесты
+    Test_time(box_plot_files_10e4, resultsCocktail_10e4, resultsHeap_10e4, resultsPigeonhole_10e4);
+
+    // Записываем результаты в файлы
+    writeResultsToFile("results_cocktail_10e4.txt", resultsCocktail_10e4);
+    writeResultsToFile("results_heap_10e4.txt", resultsHeap_10e4);
+    writeResultsToFile("results_pigeonhole_10e4.txt", resultsPigeonhole_10e4);
+
+    // Файлы для тестирования на массиве длиной 10^5
+    std::cout << "Тестирование на массиве длиной 10^5:" << std::endl;
+    std::vector<std::string> box_plot_files_10e5;
+    for (int i = 0; i < 50; i++) {
+        box_plot_files_10e5.push_back("test_input_1e5/file_" + std::to_string(i) + ".txt");
+    }
+
+    // Векторы для хранения результатов
+    std::vector<std::string> resultsCocktail_10e5;
+    std::vector<std::string> resultsHeap_10e5;
+    std::vector<std::string> resultsPigeonhole_10e5;
+
+    // Запускаем тесты
+    Test_time(box_plot_files_10e5, resultsCocktail_10e5, resultsHeap_10e5, resultsPigeonhole_10e5);
+
+    // Записываем результаты в файлы
+    writeResultsToFile("results_cocktail_10e5.txt", resultsCocktail_10e5);
+    writeResultsToFile("results_heap_10e5.txt", resultsHeap_10e5);
+    writeResultsToFile("results_pigeonhole_10e5.txt", resultsPigeonhole_10e5);
+
+    return 0;
+}
