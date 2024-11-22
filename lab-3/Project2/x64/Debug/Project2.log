@@ -1,0 +1,2 @@
+﻿  Source.cpp
+D:\C++ VS\Project2\Source.cpp(14,1): error C4700: использована неинициализированная локальная переменная "result"
