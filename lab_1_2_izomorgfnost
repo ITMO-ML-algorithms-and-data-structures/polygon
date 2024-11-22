@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+#include <cassert>
+#include<unordered_map>
+
+//Функция для проверки изоморфности
+bool izomorfnost(std::string &first_text, std::string &second_text)
+{
+	std::unordered_map<char, char> dictionary;//64 байта + n (колличество элементов) * 32 байта
+	std::string proverca_1, proverca_2;
+	//Вводим значения в словарик
+	for (int i = 0; i < first_text.size(); i++)
+	{
+		//+4 байта из за цикла
+		dictionary[second_text[i]] = first_text[i];
+		dictionary[first_text[i]] = second_text[i];
+	}
+	//Вводим значения в строки для проверки изоморфности
+	for (int i = 0; i < (first_text.size()); i++)
+	{
+		//+4 байта из за цикла
+		proverca_1 = proverca_1 + dictionary[second_text[i]]; // + 5 байт
+		proverca_2 = proverca_2 + dictionary[first_text[i]]; // + 5 байт
+	}
+	//Проверяем изоморфность
+	if (first_text == proverca_1 and second_text == proverca_2)
+	{
+		std::cout << "True";
+		return true;
+	}
+	else
+	{
+		std::cout << "False";
+		return false;
+	}
+}
+//Тесты
+void test()
+{
+	assert((izomorfnost("egg", "add") == true));
+	assert((izomorfnost("foo", "bar") == false));
+	assert((izomorfnost("qq0q", "w1ww") == false));
+	assert((izomorfnost("qwertyxxx", "asdfgjzzz") == true));
+	assert((izomorfnost("qweqwerty", "asdasdfgj") == true));
+}
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	std::string first_text, second_text;
+	test(); //Проверка тестов
+	std::cout << "Введите первое слово: ";
+	std::cin >> first_text; 
+	std::cout << "Введите второе слово: ";
+	std::cin >> second_text;
+	//Проверяем длинны строк
+	while (first_text.size() != second_text.size()) 
+	{
+		std::cout << "Введите равное количество символов в каждой строке, иначе изоморфизм не будет достигаться автоматически\n";
+		std::cout << "Введите первое слово";
+		std::cin >> first_text;
+		std::cout << "Введите второе слово";
+		std::cin >> second_text;
+	}
+	izomorfnost(first_text, second_text);
+	return 0;
+}
