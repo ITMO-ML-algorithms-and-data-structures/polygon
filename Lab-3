@@ -1,0 +1,30 @@
+#include <ctime>
+#include <random>
+#include <vector>
+#include <iostream>
+using namespace std;
+int main(int argc, char *argv[])
+{
+	int n = 1000; // 4
+	vector<char> arr(n); //24
+	//cout<<sizeof(arr);
+	for (int i = 0; i < n; ++i) { // 4*
+        arr[i] = i;
+	} // n * 1
+    //int u = sizeof(arr);
+	//cout<<u;
+	
+	
+	srand(time(0));
+	for(int i = 0;i<n;i = i +1){ // 4*
+	    int rpos = rand(); // 4*
+	    rpos = rpos%n;
+	    int k = arr[i]; //4*
+	    arr[i] = arr[rpos];
+	    arr[rpos] = k;
+	    }
+	//for(int i=0; i<n;i++){int s = arr[i];cout<<s<<" ";}
+	cout<<"OK"<<endl;
+}
+// 4 + 24 + n + 4 + 4 + 4 = 40 + n байт
+// максимум достигается во втором цикле, из-за доп.переменных.
