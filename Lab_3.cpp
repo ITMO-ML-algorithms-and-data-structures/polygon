@@ -1,5 +1,6 @@
 #include <iostream> 
 #include <string> 
+#include <fstream>
 
 using namespace std;
 
@@ -17,11 +18,18 @@ bool isBalanced(const string& row) {
             }
         }
     }
-    return balance != 0;
+    return balance == 0;
 }
 
 int main() {
-    string row = "a(b)(((a)b))";
+    ifstream input_file("test.txt");
+
+    string row;
+    int value;
+    while (input_file >> value) {
+        arr.push_back(value);
+    }
+    input_file.close();
 
     if (isBalanced(row))
         cout << "True";
