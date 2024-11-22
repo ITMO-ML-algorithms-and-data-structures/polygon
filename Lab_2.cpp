@@ -1,34 +1,26 @@
-﻿#include <iostream> 
-#include <vector> 
+﻿#include <iostream>
+#include <vector>
 #include <set>
+#include <fstream>
 
 using namespace std;
 
-vector<int> findUniqueElements(const int arr[], size_t size) {
-    vector<int> un_el;
-
-    for (size_t i = 0; i < size; i++) {
-        bool is_duplicate = false;
-
-        for (int j = 0; j < un_el.size(); j++) {
-            if (arr[i] == un_el[j]) {
-                is_duplicate = true;
-                break;
-            }
-        }
-        if (!is_duplicate) {
-            un_el.push_back(arr[i]);
-        }
-    }
-    return un_el;
+vector<int> findUniqueElements(const vector<int>& arr) {
+    set<int> unique_set(arr.begin(), arr.end());
+    return vector<int>(unique_set.begin(), unique_set.end());
 }
 
-
 int main() {
-    int size = 10;
-    int arr[] = { 1, 2, 3, 3, 1, 4, 5, 6, 5, 9 };
+    ifstream input_file("test.txt");
 
-    vector<int> unique_elements = findUniqueElements(arr, size);
+    vector<int> arr;
+    int value;
+    while (input_file >> value) {
+        arr.push_back(value);
+    }
+    input_file.close();
+
+    vector<int> unique_elements = findUniqueElements(arr);
 
     for (int elem : unique_elements) {
         cout << elem << " ";
