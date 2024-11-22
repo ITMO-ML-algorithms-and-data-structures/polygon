@@ -1,5 +1,6 @@
 #include "binary_insertion_sort.h"
 
+
 size_t binary_search(const std::vector<long long> &v, size_t left, size_t right, long long key) {
     if (left >= right)
         return key >= v[left] ? left + 1 : left;
@@ -12,6 +13,7 @@ size_t binary_search(const std::vector<long long> &v, size_t left, size_t right,
         return binary_search(v, mid + 1, right, key);
     return binary_search(v, left, mid == 0 ? mid : mid - 1, key);
 }
+
 
 void binary_insertion_sort(std::vector<long long> &v) {
     for (size_t i = 1; i < v.size(); ++i) {
@@ -46,10 +48,11 @@ void binary_insertion_sort(std::vector<long long> &v) {
     // перебор * (сравнение + сдвиг)
 
     // худший случай O(n^2)
-    // средний случай O(n^2)
+    // средний случай O(n * log n)
     // лучший случай O(n * log n)
     // память O(1)
 }
+
 
 std::pair<std::string, double> execute_binary_insertion_sort(const std::string &input) {
     std::vector<long long> v;

@@ -1,8 +1,10 @@
 #ifndef BINARY_INSERTION_SORT_H
 #define BINARY_INSERTION_SORT_H
 
+
 #include <vector>
 #include <sstream>
+
 
 size_t binary_search(const std::vector<long long> &v, size_t left, size_t right, long long key);
 

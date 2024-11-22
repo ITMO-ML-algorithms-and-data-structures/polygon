@@ -7,6 +7,8 @@
 #include "../generate_dataset.cpp"
 #include "binary_insertion_sort.h"
 #include "smooth_sort.h"
+#include "counting_sort.h"
+
 
 bool compare_function(const std::string &s1, const std::string &s2) { return s1 == s2; }
 
@@ -41,19 +43,19 @@ void check_correctness(std::pair<std::string, double> (&exec_funcion)(const std:
 
 
 void check_speed(std::pair<std::string, double> (&exec_funcion)(const std::string &), const size_t start_length,
-                 const size_t step, const size_t count) {
+                 size_t step, const size_t count) {
     size_t lenght = start_length;
     for (int i = 0; i < count; ++i) {
         generate_integer_dataset_to_file(lenght, "test0.txt");
         std::cout << lenght
-        << ' ' << test(0, exec_funcion, "", compare_function).second
-        << std::endl;
+                << ' ' << test(0, exec_funcion, "", compare_function).second
+                << std::endl;
         lenght += step;
     }
 }
 
 
 int main() {
-    // check_correctness(execute_binary_insertion_sort, 1e5, 1e5, 10);
-    // check_speed(execute_smooth_sort, 1e5, 0, 50);
+    // check_correctness(execute_counting_sort, 1e5, 1e5, 10);
+    check_speed(execute_counting_sort, 1e5, 0, 50);
 }

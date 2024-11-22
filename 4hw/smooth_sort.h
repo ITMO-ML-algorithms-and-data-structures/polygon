@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 
+
 std::vector<size_t> create_leonardo_numbers(const size_t n);
 
 

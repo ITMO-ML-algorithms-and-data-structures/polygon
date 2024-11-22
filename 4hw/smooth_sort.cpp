@@ -127,12 +127,15 @@ void smooth_sort(std::vector<long long> &array) {
     build_heap(array, subtree_size, leonardo_nums);
     // O(n * log n) - время
 
-    for (int i = array_length - 2; i >= 0; --i)
+    for (size_t i = array_length - 2; i >= 0; --i) {
         swap_with_max(array, subtree_size, leonardo_nums, i);
+        if (i == 0)
+            break;
+    }
     // O(n * log n) - время
 
-    // O(n * log n) - среднее и худшее время
-    // O(n) - лучшее время
+    // O(n * log n) - худшее время
+    // O(n) - среднее и лучшее время
     // O(n) - память
 }
 
