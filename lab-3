@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <cassert>   // для тестов
+#include <algorithm> // для std::swap
+#include <ctime>     // для std::time
+
+void shuffleArray(std::vector<int>& arr, int size) {
+    for (int i = size - 1; i > 0; --i) {
+        int j = std::rand() % (i + 1); // O(1) — генерация случайного индекса
+        std::swap(arr[i], arr[j]); // O(1) — обмен двух элементов
+    }
+} //Общая сложность: O(N)
+
+void testShuffle() {
+    std::srand(std::time(nullptr));  // Инициализируем генератор случайных чисел
+
+    // Тест 1: Перемешивание вектора с элементами от 1 до 5
+    std::vector<int> arr1 = {1, 2, 3, 4, 5};
+    std::vector<int> original_arr1 = arr1;
+    shuffleArray(arr1, arr1.size());
+    assert(arr1 != original_arr1);  // Проверка, что массив изменился
+
+    // Тест 2: Перемешивание вектора с одинаковыми элементами
+    std::vector<int> arr2 = {1, 1, 1, 1, 1};
+    shuffleArray(arr2, arr2.size());
+    std::vector<int> test2 = {1, 1, 1, 1, 1};
+    assert(arr2 == test2);  // Должен оставаться неизменным
+
+    // Тест 3: Перемешивание пустого вектора
+    std::vector<int> arr3;
+    shuffleArray(arr3, arr3.size());
+    assert(arr3.empty());  // Пустой массив должен оставаться пустым
+
+    // Тест 4: Перемешивание вектора с одним элементом
+    std::vector<int> arr4 = {42};
+    shuffleArray(arr4, arr4.size());
+    assert(arr4 == std::vector<int>{42});  // Ожидается, что он останется неизменным
+}
+
+int main() {
+    testShuffle();
+    int size;
+    std::cout << "Введите размер вектора: ";
+    std::cin >> size;
+
+    std::vector<int> arr;
+    std::cout << "Введите элементы вектора:\n";
+    for (int i = 0; i < size; ++i) {
+        int value;
+        std::cin >> value;
+        arr.push_back(value);
+    }
+
+    // Инициализация генератора случайных чисел
+    std::srand(std::time(nullptr));
+
+    std::cout << "Исходный массив: ";
+    for (int i = 0; i < size; ++i)
+        std::cout << arr[i] << " ";
+    std::cout << std::endl;
+
+    // Перемешивание массива
+    shuffleArray(arr, size);
+
+    std::cout << "Перемешанный массив: ";
+    for (int i = 0; i < size; ++i)
+        std::cout << arr[i] << " ";
+    std::cout << std::endl;
+
+    return 0;
+}
