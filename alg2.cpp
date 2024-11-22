@@ -17,7 +17,7 @@ class BinaryTree {
 public:
     BinaryTree() : root(nullptr) {} // O(1)
 
-    void insert(int value) { // O(log n) в среднем, O(n) в худшем случае
+    void insert(int value) { // O(log n) РІ СЃСЂРµРґРЅРµРј, O(n) РІ С…СѓРґС€РµРј СЃР»СѓС‡Р°Рµ
         root = insertNode(root, value);
     }
 
@@ -28,7 +28,7 @@ public:
 private:
     TreeNode* root;
 
-    TreeNode* insertNode(TreeNode* node, int value) { // O(log n) в среднем, O(n) в худшем случае
+    TreeNode* insertNode(TreeNode* node, int value) { // O(log n) РІ СЃСЂРµРґРЅРµРј, O(n) РІ С…СѓРґС€РµРј СЃР»СѓС‡Р°Рµ
         if (!node) return new TreeNode(value); // O(1)
 
         if (value < node->value) {
@@ -51,7 +51,7 @@ private:
 
 vector<int> readArrayFromFile(const string& fileName) { // O(n)
     ifstream inFile(fileName);
-    assert(inFile.is_open() && "Не удалось открыть файл!");
+    assert(inFile.is_open() && "РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р»!");
     vector<int> array;
     int number;
 
@@ -62,7 +62,7 @@ vector<int> readArrayFromFile(const string& fileName) { // O(n)
     return array; // O(1)
 }
 
-void treeSort(vector<int>& array) { // O(n log n) в среднем, O(n^2) в худшем
+void treeSort(vector<int>& array) { // O(n log n) РІ СЃСЂРµРґРЅРµРј, O(n^2) РІ С…СѓРґС€РµРј
     BinaryTree tree;
     for (int value : array) { // O(n)
         tree.insert(value); // O(log n)
@@ -72,17 +72,17 @@ void treeSort(vector<int>& array) { // O(n log n) в среднем, O(n^2) в худшем
     tree.inorderTraversal(array); // O(n)
 }
 /*
-    Сложности:
-- Вставка узла: O(log n) в среднем, O(n) в худшем случае.
-- Обход в порядке возрастания: O(n).
-- Чтение из файла: O(n).
-- Сортировка (TreeSort): O(n log n) в среднем, O(n?) в худшем случае.
+    РЎР»РѕР¶РЅРѕСЃС‚Рё:
+- Р’СЃС‚Р°РІРєР° СѓР·Р»Р°: O(log n) РІ СЃСЂРµРґРЅРµРј, O(n) РІ С…СѓРґС€РµРј СЃР»СѓС‡Р°Рµ.
+- РћР±С…РѕРґ РІ РїРѕСЂСЏРґРєРµ РІРѕР·СЂР°СЃС‚Р°РЅРёСЏ: O(n).
+- Р§С‚РµРЅРёРµ РёР· С„Р°Р№Р»Р°: O(n).
+- РЎРѕСЂС‚РёСЂРѕРІРєР° (TreeSort): O(n log n) РІ СЃСЂРµРґРЅРµРј, O(n?) РІ С…СѓРґС€РµРј СЃР»СѓС‡Р°Рµ.
 
-Общая сложность: O(n log n) в среднем, O(n?) в худшем случае.
+РћР±С‰Р°СЏ СЃР»РѕР¶РЅРѕСЃС‚СЊ: O(n log n) РІ СЃСЂРµРґРЅРµРј, O(n?) РІ С…СѓРґС€РµРј СЃР»СѓС‡Р°Рµ.
 
-Память:
-- Каждый узел дерева занимает O(1).
-- Хранение массива вектором: O(n).
+РџР°РјСЏС‚СЊ:
+- РљР°Р¶РґС‹Р№ СѓР·РµР» РґРµСЂРµРІР° Р·Р°РЅРёРјР°РµС‚ O(1).
+- РҐСЂР°РЅРµРЅРёРµ РјР°СЃСЃРёРІР° РІРµРєС‚РѕСЂРѕРј: O(n).
 */
 void test() {
     {
@@ -113,13 +113,13 @@ void test() {
 
 }
 int main() {
-    // Тесты 
+    // РўРµСЃС‚С‹ 
     test();
     cout << "All right!" << '\n';
-    // Чтение массива из файла
+    // Р§С‚РµРЅРёРµ РјР°СЃСЃРёРІР° РёР· С„Р°Р№Р»Р°
     vector<int> array = readArrayFromFile("1000.txt");
 
-    // Сортировка
+    // РЎРѕСЂС‚РёСЂРѕРІРєР°
     auto start = chrono::high_resolution_clock::now();
     treeSort(array);
     auto end = chrono::high_resolution_clock::now();
