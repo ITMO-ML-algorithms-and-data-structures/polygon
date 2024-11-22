@@ -1,0 +1,123 @@
+// Функция для чтения данных из файла
+std::vector<int> readFile(const std::string& filename) {
+    std::ifstream file(filename);
+    std::vector<int> data;
+    int value;
+
+    // Проверяем, открылся ли файл
+    if (!file.is_open()) {
+        std::cerr << "Ошибка при открытии файла: " << filename << std::endl;
+        return data; // Возвращаем пустой вектор в случае ошибки
+    }
+
+    // Чтение значений из файла
+    while (file >> value) {
+        data.push_back(value);
+    }
+
+    file.close(); // Закрываем файл
+    return data; // Возвращаем вектор данных
+}
+
+// Тестирование времени для всех трех сортировок
+void Test_time(const std::vector<std::string>& filenames,
+    std::vector<double>& timeCocktail,
+    std::vector<double>& timeHeap,
+    std::vector<double>& timePigeonhole) {
+    for (const std::string& filename : filenames) {
+        // Читаем данные из файла
+        std::vector<int> data = readFile(filename);
+
+        if (data.empty()) continue; // Пропустить пустой вектор
+
+        // Измеряем время сортировки коктейльной встряхиванием
+        auto start = std::chrono::high_resolution_clock::now();
+        cocktailShakerSort(data);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        timeCocktail.push_back(elapsed.count());
+
+        // Читаем данные снова для следующей сортировки
+        data = readFile(filename);
+
+        // Измеряем время сортировки кучей
+        start = std::chrono::high_resolution_clock::now();
+        heapSort(data);
+        end = std::chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        timeHeap.push_back(elapsed.count());
+
+        // Читаем данные снова для следующей сортировки
+        data = readFile(filename);
+
+        // Измеряем время сортировки по карманам
+        start = std::chrono::high_resolution_clock::now();
+        pigeonholeSort(data);
+        end = std::chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        timePigeonhole.push_back(elapsed.count());
+    }
+}
+
+// Функция для записи времени в файл
+void writeTimesToFile(const std::string& filename,
+    const std::vector<double>& times) {
+    std::ofstream outFile(filename);
+    if (!outFile.is_open()) {
+        std::cerr << "Ошибка при открытии файла для записи: " << filename << std::endl;
+        return;
+    }
+
+    // Запись каждого времени на новой строке
+    for (const double& time : times) {
+        outFile << time << std::endl;
+    }
+
+    outFile.close(); // Закрываем файл
+}
+
+int main() {
+    setlocale(LC_ALL, "Ru");
+
+    // Файлы для тестирования на массиве длиной 10^4
+    std::cout << "Тестирование на массиве длиной 10^4:" << std::endl;
+    std::vector<std::string> box_plot_files_10e4;
+    for (int i = 0; i < 50; i++) {
+        box_plot_files_10e4.push_back("file_boxplot_10e4/file_" + std::to_string(i) + ".txt");
+    }
+
+    // Векторы для хранения времени выполнения сортировок
+    std::vector<double> timeCocktail_10e4;
+    std::vector<double> timeHeap_10e4;
+    std::vector<double> timePigeonhole_10e4;
+
+    // Запускаем тесты
+    Test_time(box_plot_files_10e4, timeCocktail_10e4, timeHeap_10e4, timePigeonhole_10e4);
+
+    // Записываем времена в файл
+    writeTimesToFile("times_10e4.txt", timeCocktail_10e4);
+    writeTimesToFile("times_10e4_heap.txt", timeHeap_10e4);
+    writeTimesToFile("times_10e4_pigeonhole.txt", timePigeonhole_10e4);
+
+    // Файлы для тестирования на массиве длиной 10^5
+    std::cout << "Тестирование на массиве длиной 10^5:" << std::endl;
+    std::vector<std::string> box_plot_files_10e5;
+    for (int i = 0; i < 50; i++) {
+        box_plot_files_10e5.push_back("file_boxplot_10e5/file_" + std::to_string(i) + ".txt");
+    }
+
+    // Векторы для хранения времени выполнения сортировок
+    std::vector<double> timeCocktail_10e5;
+    std::vector<double> timeHeap_10e5;
+    std::vector<double> timePigeonhole_10e5;
+
+    // Запускаем тесты
+    Test_time(box_plot_files_10e5, timeCocktail_10e5, timeHeap_10e5, timePigeonhole_10e5);
+
+    // Записываем времена в файл
+    writeTimesToFile("times_10e5.txt", timeCocktail_10e5);
+    writeTimesToFile("times_10e5_heap.txt", timeHeap_10e5);
+    writeTimesToFile("times_10e5_pigeonhole.txt", timePigeonhole_10e5);
+
+    return 0;
+}
