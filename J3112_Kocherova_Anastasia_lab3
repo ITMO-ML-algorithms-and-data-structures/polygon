@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <map>
+
+#include <string>
+#include <sstream>
+#include <fstream>
+
+using namespace std;
+
+
+vector<string> stringToArray(const string& str) {
+    //функция для преобразовая строки в вектор
+    vector<string> result; 
+    stringstream ss(str);  
+    string item;
+    while (getline(ss, item, ',')) { 
+        result.push_back(item);  
+    }
+    return result;
+    //сложность данной функции будет O(M), где M - количество элементов в строке
+}
+
+
+
+int main(){
+    // Есть массив, нужно подсчитать кол-во уникальных значений и заменить каждое значение кол-вом
+    ifstream file("dataset-3.txt");
+
+    ofstream output_file("result3.txt");
+
+    string line; //О(1) - выделение памяти 
+    
+
+    while (getline(file, line)) { //О(N) - проходит по всем строкам в файле 
+        if (line.empty()) { //О(1) - проверка на пустоту строки
+            continue;  
+        }
+
+        vector<string> mas = stringToArray(line);  // О(M) + O(1) - результат работы функции и присваивание
+        map<string, int> dictionary;  // O(1) - выделение памяти на словарь
+
+        // Подсчёт количества каждого элемента в векторе
+        for (const auto& item : mas) {  
+            dictionary[item]++;  // O(logN) - вставка в словарь
+        }
+
+
+        // Запись результата в файл
+        for (const auto& item : mas) {
+            output_file << dictionary[item] << " ";  // O(N) - запись в итоговый файл
+        }
+
+        output_file << endl; 
+    }
+
+        file.close();
+        output_file.close();
+
+    //Сложность алгоритма составляет:
+    //O(N)
+
+}
+       
+
+
+
+   
