@@ -1,0 +1,18 @@
+#include <iostream>
+using namespace std;
+int main(){
+    int N;
+    cin >> N;
+    int arr[N];
+    int mn = 2147483647;
+    int ln = sizeof(arr)/sizeof(arr[0]);
+    for (int i = 0; i<ln; i++){
+        cin >> arr[i];
+        }
+    for (int j = 0; j<ln; j++){
+        if (arr[j]<=mn){
+            mn = arr[j];
+        }
+    }
+    cout << mn << endl;
+}
