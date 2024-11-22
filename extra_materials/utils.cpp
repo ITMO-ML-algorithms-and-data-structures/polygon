@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 
 void print_vector(std::string prefix, std::vector<float> &vec) {

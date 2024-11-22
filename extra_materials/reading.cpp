@@ -73,17 +73,17 @@ std::vector<T> read_array_from_file(const char filename[]) {
     return data;
 }
 
-void run_tests() {
+void run_reading_tests() {
     // Проверка что массив с int числами считывается корректно
     std::vector<int> vec_int = read_array_from_file<int>("../data/tests/vector1d_int.csv");
     std::vector<int> vec_int_true = {1, 2, 3, 4, 5};
     assert(std::equal(vec_int.begin(), vec_int.end(), vec_int_true.begin()));
-    
+
     // Проверка что массив с float числами считывается корректно
     std::vector<float> vec_float = read_array_from_file<float>("../data/tests/vector1d_float.csv");
     std::vector<float> vec_float_true = {1.1, 1.2, 2.3, 3.4};
     assert(std::equal(vec_float.begin(), vec_float.end(), vec_float_true.begin()));
-    
+
     // Проверка что массив с строками числами считывается корректно
     std::vector<std::string> vec_str = read_array_from_file<std::string>("../data/tests/vector1d_str.csv");
     std::vector<std::string> vec_str_true = {"abc", "abv", "qqq", "www"};
@@ -92,8 +92,8 @@ void run_tests() {
     std::cout << "All tests done!" << std::endl;
 }
 
-int main() {
-    run_tests();
-
-    return 0;
-}
+// int main() {
+//     run_reading_tests();
+//
+//     return 0;
+// }

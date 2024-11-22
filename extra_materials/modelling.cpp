@@ -5,6 +5,7 @@
 #define MLPACK_PRINT_INFO
 #define MLPACK_PRINT_WARN
 #include <mlpack.hpp>
+#include "modelling.h"
 
 template <typename T>
 arma::mat mat_from_vectors(std::vector<std::vector<T>> &matrix) {
@@ -41,11 +42,11 @@ arma::mat drop_columns(arma::mat &dataset, std::vector<int> indices) {
 
 /**
  * @brief Функция обучения модели МО (черного ящика), возвращающая метрику качества
- * 
+ *
  * Функция принимает на вход набор данных, и индексы столбцов целевого и индекс столбцов.
  * Главые действия: удалить индекс столбец, если он есть; извлечь целевой столбец, обучить модель
  * и вернуть метрику качества
- * 
+ *
  * @param[in] dataset Набор данных
  * @param[in] target_column_index Индекс целевого столбца (считать в датасете с индекса 0)
  * @param[in] id_column_index Индекс id или index столбца если он есть, который не важен модели при обучении
@@ -67,6 +68,6 @@ float evaluate_dataset(arma::mat dataset, short int target_column_index, short i
 
     // Обучить модель и получить метрику качества
     float rmse = lr.Train(X, y);
-    
+
     return rmse;
 }
