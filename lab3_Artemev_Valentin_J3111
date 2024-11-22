@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include<string>
+using namespace std;
+
+string func(string a) { //Функция что принимает строку, и возвращает оптимизированный вариант
+    string a_out; //Объявляем итоговую строку. Вес 32 байта
+    int len_a = a.size(); //Находим размер входной строки. Вес 4 байта
+    int count = 1; //Счётчик подряд идущих одинаковых символов. Вес 4 байта
+    for (int i = 0; i < len_a; i++) //Проходимся по строке
+    {
+        if (a[i] == a[i + 1]) //если символ равен следующему, то увеличиваем счётчик
+        {
+            count++;
+        }
+        else //Если не равен, то смотрим значения счётчика
+        {
+            if (count > 1 or (i==len_a-1 and count >1)) { //если значения счётчика увеличилось, то прибавляем к итоговой строке символ и количество его повтарений
+                a_out = a_out + a[i] + to_string(count);
+                count = 1; //обнуляем счётчик
+            }
+            else if (count == 1) { //если счётчик не изменил своё значение, то просто прибавляем символ к итоговой строке
+                a_out = a_out + a[i];
+            }
+        }    
+    }
+    return a_out; //вывод итоговой строки
+    
+}
+
+string test(string a, string b) //Функция для тестирования функции func
+{
+    if (func(a) == b) return "True";
+    if (func(a) != b) return "False";
+}
+
+int main()
+{
+
+    string test1 = "abbbaa"; //Вводная строка для первого теста. Вес 32 байта
+    string test1_out = "ab3a2"; //Выходная строка для первого теста. Вес 32 байта
+    string test2 = "ababa";  //Вводная строка для второго теста. Вес 32 байта
+    string test2_out = "a3b2"; //Выходная строка для второго теста. Вес 32 байта
+    cout << "Tests:" << endl;
+    cout << test1 << " --> " << test1_out << ": " << test(test1, test1_out) << endl;
+    cout << test2 << " --> " << test2_out << ": " << test(test2, test2_out) << endl;
+
+
+    string a = "aaabb"; //Строка из примера задания. Вес 32 байта
+    cout << endl << a << " --> " << func(a);
+
+    return 0;
+}
