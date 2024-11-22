@@ -1,0 +1,35 @@
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+
+vector <int> delete_dubl()
+{
+    string line;
+    ifstream in("numbers.txt");
+    vector <int> matrix;
+    vector <int> mass;
+    int num=0;
+    
+    while (getline(in,line)){
+        num = stoi(line);
+        matrix[num]=1;
+        mass.push_back(num);
+    }
+
+    auto index=mass.cbegin();
+    
+    for (int i=0; i<mass.size(); i++){
+        if (matrix[i]==1){
+            mass.erase(index);
+        }
+        index++;
+    }
+    return mass;
+}
+int main(){
+    delete_dubl();
+    return 0;
+}    
