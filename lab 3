@@ -1,0 +1,41 @@
+//удалить дубликаты из массива
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <fstream>
+using namespace std;
+
+int main(){
+    vector<string> arr; //O(1)
+    unordered_map<string,int> hash_table; //O(1)
+
+    ifstream inputFile("/Users/annabondarenko/PycharmProjects/pythonProject/random_numbers1.txt");
+
+    string line; //O(1)
+ 
+    while(inputFile >> line){ //O(N)
+        arr.push_back(line); //O(1)
+
+    }
+    inputFile.close();
+
+    for(int i = 0; i < arr.size(); i++){ //O(N)
+        if(hash_table[arr[i]] > 0){ //O(1)+O(N)
+            arr.erase(arr.begin() + i);//O(1)
+            i--;//O(1)
+        }
+        else{
+            hash_table[arr[i]] = 1;//O(N)+O(1)
+        }
+    }
+
+    for (int i = 0; i < arr.size(); ++i) { //O(N)
+        cout << arr[i];//O(1)
+        if (i != arr.size() - 1) {//O(1)+O(1)
+            cout << " ";  
+        }
+    }
+    return 0;
+}
