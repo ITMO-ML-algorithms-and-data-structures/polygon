@@ -1,0 +1,17 @@
+#include <iostream>
+#include <fstream>
+#include <unordered_set>
+
+using namespace std;
+int main(){
+    ifstream File("/Users/vitamija/Desktop/vita.tsv"); ///обратилась к файлу 
+    unordered_set<int> dbl; /// unourder_set это как у нас set в питоне
+    int number;
+    while(File >> number){ 
+        dbl.insert(number); ///закидываем в сет наши числа из файдлыоа
+    }
+    File.close(); ///закрываем файо 
+    for (auto number : dbl){ ///это мы пробегаемс про unordered_set
+        cout << number << ", "; /// мы выводим наши числа без дубликам, через запятую
+    }
+}
