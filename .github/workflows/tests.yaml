@@ -1,0 +1,25 @@
+name: C++ CI
+
+on:
+  push:
+    branches:
+      - J3113_Konkova_Nina
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install g++
+      run: sudo apt-get install g++
+
+    - name: Compile C++ code
+      run: g++ main.cpp -o main
+
+   
