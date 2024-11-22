@@ -48,7 +48,7 @@ int main() {
     string filePath = "D:\\program\\C++program\\lab4algos\\lab4.txt";
     ifstream inputFile(filePath);
 
-    if (!inputFile.is_open())  {
+    if (!inputFile.is_open()) {
         cerr << "Error opening file at: " << filePath << endl;
         return 1;
     }
