@@ -1,0 +1,97 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cassert>
+#include "ConsoleApplication1.h"
+
+bool isNumber(const std::string& str) {
+	if (str.empty())  return false ;
+
+	for (char ch : str) {
+		if (!std::isdigit(ch)) {
+			return false; 
+		}
+	}
+	if (str[0] == '0')
+	{
+		return false;
+	}
+	return true; 
+}
+std::string srednee_znachenit(std::vector<std::string>&numbers, std::string &ves_array)
+{
+	int sum = 0, srznach; // 4 + 4 байта
+	std::string result; // 24-32 байта
+	for (int flag = 0; flag < std::stoi(ves_array); flag++) // 4 байта
+	{
+		if (numbers[flag] != "null") 
+		{
+			sum = sum + std::stoi(numbers[flag]);
+		}
+	}
+
+	if (sum != 0)
+	{
+		srznach = sum / std::stoi(ves_array);
+	}
+	else
+	{
+		srznach = 0;
+	}
+	//Заполняем null на среднее значение
+	for (int flag = 0; flag < std::stoi(ves_array); flag++) //4 байта
+	{
+		if (numbers[flag] == "null")
+		{
+			numbers[flag] = std::to_string(srznach);
+		}
+	}
+	//Заполняем результат 
+	result = result + "[";
+	for (int flag = 0; flag < std::stoi(ves_array); flag++) // 4 байта
+	{
+		result = result+ numbers[flag];
+		if (flag + 1 < std::stoi(ves_array))
+		{
+			result = result +  ", ";
+		}
+	}
+	result = result + "]";
+	return result;
+}
+//Тесты
+void test()
+{
+	std::vector<std::string> numer = {"1", "null", "10", "4"};
+	std::string ves_array = "4";
+	assert(srednee_znachenit(numer, ves_array) == "['1', '3', '10', '4']");
+}
+int main()
+{	
+	setlocale(LC_ALL, "Russian");
+	int srznach, sum = 0; // 4 + 4 байта
+	std::string znachenie2, ves_array; // ( 24 - 32 ) * 2 байта
+	std::vector<std::string> numbers; // 80 байт
+	std::cout << "Введите колличество элементов массива: ";
+	std::getline(std::cin, ves_array);
+	while (not isNumber(ves_array) or std::stoi(ves_array) <= 0 or std::stoi(ves_array) > 1000000000) //Проверка на дурака
+	{
+		std::cout << "Введите подходящее значение: ";
+		std::getline(std::cin, ves_array);
+	}
+	for (int flag = 0; flag < std::stoi(ves_array); flag++) //4 байта
+	{
+		std::cout << "Введите элемент: ";
+		std::getline(std::cin, znachenie2);
+		// Еще одна проверка (:
+		while (znachenie2 != "null" and (not isNumber(znachenie2))) {
+			std::cout << "Введите подходящее значение: ";
+			std::getline(std::cin, znachenie2);
+		}
+
+		numbers.push_back(znachenie2); //Вводим значения в вектор
+	}
+	std::cout<< srednee_znachenit(numbers, ves_array);
+	
+	return 0;
+}
