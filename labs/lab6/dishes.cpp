@@ -4,13 +4,13 @@
 
 /*** Часть 1. Quick Sort по убыванию ***/
 // Функция, делящая массив
-int partition(std::vector<int>& arr, int low, int high) {
+int partition(std::vector<int>& arr, int low, int high) { // 4 + 4 байта на два int, 24 байта на вектор
     // Выбираем опорный элемент (последний) и индекс меньшего элемента
-    int pivot = arr[high]; // O(1)
-    int i = low - 1; // O(1)
+    int pivot = arr[high]; // O(1). +4 байта на int
+    int i = low - 1; // O(1). +4 байта на int
 
     // Проход по всем от low до high-1
-    for (int j = low; j < high; j++) { // O(N), N - разность между high и low
+    for (int j = low; j < high; j++) { // O(N), N - разность между high и low. +4 байта на int
         // Сравниваем текущий с опорным, если текущий больше, то увеличиваем индекс i и меняем местами i и j
         if (arr[j] > pivot) { // O(1)
             i++; // O(1)
@@ -23,12 +23,11 @@ int partition(std::vector<int>& arr, int low, int high) {
 }
 // Итог по функции partition: O(N), где N - разность между hight и low
 
-
 // Основная функция для Quick Sort
-void quick_sort(std::vector<int>& arr, int low, int high) {
+void quick_sort(std::vector<int>& arr, int low, int high) { // + 4 + 4 байта на два int, +24 байта на вектор
     if (low < high) { // O(1)
         // Делим массив и получаем индекс опорного
-        int pi = partition(arr, low, high); // O(N), вызов partition
+        int pi = partition(arr, low, high); // O(N), вызов partition. +4 байта на int
 
         // Рекурсивно сортируем элементы в левой и правой частях
         quick_sort(arr, low, pi - 1); // O(logN) в среднем случае, рекурсия
@@ -40,16 +39,16 @@ void quick_sort(std::vector<int>& arr, int low, int high) {
 
 /*** Часть 2. Решение задачи ***/
 // Функция, принимающая набор коэффициентов блюд и возвращающая оптимальный итог по ним
-int maxSatisfaction(std::vector<int>& satisfaction) {
+int maxSatisfaction(std::vector<int>& satisfaction) { // +24 байта на вектор
     // Задаём итоговую сумму, она состоит из слагаемых вида time*coef, то есть коэффициент блюда на время его готовки (по условию n-ное блюдо готовится n единиц времени, отсчёт n ведётся с 1)
     // Задаём сумму коэффициентов, в неё будем добавлять коэффициенты тех блюд, которые будут приготовлены
-    int res_sum = 0; // O(1)
-    int satisfaction_sum = 0; // O(1)
+    int res_sum = 0; // O(1). +4 байта на int
+    int satisfaction_sum = 0; // O(1). +4 байта на int
     // Сортируем коэффициенты по убыванию, чтобы сначала учесть наилучшие блюда
     quick_sort(satisfaction, 0, satisfaction.size()-1); // O(N * logN), вызов сортировки
 
     // Начинаем перебирать от лучшего к худшему
-    for (int sat_coef : satisfaction) { // O(N), проход по всем элементам
+    for (int& sat_coef : satisfaction) { // O(N), проход по всем элементам
         // Прибавляем коэф к их текущей сумме
         satisfaction_sum += sat_coef; // O(1)
         // Если в какой-то момент оказалось, что на следующем блюде мы уже не получим значение больше, то дальше продолжать не нужно и лучший результат мы уже получили
