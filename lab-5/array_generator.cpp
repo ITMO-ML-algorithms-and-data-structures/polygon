@@ -5,7 +5,7 @@
 #include <random>
 
 int main() {
-    int n = 90000;
+    int n = 1000000;
     // Генерируем массив из натуральных чисел
     std::vector<int> numbers(n);
     for (int i = 0; i < n; ++i) {
