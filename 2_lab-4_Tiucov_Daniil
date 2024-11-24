@@ -1,0 +1,163 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <numeric>
+#include <limits>
+#include <cassert>
+// Функция для расчёта метрики кластера
+double clusterMetric(const std::vector<int>& cluster) {
+    if (cluster.empty()) return 0;
+    double mean = std::accumulate(cluster.begin(), cluster.end(), 0.0) / cluster.size();
+    double sum = 0;
+    for (int val : cluster) {
+        sum += std::abs(val - mean); // Используется только переменная `sum`: 8 байт (double)
+    }
+    return sum; // Итоговая память: O(1), так как всё вычисление инлайн
+}
+
+// Функция для расчёта общей метрики для всех кластеров
+double totalMetric(const std::vector<std::vector<int>>& clusters) {
+    double total = 0; // Занимает 8 байт
+    for (const auto& cluster : clusters) {
+        total += clusterMetric(cluster); // Каждый вызов `clusterMetric` не требует дополнительной памяти
+    }
+    return total; // Общая память: O(1)
+}
+
+// Функция для разбиения массива на кластеры
+void clusterize(const std::vector<int>& arr, int numClusters, std::vector<std::vector<int>>& bestClusters, double& bestMetric) {
+    int n = arr.size(); // Переменная занимает 4 байта
+
+    // Вектор индексов для разбиения
+    std::vector<int> indices(n - 1); // Занимает (n-1) * 4 байта
+    std::fill(indices.begin(), indices.begin() + (numClusters - 1), 1); // Нет дополнительной памяти
+
+    bestMetric = std::numeric_limits<double>::max(); // Переменная занимает 8 байт
+
+    // Перебираем все возможные разбиения
+    do {
+        std::vector<std::vector<int>> clusters; // Для хранения текущих кластеров: занимает O(n) памяти (динамический рост)
+        std::vector<int> currentCluster;       // Временный кластер: O(n) памяти в худшем случае
+
+        for (int i = 0; i < n; ++i) {          // Цикл обрабатывает массив из n элементов
+            currentCluster.push_back(arr[i]); // Память увеличивается на 4 байта за каждый элемент
+            if (i < n - 1 && indices[i] == 1) {
+                clusters.push_back(currentCluster); // Добавление текущего кластера, копирование: O(size(currentCluster) * 4 байта)
+                currentCluster.clear();           // Очистка, память освобождается
+            }
+        }
+
+        if (!currentCluster.empty()) {
+            clusters.push_back(currentCluster); // Добавление оставшегося кластера
+        }
+
+        // Пропускаем разбиения с количеством кластеров, отличным от numClusters
+        if (clusters.size() != numClusters) continue;
+
+        // Вычисление метрики
+        double metric = totalMetric(clusters); // Занимает 8 байт, без дополнительных массивов
+
+        // Обновляем лучший результат
+        if (metric < bestMetric) {
+            bestMetric = metric;              // Занимает 8 байт
+            bestClusters = clusters;          // Переприсваивание: выделяется память O(n), старое значение освобождается
+        }
+
+    } while (std::prev_permutation(indices.begin(), indices.end())); // Перестановки используют память: O(n)
+}
+
+void runTests() {
+    // Тест 1: Один элемент в массиве
+    {
+        std::vector<int> arr = {10};
+        std::vector<std::vector<int>> bestClusters;
+        double bestMetric;
+
+        clusterize(arr, 1, bestClusters, bestMetric);
+
+        assert(bestClusters.size() == 1 && "Test 1 failed: Array with one element should produce one cluster");
+        assert(bestClusters[0] == arr && "Test 1 failed: Single cluster should contain the only element");
+        assert(bestMetric == 0 && "Test 1 failed: Metric for single-element array should be 0");
+    }
+
+    // Тест 2: Два элемента, два кластера
+    {
+        std::vector<int> arr = {5, 15};
+        std::vector<std::vector<int>> bestClusters;
+        double bestMetric;
+
+        clusterize(arr, 2, bestClusters, bestMetric);
+
+        assert(bestClusters.size() == 2 && "Test 2 failed: Two elements and two clusters should produce two clusters");
+        assert(bestClusters[0].size() == 1 && bestClusters[1].size() == 1 &&
+               "Test 2 failed: Each cluster should have one element");
+        assert(bestMetric == 0 && "Test 2 failed: Metric for perfectly separated clusters should be 0");
+    }
+
+    // Тест 3: Массив из 5 элементов, 2 кластера
+    {
+        std::vector<int> arr = {1, 2, 3, 4, 5};
+        std::vector<std::vector<int>> bestClusters;
+        double bestMetric;
+
+        clusterize(arr, 2, bestClusters, bestMetric);
+
+        assert(bestClusters.size() == 2 && "Test 3 failed: Array with 5 elements and 2 clusters should produce 2 clusters");
+        assert(bestMetric > 0 && "Test 3 failed: Metric should be positive for this split");
+    }
+
+    // Тест 4: Равные элементы в массиве
+    {
+        std::vector<int> arr = {7, 7, 7, 7};
+        std::vector<std::vector<int>> bestClusters;
+        double bestMetric;
+
+        clusterize(arr, 2, bestClusters, bestMetric);
+
+        assert(bestClusters.size() == 2 && "Test 4 failed: Array with 4 equal elements and 2 clusters should produce 2 clusters");
+        assert(bestMetric == 0 && "Test 4 failed: Metric for identical elements in clusters should be 0");
+    }
+
+    // Тест 5: Массив, где число кластеров равно числу элементов
+    {
+        std::vector<int> arr = {1, 2, 3, 4, 5};
+        std::vector<std::vector<int>> bestClusters;
+        double bestMetric;
+
+        clusterize(arr, 5, bestClusters, bestMetric);
+
+        assert(bestClusters.size() == 5 && "Test 5 failed: Array with n elements and n clusters should produce n clusters");
+        assert(bestMetric == 0 && "Test 5 failed: Metric should be 0 for one-element clusters");
+    }
+
+    std::cout << "All tests passed successfully!" << std::endl;
+}
+
+
+int main() {
+    // Входной массив
+    std::vector<int> input_arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25}; // Занимает n * 4 байта (100 байт для n = 25)
+
+    // Количество кластеров
+    int numClusters = 10;
+
+    // Результат
+    std::vector<std::vector<int>> bestClusters; // Динамическая память, будет занимать до O(n) в процессе выполнения
+    double bestMetric;                          // Занимает 8 байт
+
+    // Выполняем кластеризацию
+    clusterize(input_arr, numClusters, bestClusters, bestMetric);
+
+    // Вывод результатов
+    std::cout << "Clusters:" << std::endl;
+    for (const auto& cluster : bestClusters) {
+        std::cout << "[ ";
+        for (int val : cluster) {
+            std::cout << val << " ";
+        }
+        std::cout << "]" << std::endl;
+    }
+    runTests();
+    return 0;
+}
