@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <numeric>
 #include <vector>
 #include <random>
 #include <algorithm>
-using namespace std; 
+using namespace std;
 
 // Функция для генерации случайной перестановки
 vector<int> generateRandomPermutation(int n) {
@@ -16,9 +17,8 @@ vector<int> generateRandomPermutation(int n) {
 }
 
 int main() {
-    string inputFileName = "";     //O(n)
-    string outputFileName = "";
-    int n = 1000000000;  //сколько входных значений
+    string inputFileName = "datalab3.txt";     //O(n)
+    string outputFileName = "mixed.txt";
 
     // Читаем данные из файла
     ifstream inputFile(inputFileName);
@@ -27,18 +27,19 @@ int main() {
         return 1;
     }
 
-    vector<int> data(n);
-    for (int i = 0; i < n; ++i) {        //O(n)
-        inputFile >> data[i];
+    vector<int> data;
+    int value;
+    while (inputFile >> value) {  // Читаем до конца файла
+        data.push_back(value);
     }
     inputFile.close();
 
     // Генерируем случайную перестановку
-    vector<int> permutation = generateRandomPermutation(n);     //O(n)
+    vector<int> permutation = generateRandomPermutation(data.size()); //O(n)
 
     // Перемешиваем массив, используя перестановку
-    vector<int> shuffledData(n);
-    for (int i = 0; i < n; ++i) {                            //O(n)
+    vector<int> shuffledData(data.size());
+    for (int i = 0; i < data.size(); ++i) {                            //O(n)
         shuffledData[i] = data[permutation[i]];
     }
 
@@ -49,7 +50,7 @@ int main() {
         return 1;
     }
 
-    for (int i = 0; i < n; ++i) {                       //O(n)
+    for (int i = 0; i < data.size(); ++i) {                       //O(n)
         outputFile << shuffledData[i] << " ";
     }
     outputFile.close();
@@ -58,23 +59,4 @@ int main() {
 }
 
 //сложность всего алгоритма составляет O(n)
-
-
-
-
-
-
-
-
-
-Код для датасета:
-import random
-
-numbers = [random.randint(0, 1000) for _ in range(1000000000)]
-
-with open("random_numbers.txt", "w") as f:
-    for number in numbers:
-        f.write(str(number) + "\n")
-
-print("Числа успешно записаны в файл random_numbers.txt")
 
