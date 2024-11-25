@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <cassert>
 
 using namespace std;
 
@@ -42,7 +43,7 @@ vector<int> vecCountUniqueValues(const vector<string>& arr) { // Подсчёт 
 
     // Замена каждого значения на количество его вхождений
     for (size_t i = 0; i < arr.size(); ++i) {
-        result[i] = frequencyMap[arr[i]]; // Уже учли это в стр.29 (вроде бы...)
+        result[i] = frequencyMap[arr[i]]; // Уже учли это в строке 29
     }
 
     return result;
@@ -53,7 +54,7 @@ vector<int> vecCountUniqueValues(const vector<string>& arr) { // Подсчёт 
 
 int main() {
 
-   // Пример (датасет?) массива
+   // Пример (датасет?) массива;
 vector<string> arr = {"expulsion", "AOW", "expulsion", "expulsion", "AOW", "mercy"};
     
     // Получение результата
@@ -69,8 +70,62 @@ vector<string> arr = {"expulsion", "AOW", "expulsion", "expulsion", "AOW", "merc
     }
     cout << "]" << endl;
 
+    testEdgeCases();
+
     return 0;
 }
 
 
 //Посчитать память
+
+// Эджкейсы
+
+void testEdgeCases() {
+
+//Пустой массив:
+ vector<string> emptyArr;
+    vector<int> emptyResult = vecCountUniqueValues(emptyArr);
+    cout << "Пустой массив: ";
+    cout << "[";
+    for (size_t i = 0; i < emptyResult.size(); ++i) {
+        cout << emptyResult[i];
+        if (i < emptyResult.size() - 1) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+
+
+// Массив с одним элементом:
+
+ vector<string> singleElementArr = {"expulsion"};
+    vector<int> singleElementResult = vecCountUniqueValues(singleElementArr);
+    cout << "Массив с одним элементом: ";
+    cout << "[";
+    for (size_t i = 0; i < singleElementResult.size(); ++i) {
+        cout << singleElementResult[i];
+        if (i < singleElementResult.size() - 1) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+
+
+// Массив с одинаковыми элементами:
+
+vector<string> identicalElementsArr = {"AOW", "AOW", "AOW"};
+    vector<int> identicalElementsResult = vecCountUniqueValues(identicalElementsArr);
+    cout << "Массив с одинаковыми элементами: ";
+    cout << "[";
+    for (size_t i = 0; i < identicalElementsResult.size(); ++i) {
+        cout << identicalElementsResult[i];
+        if (i < identicalElementsResult.size() - 1) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+    vector<int> result3vector = {1, 1, 1};
+
+    assert(vecCountUniqueValues(identicalElementsArr) == result3vector);
+
+}
