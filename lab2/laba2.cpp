@@ -22,6 +22,12 @@ arr = [“Orange”, “Red”, “Green”, “Orange”]"
 */
 
 
+
+
+
+
+
+
 // Создаём функцию
 vector<int> vecCountUniqueValues(const vector<string>& arr) { // Подсчёт уникальных значений в массиве строк
     // На вход 1000 * N + 4 байт (N — количество строк, каждая строка до 1000 символов)
@@ -33,7 +39,7 @@ vector<int> vecCountUniqueValues(const vector<string>& arr) { // Подсчёт 
     vector<int> result(arr.size()); // Вектор для хранения количества вхождений
     //4 * arr.size() байт (4 - размер int)
 
-    // Подсчёт частоты каждого элемента
+    // Подсчёт количество вхождений каждого элемента в массив
     for (const string& str : arr) { 
         frequencyMap[str]++;
         // 1000 + 4 байта на строку (1000 - длина строки, 4 - размер int)
@@ -48,6 +54,68 @@ vector<int> vecCountUniqueValues(const vector<string>& arr) { // Подсчёт 
 
     return result;
 }
+
+
+// Эджкейсы
+
+void testEdgeCases() {
+
+//Пустой массив:
+ vector<string> emptyArr;
+    vector<int> emptyResult = vecCountUniqueValues(emptyArr);
+    cout << "Пустой массив: ";
+    cout << "[";
+    for (size_t i = 0; i < emptyResult.size(); ++i) {
+        cout << emptyResult[i];
+        if (i < emptyResult.size() - 1) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+    vector<int> result1vector = {};
+    assert(vecCountUniqueValues(emptyArr) == result1vector);
+
+// Массив с одним элементом:
+
+ vector<string> singleElementArr = {"expulsion"};
+    vector<int> singleElementResult = vecCountUniqueValues(singleElementArr);
+    cout << "Массив с одним элементом: ";
+    cout << "[";
+    for (size_t i = 0; i < singleElementResult.size(); ++i) {
+        cout << singleElementResult[i];
+        if (i < singleElementResult.size() - 1) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+    vector<int> result2vector = {1};
+    assert(vecCountUniqueValues(singleElementArr) == result2vector);
+
+// Массив с одинаковыми элементами:
+
+vector<string> identicalElementsArr = {"AOW", "AOW", "AOW"};
+    vector<int> identicalElementsResult = vecCountUniqueValues(identicalElementsArr);
+    cout << "Массив с одинаковыми элементами: ";
+    cout << "[";
+    for (size_t i = 0; i < identicalElementsResult.size(); ++i) {
+        cout << identicalElementsResult[i];
+        if (i < identicalElementsResult.size() - 1) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+    vector<int> result3vector = {3, 3, 3};
+
+    assert(vecCountUniqueValues(identicalElementsArr) == result3vector);
+
+}
+
+
+
+//Посчитать память
+
+
+
 
 // На выходе имеем 
 // N * 1000 + N * 1008 + 4 + 4 * arr.size() = N * 1000 + N * 1008 + 4 + N * 4 = N * 2012 + 4 байт
@@ -69,63 +137,8 @@ vector<string> arr = {"expulsion", "AOW", "expulsion", "expulsion", "AOW", "merc
         }
     }
     cout << "]" << endl;
-
+    
     testEdgeCases();
 
     return 0;
-}
-
-
-//Посчитать память
-
-// Эджкейсы
-
-void testEdgeCases() {
-
-//Пустой массив:
- vector<string> emptyArr;
-    vector<int> emptyResult = vecCountUniqueValues(emptyArr);
-    cout << "Пустой массив: ";
-    cout << "[";
-    for (size_t i = 0; i < emptyResult.size(); ++i) {
-        cout << emptyResult[i];
-        if (i < emptyResult.size() - 1) {
-            cout << ", ";
-        }
-    }
-    cout << "]" << endl;
-
-
-// Массив с одним элементом:
-
- vector<string> singleElementArr = {"expulsion"};
-    vector<int> singleElementResult = vecCountUniqueValues(singleElementArr);
-    cout << "Массив с одним элементом: ";
-    cout << "[";
-    for (size_t i = 0; i < singleElementResult.size(); ++i) {
-        cout << singleElementResult[i];
-        if (i < singleElementResult.size() - 1) {
-            cout << ", ";
-        }
-    }
-    cout << "]" << endl;
-
-
-// Массив с одинаковыми элементами:
-
-vector<string> identicalElementsArr = {"AOW", "AOW", "AOW"};
-    vector<int> identicalElementsResult = vecCountUniqueValues(identicalElementsArr);
-    cout << "Массив с одинаковыми элементами: ";
-    cout << "[";
-    for (size_t i = 0; i < identicalElementsResult.size(); ++i) {
-        cout << identicalElementsResult[i];
-        if (i < identicalElementsResult.size() - 1) {
-            cout << ", ";
-        }
-    }
-    cout << "]" << endl;
-    vector<int> result3vector = {1, 1, 1};
-
-    assert(vecCountUniqueValues(identicalElementsArr) == result3vector);
-
 }
