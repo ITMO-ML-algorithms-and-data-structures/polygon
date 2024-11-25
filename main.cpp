@@ -85,7 +85,7 @@ tuple<vector<int>, vector<int>, vector<int>> klast(const vector<int>& arr) {
 void prClusters(const tuple<vector<int>, vector<int>, vector<int>>& clusters) {
     // Выводим первый кластер
     cout << "[";
-    for (size_t i = 0; i < get<0>(clusters).size(); ++i) {
+    for (int i = 0; i < get<0>(clusters).size(); ++i) {
         if (i > 0) {
             cout << ", ";
         }
@@ -94,7 +94,7 @@ void prClusters(const tuple<vector<int>, vector<int>, vector<int>>& clusters) {
     cout << "], [";
 
     // Выводим второй кластер
-    for (size_t i = 0; i < get<1>(clusters).size(); ++i) {
+    for (int i = 0; i < get<1>(clusters).size(); ++i) {
         if (i > 0) {
             cout << ", ";
         }
@@ -103,7 +103,7 @@ void prClusters(const tuple<vector<int>, vector<int>, vector<int>>& clusters) {
     cout << "], [";
 
     // Выводим третий кластер
-    for (size_t i = 0; i < get<2>(clusters).size(); ++i) {
+    for (int i = 0; i < get<2>(clusters).size(); ++i) {
         if (i > 0) {
             cout << ", ";
         }
