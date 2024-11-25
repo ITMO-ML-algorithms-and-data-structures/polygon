@@ -1,9 +1,26 @@
 #include <iostream>
-
+#include <fstream>
+#include <sstream>
+#include <ctime>
 using namespace std;
 
 int main(){
-    vector<int> arr = {10, 2, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 2};
+    ifstream inputFile("/Users/user/CLionProjects/polygon-1/numbers1e4.tsv");
+    if (!inputFile) {
+        cerr << "Не удалось открыть файл!" << endl;
+        return 1;
+    }
+    string line;
+    vector<int> arr;
+    if (getline(inputFile, line)) {
+        stringstream ss(line);
+        string cell;
+        while (getline(ss, cell, '\t')) {
+            arr.push_back(stoi(cell));
+        }
+    }
+    inputFile.close();
+    clock_t begin = clock();
 
     int sizee = arr.size();
     int maximum = 0;
@@ -26,6 +43,9 @@ int main(){
         answer[pref_summa[arr[i]] - 1] = arr[i];
         pref_summa[arr[i]]--;
     }
+    clock_t end = clock();
+    double time_spent = (double) (end - begin) / CLOCKS_PER_SEC;
+    cout << time_spent << endl;
 
     for (int i = 0; i < sizee; i++) {
         cout << answer[i] << " ";

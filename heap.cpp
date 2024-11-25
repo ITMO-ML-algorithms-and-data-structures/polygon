@@ -1,4 +1,7 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <ctime>
 
 using namespace std;
 void heapify(int *arr, int size, int i){
@@ -18,16 +21,41 @@ void heapify(int *arr, int size, int i){
 }
 
 int main(){
-    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    int size = sizeof(arr) / sizeof(arr[0]);
-    for (int i = size/2-1; i >= 0; i--){
-        heapify(arr, size, i);
+    ifstream inputFile("/Users/user/CLionProjects/polygon-1/numbers1e4.tsv");
+    if (!inputFile) {
+        cerr << "Не удалось открыть файл!" << endl;
+        return 1;
     }
-    for (int i = size-1; i >= 0; i--){
-        swap(arr[0], arr[i]);
-        heapify(arr, i, 0);
-    }
-    for (int i = 0; i < size; i++){
-      cout << arr[i] << " ";
-    }
+    string line;
+    if (getline(inputFile, line)) {
+        stringstream ss(line);
+        string cell;
+        int count = 0;
+
+        stringstream temp(line);
+        while (getline(temp, cell, '\t')) {
+            count++;
+        }
+        int arr[count];
+        int index = 0;
+        while (getline(ss, cell, '\t')) {
+            arr[index++] = stoi(cell);
+        }
+        inputFile.close();
+        clock_t begin = clock();
+        int size = sizeof(arr) / sizeof(arr[0]);
+        for (int i = size/2-1; i >= 0; i--){
+            heapify(arr, size, i);
+        }
+        for (int i = size-1; i >= 0; i--){
+            swap(arr[0], arr[i]);
+            heapify(arr, i, 0);
+        }
+        clock_t end = clock();
+        double elapsed = (double) (end - begin) / CLOCKS_PER_SEC;
+        cout << elapsed << endl;
+		for (int i = 0; i < size; i++){
+      		cout << arr[i] << " ";
+    		}
+        }
 }

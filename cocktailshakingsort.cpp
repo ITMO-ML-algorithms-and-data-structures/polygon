@@ -1,9 +1,28 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <ctime>
 using namespace std;
 
 int main() {
-    int a[] = {10, 9, 8, 7, 5, 6, 4, 3, 2, 1, 0};
-    int size = sizeof(a) / sizeof(a[0]) - 1;
+    ifstream inputFile("/Users/user/CLionProjects/polygon-1/numbers1e4.tsv");
+    if (!inputFile) {
+        cerr << "Не удалось открыть файл!" << endl;
+        return 1;
+    }
+    string line;
+    vector<int> a;
+    if (getline(inputFile, line)) {
+        stringstream ss(line);
+        string cell;
+        while (getline(ss, cell, '\t')) {
+            a.push_back(stoi(cell));
+        }
+    }
+    inputFile.close();
+    clock_t begin = clock();
+
+    int size = a.size() - 1;
     bool finish = false;
     while (!finish) {
         finish = true;
@@ -24,7 +43,11 @@ int main() {
             }
         }
     }
+    clock_t end = clock();
+    double elapsed = (double) (end - begin) / CLOCKS_PER_SEC;
+    cout << elapsed << endl;
     for (int i = 0; i <= size; i++) {
         cout << a[i] << " ";
     }
+    cout << endl;
 }
