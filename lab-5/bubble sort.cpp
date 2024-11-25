@@ -34,20 +34,26 @@ void read_csv(const std::string& filename, std::vector<int>& intArray) { // Фу
 
 void bubble_sort(std::vector<int>& arr, int n) {
     for (int i = 0; i < n; i++) {
+        bool flag = false;
         for (int j = 0; j < n-1; j++) {
         if (arr[j] > arr[j + 1]) {
             int temp = arr[j]; // создали дополнительную переменную
             arr[j] = arr[j + 1]; // меняем местами
             arr[j + 1] = temp; // значения элементов
+            flag = true;
         }
+        }
+        if (!flag){
+            break;
         }
     }
     }
 
 int main() {
     std::vector<std::string> data_samples = {"1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000", "9000", 
-                                           "10000", "20000", "30000", "40000", "50000", "60000", "70000", "80000", "90000", "100000",
-                                           "100000", "200000", "300000", "400000", "500000", "600000", "700000", "800000", "900000", "1000000"};
+                                           "10000", "20000", "30000", "40000", "50000", "60000", "70000", "80000", "90000", 
+                                           "100000", "200000", "300000", "400000", "500000", "600000", "700000", "800000", "900000",
+                                            "1000000"};
 //    std::vector<std::string> data_samples = {"100000"};
     std::vector<float> corr_median_time;
     std::cout << data_samples.size() << std::endl;
