@@ -22,7 +22,7 @@ int heapify(vector<int>& arr, int n, int i) {
     }
     return 1;
 }
-  
+
 
 int heap_sort(vector<int>& arr, int n) {
 
@@ -36,6 +36,9 @@ int heap_sort(vector<int>& arr, int n) {
     }
     return 1;
 }
+// Сложность: функция heapifi производиться за log(n), -
+// - она применяется n/2 + n раз => асимптотикка O(3/2*log(n)*n)
+// Затраты по памтяти: O(1)
 
 int count1() {
     ifstream fin("data.txt");

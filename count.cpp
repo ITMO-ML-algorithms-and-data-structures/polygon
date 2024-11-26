@@ -7,14 +7,15 @@ using namespace std;
 
 int count_sort(vector<int> arr, int n) {
 
-    vector <int> c_arr(20001, 0);
+    int k = 20001;
+    vector <int> c_arr(k, 0);
     for (int i = 0; i < n; i++) {
       c_arr[arr[i] + 1000] += 1;
     }
 
     int c = 0;
     int j = 0;
-    while (c < 20001) {
+    while (c < k) {
         if (c_arr[c] == 0) {
             c += 1;
         }
@@ -26,6 +27,9 @@ int count_sort(vector<int> arr, int n) {
     }
     return 1;
 }
+// Сложность: 2 вложенных цикла => асимтотика O(n + n), так как есть 2 цикла -
+// - которые проходятся по всем элементам
+// Затраты по памтяти: O(k), где k < n
 
 int count1() {
     

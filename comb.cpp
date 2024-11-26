@@ -5,23 +5,22 @@
 using namespace std;
 
 int comb_sort(vector<int>& vec, int n) {
-    // int j;
-    // for (int i = 0; i < n * k; i++ ){
-    //     j = i / k;
-    //     fin >> vec[j];
-    // }
     double factor = 1.25;  
     int step = n - 1; 
     while (step >= 1) {
         for (int i = 0; i + step < n; i++) {
             if (vec[i] > vec[i+step]) {
-                swap(vec[i], vec[i + step]);
+                swap(vec[i], vec[i + step]); 
             }
         }
         step = step / factor;
     }
     return 1;
 }
+// Сложность: 2 вложенных цикла => асимтотика O(n^2)
+// Затраты по памтяти: O(1)
+
+
 int count2 () {
     ifstream fin("data.txt");
     ofstream fout("comb_1e5.txt");
