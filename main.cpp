@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <chrono> //to know the time
 #include <unordered_set>
 using namespace std;
 
@@ -60,39 +61,54 @@ vector<int> eliminarDuplicados(int arr[], int size) {
 
 int main(){
 
+    auto inicio = chrono::high_resolution_clock::now();
+
     //common test
-    int  arr1[]={1,2,3,3,5,6,6};
-    vector<int> resultado1= eliminarDuplicados(arr1,7);
-    cout<<"test1:  ";
-    for(int num : resultado1)
-        cout << num << " ";
-    cout<<endl;
+   try {
+       int arr1[] = {1, 2, 3, 3, 5, 6, 6};
+       vector<int> resultado1 = eliminarDuplicados(arr1, 7);
+
+
+       cout << "test1:  ";
+       for (int num: resultado1)
+           cout << num << " ";
+       cout << endl;
 
 
 
-    //test with empty
-    int arr2[]={};
-    vector<int> resultado2 = eliminarDuplicados(arr2,0);
-    cout << "test2:  ";
-    for (int num : resultado2)
-        cout << num <<" ";
-    cout<<endl;
+       //test with empty
+       int arr2[] = {};
+       vector<int> resultado2 = eliminarDuplicados(arr2, 0);
+       cout << "test2:  ";
+       for (int num: resultado2)
+           cout << num << " ";
+       cout << endl;
 
-    //test with limit case
-    int arr3[]={0,MAX_VALUE,0};
-    vector<int> resultadao3= eliminarDuplicados(arr3,3);
-    cout << "test3:  ";
-    for (int num:resultadao3)
-        cout << num << " ";
-    cout << endl;
+       //test with limit case
+       int arr3[] = {0, MAX_VALUE, 0};
+       vector<int> resultadao3 = eliminarDuplicados(arr3, 3);
+       cout << "test3:  ";
+       for (int num: resultadao3)
+           cout << num << " ";
+       cout << endl;
+   }
+       catch (const exception &e){
+           cout << "error";
+       }
 
-    //error test
-    int arr4[]={-1,1};
-    vector<int> resultados4= eliminarDuplicados(arr4,2);
-    cout<<"test4:  ";
-    for(int num:resultados4)
-        cout<<num<<" ";
-    cout<<endl;
+
+    auto fin = chrono::high_resolution_clock::now();
+    auto duracion = chrono::duration_cast<chrono::seconds>(fin-inicio).count();
+
+    cout << "time to process the dataset:"<< duracion <<"  sec."<<endl;
+
+       //error test
+       int arr4[] = {-1, 1};
+       vector<int> resultados4 = eliminarDuplicados(arr4, 2);
+       cout << "test4:  ";
+       for (int num: resultados4)
+           cout << num << " ";
+       cout << endl;
 
     return 0;
 }
