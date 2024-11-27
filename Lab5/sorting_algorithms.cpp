@@ -4,8 +4,9 @@
 #include <limits>
 #include <fstream>
 #include <cmath>
+#include <random>
 
-#define DOCTEST_IMPLEMENT_WITH_MAIN
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "..\Source\doctest.h"
 
 
@@ -39,7 +40,6 @@ namespace selection_sort {
 
 };
 
-
 namespace comb_sort {
 
     const double SF = 1.3;
@@ -70,7 +70,6 @@ namespace comb_sort {
     }
 
 };
-
 
 namespace bucket_sort {
 
@@ -135,6 +134,78 @@ namespace bucket_sort {
 
 TEST_CASE("Testing selection sort") {
 
-    std::vector<int> best_case, worst_case, middle_case;
+    const int LEN = 1e4;
+
+    std::vector<int> best_case(LEN), worst_case(LEN), middle_case(LEN);
+
+    for (int i = 0; i < LEN; i++) {
+        best_case[i] = i;
+        middle_case[i] = i;
+        worst_case[i] = LEN - 1 - i;
+    }
+
+    std::srand(time(NULL));
+    std::random_shuffle(middle_case.begin(), middle_case.end());
+
+    selection_sort::sort(best_case);
+    selection_sort::sort(middle_case);
+    selection_sort::sort(worst_case);
+
+    CHECK(std::is_sorted(best_case.begin(), best_case.end()) == true);
+    CHECK(std::is_sorted(middle_case.begin(), middle_case.end()) == true);
+    CHECK(std::is_sorted(worst_case.begin(), worst_case.end()) == true);
+
+}
+
+TEST_CASE("Testing comb sort") {
+
+    const int LEN = 1e6;
+
+    std::vector<int> best_case(LEN), worst_case(LEN), middle_case(LEN);
+
+    for (int i = 0; i < LEN; i++) {
+        best_case[i] = i;
+        middle_case[i] = i;
+        worst_case[i] = LEN - 1 - i;
+    }
+
+    std::srand(time(NULL));
+    std::random_shuffle(middle_case.begin(), middle_case.end());
+
+    comb_sort::sort(best_case);
+    comb_sort::sort(middle_case);
+    comb_sort::sort(worst_case);
+
+    CHECK(std::is_sorted(best_case.begin(), best_case.end()) == true);
+    CHECK(std::is_sorted(middle_case.begin(), middle_case.end()) == true);
+    CHECK(std::is_sorted(worst_case.begin(), worst_case.end()) == true);
+
+}
+
+TEST_CASE("Testing bucket sort") {
+
+    std::vector<int> best_case(1e6), worst_case(1e4), middle_case(1e6);
+
+    for (int i = 0; i < best_case.size(); i++)
+        best_case[i] = i;
+    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(-1e6, 1e6);
+
+    for (int i = 0; i < middle_case.size(); i++)
+        middle_case[i] = dist(gen);
+
+    for (int i = 0; i < worst_case.size() - 1; i++)
+        worst_case[i] = worst_case.size() - 1 - i;
+    worst_case[worst_case.size() - 1] = std::numeric_limits<int>::max();
+
+    bucket_sort::sort(best_case);
+    bucket_sort::sort(middle_case);
+    bucket_sort::sort(worst_case);
+
+    CHECK(std::is_sorted(best_case.begin(), best_case.end()) == true);
+    CHECK(std::is_sorted(middle_case.begin(), middle_case.end()) == true);
+    CHECK(std::is_sorted(worst_case.begin(), worst_case.end()) == true);
 
 }
