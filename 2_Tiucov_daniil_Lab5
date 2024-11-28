@@ -1,0 +1,231 @@
+#include <iostream>
+#include <vector>
+#include <cassert>
+#include <algorithm>
+#include <numeric>
+#include<chrono>
+void bubbleSort(std::vector<int>& input_data) {
+    bool flag;
+
+    for (int i = 0; i < input_data.size() - 1; i++) {
+        flag = false;
+        for (int j = 0; j < input_data.size() - i - 1; j++) {
+            if (input_data[j] > input_data[j + 1]) {
+                std::swap(input_data[j], input_data[j + 1]);
+                flag = true;
+            }
+        }
+        if (!flag)
+            break;
+    }
+}
+
+void SelectionSort(std::vector<int>& values) {
+    for (auto i = values.begin(); i != values.end(); ++i) {
+        auto j = std::min_element(i, values.end());
+        std::swap(*i, *j);
+    }
+}
+
+void HeapSort(std::vector<int>& values) {
+    std::ranges::make_heap(values.begin(), values.end());
+    for (auto i = values.end(); i != values.begin(); --i) {
+        std::pop_heap(values.begin(), i);
+    }
+}
+
+void printVector(const std::vector<int>& arr) {
+    for (int num : arr)
+        std::cout << " " << num;
+}
+
+// void runTests_BubbleSort() {
+//     // Тест 1: Пустой вектор
+//     std::vector<int> test1 = {};
+//     bubbleSort(test1);
+//     assert((test1 == std::vector<int>{}) && "Test 1 failed: empty vector should remain empty");
+//
+//     // Тест 2: Вектор из одного элемента
+//     std::vector<int> test2 = {5};
+//     bubbleSort(test2);
+//     assert((test2 == std::vector<int>{5}) && "Test 2 failed: single-element vector should remain unchanged");
+//
+//     // Тест 3: Упорядоченный вектор
+//     std::vector<int> test3 = {1, 2, 3, 4, 5};
+//     bubbleSort(test3);
+//     assert((test3 == std::vector<int>{1, 2, 3, 4, 5}) && "Test 3 failed: sorted vector should remain unchanged");
+//
+//     // Тест 4: Обратно упорядоченный вектор
+//     std::vector<int> test4 = {5, 4, 3, 2, 1};
+//     bubbleSort(test4);
+//     assert((test4 == std::vector<int>{1, 2, 3, 4, 5}) && "Test 4 failed: reverse-sorted vector should become sorted");
+//
+//     // Тест 5: Вектор с повторяющимися элементами
+//     std::vector<int> test5 = {4, 2, 4, 3, 1};
+//     bubbleSort(test5);
+//     assert((test5 == std::vector<int>{1, 2, 3, 4, 4}) && "Test 5 failed: vector with duplicates not sorted correctly");
+//
+//     // Тест 6: Все элементы одинаковы
+//     std::vector<int> test6 = {7, 7, 7, 7, 7};
+//     bubbleSort(test6);
+//     assert((test6 == std::vector<int>{7, 7, 7, 7, 7}) && "Test 6 failed: identical elements should remain unchanged");
+//
+//     // Тест 7: Смешанные положительные и отрицательные числа
+//     std::vector<int> test7 = {3, -1, 0, -2, 5, 1};
+//     bubbleSort(test7);
+//     assert((test7 == std::vector<int>{-2, -1, 0, 1, 3, 5}) && "Test 7 failed: vector with mixed numbers not sorted correctly");
+//
+//     // Тест 8: Вектор с одним отрицательным числом
+//     std::vector<int> test8 = {-42};
+//     bubbleSort(test8);
+//     assert((test8 == std::vector<int>{-42}) && "Test 8 failed: single negative element should remain unchanged");
+//     std::cout << "All tests passed successfully!" << std::endl;
+//
+// }
+// void runTests_SelectionSort() {
+//     // Тест 1: Пустой вектор
+//     std::vector<int> test1 = {};
+//     SelectionSort(test1);
+//     assert((test1 == std::vector<int>{}) && "Test 1 failed: empty vector should remain empty");
+//
+//     // Тест 2: Вектор из одного элемента
+//     std::vector<int> test2 = {5};
+//     SelectionSort(test2);
+//     assert((test2 == std::vector<int>{5}) && "Test 2 failed: single-element vector should remain unchanged");
+//
+//     // Тест 3: Упорядоченный вектор
+//     std::vector<int> test3 = {1, 2, 3, 4, 5};
+//     SelectionSort(test3);
+//     assert((test3 == std::vector<int>{1, 2, 3, 4, 5}) && "Test 3 failed: sorted vector should remain unchanged");
+//
+//     // Тест 4: Обратно упорядоченный вектор
+//     std::vector<int> test4 = {5, 4, 3, 2, 1};
+//     SelectionSort(test4);
+//     assert((test4 == std::vector<int>{1, 2, 3, 4, 5}) && "Test 4 failed: reverse-sorted vector should become sorted");
+//
+//     // Тест 5: Вектор с повторяющимися элементами
+//     std::vector<int> test5 = {4, 2, 4, 3, 1};
+//     SelectionSort(test5);
+//     assert((test5 == std::vector<int>{1, 2, 3, 4, 4}) && "Test 5 failed: vector with duplicates not sorted correctly");
+//
+//     // Тест 6: Все элементы одинаковы
+//     std::vector<int> test6 = {7, 7, 7, 7, 7};
+//     SelectionSort(test6);
+//     assert((test6 == std::vector<int>{7, 7, 7, 7, 7}) && "Test 6 failed: identical elements should remain unchanged");
+//
+//     // Тест 7: Смешанные положительные и отрицательные числа
+//     std::vector<int> test7 = {3, -1, 0, -2, 5, 1};
+//     SelectionSort(test7);
+//     assert((test7 == std::vector<int>{-2, -1, 0, 1, 3, 5}) && "Test 7 failed: vector with mixed numbers not sorted correctly");
+//
+//     // Тест 8: Вектор с одним отрицательным числом
+//     std::vector<int> test8 = {-42};
+//     SelectionSort(test8);
+//     assert((test8 == std::vector<int>{-42}) && "Test 8 failed: single negative element should remain unchanged");
+//     std::cout << "All tests passed successfully!" << std::endl;
+//
+// }
+//
+// void runTests_heapSort() {
+//     // Тест 1: Пустой вектор
+//     std::vector<int> test1 = {};
+//     HeapSort(test1);
+//     assert((test1 == std::vector<int>{}) && "Test 1 failed: empty vector should remain empty");
+//
+//     // Тест 2: Вектор из одного элемента
+//     std::vector<int> test2 = {5};
+//     HeapSort(test2);
+//     assert((test2 == std::vector<int>{5}) && "Test 2 failed: single-element vector should remain unchanged");
+//
+//     // Тест 3: Упорядоченный вектор
+//     std::vector<int> test3 = {1, 2, 3, 4, 5};
+//     HeapSort(test3);
+//     assert((test3 == std::vector<int>{1, 2, 3, 4, 5}) && "Test 3 failed: sorted vector should remain unchanged");
+//
+//     // Тест 4: Обратно упорядоченный вектор
+//     std::vector<int> test4 = {5, 4, 3, 2, 1};
+//     HeapSort(test4);
+//     assert((test4 == std::vector<int>{1, 2, 3, 4, 5}) && "Test 4 failed: reverse-sorted vector should become sorted");
+//
+//     // Тест 5: Вектор с повторяющимися элементами
+//     std::vector<int> test5 = {4, 2, 4, 3, 1};
+//     HeapSort(test5);
+//     assert((test5 == std::vector<int>{1, 2, 3, 4, 4}) && "Test 5 failed: vector with duplicates not sorted correctly");
+//
+//     // Тест 6: Все элементы одинаковы
+//     std::vector<int> test6 = {7, 7, 7, 7, 7};
+//     HeapSort(test6);
+//     assert((test6 == std::vector<int>{7, 7, 7, 7, 7}) && "Test 6 failed: identical elements should remain unchanged");
+//
+//     // Тест 7: Смешанные положительные и отрицательные числа
+//     std::vector<int> test7 = {3, -1, 0, -2, 5, 1};
+//     HeapSort(test7);
+//     assert((test7 == std::vector<int>{-2, -1, 0, 1, 3, 5}) && "Test 7 failed: vector with mixed numbers not sorted correctly");
+//
+//     // Тест 8: Вектор с одним отрицательным числом
+//     std::vector<int> test8 = {-42};
+//     HeapSort(test8);
+//     assert((test8 == std::vector<int>{-42}) && "Test 8 failed: single negative element should remain unchanged");
+//     std::cout << "All tests passed successfully!" << std::endl;
+//
+// }
+
+int main() {
+
+    std::vector<int> bubble_vector;
+    for(int i = 1e7; i >= 1e3; i-=100) {
+        bubble_vector.push_back(i);
+    }
+    //
+    // auto start_time = std::chrono::high_resolution_clock::now();
+    // bubbleSort(bubble_vector);
+    // auto end_time = std::chrono::high_resolution_clock::now();
+    //
+    //
+    // auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    //
+    //
+    // std::cout << "\nBubble Sort completed in: " << elapsed_time.count() << " milliseconds." << std::endl;
+
+    bubbleSort(bubble_vector);
+    printVector(bubble_vector);
+    std::cout << std::endl;
+    //
+    std::vector<int> selection_vector;
+    for(int i = 1e6; i >= 1e3; i-=100) {
+        selection_vector.push_back(i);
+    }
+    // auto start_time = std::chrono::high_resolution_clock::now();
+    // SelectionSort(selection_vector);
+    // auto end_time = std::chrono::high_resolution_clock::now();
+    //
+    //
+    // auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    //
+    //
+    // std::cout << "\nBubble Sort completed in: " << elapsed_time.count() << " milliseconds." << std::endl;
+    SelectionSort(selection_vector);
+    printVector(selection_vector);
+    std::cout << std::endl;
+
+    std::vector<int> heap;
+    for(int i = 1e7; i >= 1e3; i-=10) {
+        heap.push_back(i);
+    }
+    // auto start_time = std::chrono::high_resolution_clock::now();
+    // HeapSort(heap);
+    // auto end_time = std::chrono::high_resolution_clock::now();
+    //
+    //
+    // auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    //
+    //
+    // std::cout << "\nBubble Sort completed in: " << elapsed_time.count() << " milliseconds." << std::endl;
+    HeapSort(heap);
+    printVector(heap);
+
+
+
+
+    return 0;
+}
