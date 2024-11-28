@@ -1,0 +1,151 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <limits>
+#include <chrono>
+
+double min_metric; // Начальная метрика, будет задаваться в тестах
+std::vector<std::vector<double>> best_partition; // Лучшее разбиение
+int k; // Желаемое количество кластеров, будет задаваться в тестах
+
+// Функция для вычисления метрики в пределах одном кластере
+double cluster_diff(const std::vector<double>& cluster) { //O(Q), где Q - кол-во элементов в кластере
+    if (cluster.empty()) {
+        return 0;
+    }
+    double avg = 0;
+    for (double val : cluster) {
+        avg += val;
+    }
+    avg /= cluster.size();
+    double diff = 0;
+    for (double val : cluster) {
+        diff += std::abs(val - avg);
+    }
+    return diff;
+}
+
+// Рекурсивная функция для поиска оптимального разбиения O(2^N)
+void optimal_partition(const std::vector<double>& arr, int in_el, std::vector<std::vector<double>>& cluster_mas, double metric) {
+    if (in_el == arr.size() && cluster_mas.size() == k) {
+        if (metric < min_metric) {
+            min_metric = metric;
+            best_partition = cluster_mas;
+        }
+        return;
+    }
+
+    if (cluster_mas.size() > k || in_el >= arr.size()) {
+        return;
+    }
+
+    double best_add_metric = std::numeric_limits<double>::infinity(); // Начальная метрика для лучшего изменения
+    size_t best_cluster_idx = -1; // Индекс кластера, который дает наименьшую метрику
+
+    // Проходим по всем кластерам и находим тот, который дает наименьшее изменение метрики
+    for (size_t i = 0; i < cluster_mas.size(); ++i) {
+        cluster_mas[i].push_back(arr[in_el]);
+        double add_metric = cluster_diff(cluster_mas[i]);
+
+        // Если нашли лучший вариант, запоминаем метрику и индекс кластера
+        if (add_metric < best_add_metric) {
+            best_add_metric = add_metric;
+            best_cluster_idx = i;
+        }
+
+        cluster_mas[i].pop_back(); // Откатываем изменения
+    }
+
+    // Теперь добавляем элемент только в лучший кластер, который дал наименьшую метрику
+    if (best_cluster_idx != static_cast<size_t>(-1)) {
+        cluster_mas[best_cluster_idx].push_back(arr[in_el]);
+        optimal_partition(arr, in_el + 1, cluster_mas, metric + best_add_metric);
+        cluster_mas[best_cluster_idx].pop_back(); // Откатываем изменения
+    }
+
+    // В случае если кластеры еще не заполнены до k, добавляем новый кластер
+    if (cluster_mas.size() < k) {
+        cluster_mas.push_back({arr[in_el]});
+        optimal_partition(arr, in_el + 1, cluster_mas, metric);
+        cluster_mas.pop_back();
+    }
+}
+
+
+// Глобальные переменные для подсчета пройденных и не пройденных тестов
+int test_passed = 0;
+int test_failed = 0;
+
+// Функция для сравнения двух вложенных векторов (кластеры внутри векторов)
+void assertEqual(const std::vector<std::vector<double>>& result,
+                 const std::vector<std::vector<double>>& expected,
+                 const std::string& testName) {
+    bool condition = (result.size() == expected.size());  // Сначала сравниваем количество кластеров (векторов)
+
+    // Если количество кластеров совпадает, сравниваем каждый вложенный вектор
+    if (condition) {
+        for (size_t i = 0; i < result.size(); ++i) {
+            if (result[i] != expected[i]) {
+                condition = false;
+                break;  // Если хотя бы один вложенный вектор не совпадает, тест не прошел
+            }
+        }
+    }
+
+    // Увеличиваем счетчики в зависимости от результата
+    if (condition) {
+        test_passed++;
+        std::cout << testName << " - Passed\n";
+    } else {
+        test_failed++;
+        std::cout << testName << " - Failed\n";
+    }
+}
+
+// Отчёт о прохождении тестов
+void report() {
+    std::cout << "\nTotal of tests passed: " << test_passed << "\n";
+    std::cout << "Total of tests failed: " << test_failed << "\n";
+}
+
+void runTest(const std::vector<double>& arr, int clusterCount, const std::vector<std::vector<double>>& expected, const std::string& testName) {
+    k = clusterCount;  // Задаем желаемое количество кластеров
+    min_metric = std::numeric_limits<double>::infinity();  // Начальная метрика
+    std::vector<std::vector<double>> cluster_mas;
+
+    // Измеряем время выполнения теста
+    auto start = std::chrono::high_resolution_clock::now();
+
+    optimal_partition(arr, 0, cluster_mas, 0);
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+
+    // Печатаем время выполнения теста
+    std::cout << testName << " - Execution time: " << duration.count() << " seconds\n";
+
+    assertEqual(best_partition, expected, testName);
+}
+
+int main() {
+    // Тест 1: Массив из 10 элементов, каждый элемент в своем кластере
+    std::vector<double> arr1 = {1.5, 3, -2.4, 7, -5.8, 6, -3, 8, 0.9, -1};
+    std::vector<std::vector<double>> expected1 = {{1.5}, {3}, {-2.4}, {7}, {-5.8}, {6}, {-3}, {8}, {0.9}, {-1}};
+    runTest(arr1, 10, expected1, "Test 1: One element per cluster");
+
+    // Тест 2: Массив из 20 одинаковых элементов
+    std::vector<double> arr2 =  {-3, -3, -3, -3, -3, -3, -3, -3, -3, -3,
+                            -3, -3, -3, -3, -3, -3, -3, -3, -3, -3};
+    std::vector<std::vector<double>> expected2 = {{-3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3}, {-3}, {-3}, {-3}, {-3}, {-3}, {-3}, {-3}, {-3}, {-3}};
+    runTest(arr2, 10, expected2, "Test 2: An array of 20 identical elements");
+
+    // Тест 3: Массив из 25 элементов, распределенных по 10 кластерам
+    std::vector<double> arr3 = {-1.2, 2, -3.1, 4, -5.3, 6, -7.8, 8, -9.6, 10,
+                            -11.5, 12, -13.7, 14, -15.2, 16, -17.4, 18, -19.1, 20,
+                            -21.3, 22, -23.8, 24, -25.9};
+    std::vector<std::vector<double>> expected3 = {{-1.2, -3.1, -5.3}, {2, 4, 6}, {-7.8, -9.6, -11.5}, {8, 10, 12}, {-13.7, -15.2}, {14, 16}, {-17.4, -19.1, -21.3}, {18, 20}, {22, 24}, {-23.8, -25.9}};
+    runTest(arr3, 10, expected3, "Test 3: An array of 25 elements distributed across 10 clusters");
+
+    report();
+    return 0;
+}
