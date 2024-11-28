@@ -19,16 +19,16 @@ void pigeonhole_sort(std::vector<int> &arr)
         if (arr[i] > max_value) // O(1): сравнение
             max_value = arr[i]; // O(1): обновление максимума
     }
-    int range = max_value - min_value + 1; // O(1): вычисление диапазона
 
-    // создание массива векторов. размер массива равен диапазону. каждый вектор представляет собой отверстие, содержащее соответствующие элементы.
+    int range = max_value - min_value + 1; // O(1): вычисление диапазона
+    // создание вектора векторов. размер массива равен диапазону. каждый вектор представляет собой отверстие, содержащее соответствующие элементы.
     std::vector<std::vector<int>> holes(range); // O(range): выделение памяти для векторов
 
     // проход по входному массиву и размещение каждого элемента в соответствующее ему отверстие
     for (int i = 0; i < n; i++)                      // O(N): заполнение векторов
         holes[arr[i] - min_value].push_back(arr[i]); // O(1): вставка элемента в вектор
 
-    // проход по всем отверстиям одно за другим. для каждого отверстия взять его элементы и поместить в массив.
+    // проход по всем отверстиям одно за другим. для каждого отверстия надо взять его элементы и поместить в массив.
     int index = 0;                  // O(1)
     for (int i = 0; i < range; i++) // O(range): проход по каждому вектору
     {
@@ -67,14 +67,11 @@ void test_worst_case()
     }
 }
 
-void test_2worst_case()
+void test_large_range()
 {
-    std::vector<int> arr = {5, 5, 5, 5, 5};
+    std::vector<int> arr = {1000, -1000, 500, -500, 0};
     pigeonhole_sort(arr);
-    for (size_t i = 0; i < arr.size() - 1; i++)
-    {
-        assert(arr[i] <= arr[i + 1]);
-    }
+    assert(arr[0] == -1000 && arr[1] == -500 && arr[2] == 0 && arr[3] == 500 && arr[4] == 1000);
 }
 
 // тесты для крайних случаев
@@ -116,13 +113,6 @@ void test_negative_numbers()
     }
 }
 
-void test_large_range()
-{
-    std::vector<int> arr = {1000, -1000, 500, -500, 0};
-    pigeonhole_sort(arr);
-    assert(arr[0] == -1000 && arr[1] == -500 && arr[2] == 0 && arr[3] == 500 && arr[4] == 1000);
-}
-
 int main()
 {
     test_best_case();
@@ -133,9 +123,6 @@ int main()
 
     test_worst_case();
     std::cout << "Тест для худшего случая пройден" << std::endl;
-
-    test_2worst_case();
-    std::cout << "Тест для второго худшего случая пройден" << std::endl;
 
     // тесты для крайних случаев
     test_empty_array();

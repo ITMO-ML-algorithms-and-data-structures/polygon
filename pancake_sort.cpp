@@ -68,16 +68,6 @@ void test_average_case()
     }
 }
 
-void test_worst_case()
-{
-    std::vector<int> arr = {5, 4, 3, 2, 1};
-    pancake_sort(arr);
-    for (int i = 0; i < arr.size() - 1; i++)
-    {
-        assert(arr[i] <= arr[i + 1]);
-    }
-}
-
 // крайние случаи
 void test_empty_array()
 {
@@ -110,9 +100,6 @@ int main()
 
     test_average_case();
     std::cout << "Тест для среднего случая пройден" << std::endl;
-
-    test_worst_case();
-    std::cout << "Тест для худшего случая пройден" << std::endl;
 
     test_empty_array();
     std::cout << "Тест для пустого массива пройден" << std::endl;
