@@ -5,7 +5,7 @@
 #include <sstream>
 #include <chrono>
 
-std::vector<std::vector<char>> readMatrixFromCSV(const std::string& fileName) {
+std::vector<std::vector<char>> readMatrixFromCSV(const std::string& fileName) { // Чтение матрицы из csv
     std::vector<std::vector<char>> matrix;
     std::ifstream file(fileName);
     std::string line;
@@ -38,42 +38,47 @@ int maximalRectangle(std::vector<std::vector<char>>& matrix) {
     int cols = matrix[0].size();
     int max_area = 0;
 
+    // Перебираем все ячейки по очереди
     for (int y = 0; y < rows; y ++) {       // O(N) итераций
         for (int x = 0; x < cols; x ++) {   // O(N) итераций
-            if (matrix[y][x] == '1') {
+            if (matrix[y][x] == '1') { // Если в клетке 1 - начинаем строить прямоугольник от этой вершины
                 int tmp_max_add_y = 1;
 
                 while ((y + tmp_max_add_y) < rows && matrix[y + tmp_max_add_y][x] == '1') { // в среднем О(N / 2) итераций
-                    tmp_max_add_y ++;
+                    tmp_max_add_y ++; // Ищем максимальную "добавку" к глубине
                 }
 
+                // Перебираем все возможные значения глубины
                 for (int tmp_add_y = 1; tmp_add_y <= tmp_max_add_y; tmp_add_y ++) { // в среднем О(N / 2) итераций
                     bool flag = true;
                     int tmp_area = tmp_add_y;
 
+                    // Строим максимально "длинный" прямоугольник при текущей глубине
+                    // Перебор столбцов правее текущего
                     for (int j = 1; j < cols - x; j ++) { // в среднем О(N / 2) итераций
+                        // Проверяем, состоит ли каждый столбец только из 1
                         for (int i = 0; i < tmp_add_y; i ++) { // в среднем О(N / 2) итераций
                             if (matrix[y + i][x + j] == '1') { // взятие по индексу - О(1)
                                 continue;
                             }
                             else {
-                                flag = false;
+                                flag = false; // Если в столбце есть 0 - завершаем текущую итерацию
                                 break;
                             }
 
                         }
 
                         if (flag) {
-                            tmp_area += tmp_add_y;
+                            tmp_area += tmp_add_y; // Если столбец из 1 - "приклеиваем" этот столбец справа к текущему прямоугольнику
                         }
                         else {
                             break;
                         }
                     }
 
-                    max_area = std::max(max_area, tmp_area);
+                    max_area = std::max(max_area, tmp_area); // Обновляем максимальную площадь
 
-                    if (max_area == rows * cols)
+                    if (max_area == rows * cols) // Предельный случай - если с первого раза построили прямоугольник максимально возможного размера
                         return max_area;
                 } 
             }
