@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include <vector>
 
 // функция для вычисления следующего шага
 int get_next_gap(int gap)
@@ -13,11 +14,15 @@ int get_next_gap(int gap)
     return gap; // O(1)
 }
 
-// функция для сортировки массива методом comb sort
-void comb_sort(int arr[], const int n)
+// функция для сортировки вектора методом comb sort
+void comb_sort(std::vector<int> &arr)
 {
-    int gap = n;         // O(1)
-    bool swapped = true; // O(1): устанавливаем флаг swapped как true, чтобы цикл гарантированно запустился хотя бы один раз
+    if (arr.empty())
+    {
+        return;
+    }
+    int gap = arr.size(); // O(1)
+    bool swapped = true;  // O(1): устанавливаем флаг swapped как true, чтобы цикл гарантированно запустился хотя бы один раз
 
     // продолжаем выполнение цикла до тех пор, пока шаг не станет равным 1 или произошла хотя бы одна перестановка
     while (gap != 1 || swapped == true) // O(N^2)
@@ -25,7 +30,7 @@ void comb_sort(int arr[], const int n)
         gap = get_next_gap(gap); // O(1): вычисляем следующий шаг
         swapped = false;         // O(1): сбрасываем флаг swapped, чтобы проверить, произошли ли перестановки в этом проходе
 
-        for (int i = 0; i < n - gap; i++) // O(N): сравниваем все элементы с текущим шагом
+        for (int i = 0; i < arr.size() - gap; i++) // O(N): сравниваем все элементы с текущим шагом
         {
             if (arr[i] > arr[i + gap]) // O(1)
             {
@@ -40,10 +45,9 @@ void comb_sort(int arr[], const int n)
 
 void test_best_case()
 {
-    int arr[] = {1, 2, 3, 4, 5};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    comb_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {1, 2, 3, 4, 5};
+    comb_sort(arr);
+    for (int i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
@@ -51,10 +55,9 @@ void test_best_case()
 
 void test_average_case()
 {
-    int arr[] = {3, 1, 4, 2, 5};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    comb_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {3, 1, 4, 2, 5};
+    comb_sort(arr);
+    for (int i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
@@ -62,37 +65,33 @@ void test_average_case()
 
 void test_worst_case()
 {
-    int arr[] = {5, 4, 3, 2, 1};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    comb_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {5, 4, 3, 2, 1};
+    comb_sort(arr);
+    for (int i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
 }
 
-void test_empty_array()
+void test_empty_vector()
 {
-    int arr[] = {};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    comb_sort(arr, n);
-    assert(n == 0);
+    std::vector<int> arr;
+    comb_sort(arr);
+    assert(arr.empty());
 }
 
 void test_single_element()
 {
-    int arr[] = {97};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    comb_sort(arr, n);
+    std::vector<int> arr = {97};
+    comb_sort(arr);
     assert(arr[0] == 97);
 }
 
 void test_with_duplicates()
 {
-    int arr[] = {4, 5, 4, 3, 2, 2};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    comb_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {4, 5, 4, 3, 2, 2};
+    comb_sort(arr);
+    for (int i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
@@ -109,14 +108,14 @@ int main()
     test_worst_case();
     std::cout << "Тест для худшего случая пройден" << std::endl;
 
-    test_empty_array();
-    std::cout << "Тест для пустого массива пройден" << std::endl;
+    test_empty_vector();
+    std::cout << "Тест для пустого вектора пройден" << std::endl;
 
     test_single_element();
-    std::cout << "Тест для массива с одним элементом пройден" << std::endl;
+    std::cout << "Тест для вектора с одним элементом пройден" << std::endl;
 
     test_with_duplicates();
-    std::cout << "Тест для массива с дубликатами пройден" << std::endl;
+    std::cout << "Тест для вектора с дубликатами пройден" << std::endl;
 
     return 0;
 }

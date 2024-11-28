@@ -3,8 +3,13 @@
 #include <cassert>
 
 // сортирует массив с использованием алгоритма сортировки голубиных отверстий
-void pigeonhole_sort(int arr[], int n)
+void pigeonhole_sort(std::vector<int> &arr)
 {
+    if (arr.empty())
+    {
+        return;
+    }
+    int n = arr.size(); // О(1): определение размера вектора
     // нахождение минимального и максимального значений в массиве
     int min_value = arr[0], max_value = arr[0]; // O(1): инициализация переменных
     for (int i = 1; i < n; i++)                 // O(N): поиск минимума и максимума
@@ -17,7 +22,7 @@ void pigeonhole_sort(int arr[], int n)
     int range = max_value - min_value + 1; // O(1): вычисление диапазона
 
     // создание массива векторов. размер массива равен диапазону. каждый вектор представляет собой отверстие, содержащее соответствующие элементы.
-    std::vector<int> holes[range]; // O(range): выделение памяти для векторов
+    std::vector<std::vector<int>> holes(range); // O(range): выделение памяти для векторов
 
     // проход по входному массиву и размещение каждого элемента в соответствующее ему отверстие
     for (int i = 0; i < n; i++)                      // O(N): заполнение векторов
@@ -34,10 +39,9 @@ void pigeonhole_sort(int arr[], int n)
 
 void test_best_case()
 {
-    int arr[] = {1, 2, 3, 4, 5};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {1, 2, 3, 4, 5};
+    pigeonhole_sort(arr);
+    for (size_t i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
@@ -45,10 +49,9 @@ void test_best_case()
 
 void test_average_case()
 {
-    int arr[] = {3, 1, 4, 2, 5};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {3, 1, 4, 2, 5};
+    pigeonhole_sort(arr);
+    for (size_t i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
@@ -56,10 +59,9 @@ void test_average_case()
 
 void test_worst_case()
 {
-    int arr[] = {5, 4, 3, 2, 1};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {5, 4, 3, 2, 1};
+    pigeonhole_sort(arr);
+    for (size_t i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
@@ -67,10 +69,9 @@ void test_worst_case()
 
 void test_2worst_case()
 {
-    int arr[] = {5, 5, 5, 5, 5};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {5, 5, 5, 5, 5};
+    pigeonhole_sort(arr);
+    for (size_t i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
@@ -79,51 +80,46 @@ void test_2worst_case()
 // тесты для крайних случаев
 void test_empty_array()
 {
-    int arr[] = {};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
-    assert(n == 0);
+    std::vector<int> arr; // Пустой вектор
+    pigeonhole_sort(arr);
+    assert(arr.empty()); // Проверка, что вектор пустой
 }
 
 void test_single_element()
 {
-    int arr[] = {42};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
+    std::vector<int> arr = {42};
+    pigeonhole_sort(arr);
     assert(arr[0] == 42);
 }
 
 void test_two_elements_sorted()
 {
-    int arr[] = {1, 2};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
+    std::vector<int> arr = {1, 2};
+    pigeonhole_sort(arr);
     assert(arr[0] == 1 && arr[1] == 2);
 }
 
 void test_two_elements_unsorted()
 {
-    int arr[] = {2, 1};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
+    std::vector<int> arr = {2, 1};
+    pigeonhole_sort(arr);
     assert(arr[0] == 1 && arr[1] == 2);
 }
 
 void test_negative_numbers()
 {
-    int arr[] = {-3, -1, -4, -2, -5};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
-    for (int i = 0; i < n - 1; i++)
+    std::vector<int> arr = {-3, -1, -4, -2, -5};
+    pigeonhole_sort(arr);
+    for (size_t i = 0; i < arr.size() - 1; i++)
     {
         assert(arr[i] <= arr[i + 1]);
     }
 }
+
 void test_large_range()
 {
-    int arr[] = {1000, -1000, 500, -500, 0};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    pigeonhole_sort(arr, n);
+    std::vector<int> arr = {1000, -1000, 500, -500, 0};
+    pigeonhole_sort(arr);
     assert(arr[0] == -1000 && arr[1] == -500 && arr[2] == 0 && arr[3] == 500 && arr[4] == 1000);
 }
 
