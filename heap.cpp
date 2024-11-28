@@ -4,6 +4,7 @@
 #include <ctime>
 
 using namespace std;
+
 void heapify(int *arr, int size, int i){
     int l = 2*i+1;
     int r = 2*i+2;
@@ -20,8 +21,8 @@ void heapify(int *arr, int size, int i){
     }
 }
 
-int main(){
-    ifstream inputFile("/Users/user/CLionProjects/polygon-1/numbers1e4.tsv");
+int main(int argc, char* argv[]){
+    ifstream inputFile(argv[1]);
     if (!inputFile) {
         cerr << "Не удалось открыть файл!" << endl;
         return 1;
@@ -53,7 +54,7 @@ int main(){
         }
         clock_t end = clock();
         double elapsed = (double) (end - begin) / CLOCKS_PER_SEC;
-        cout << elapsed << endl;
+        //cout << elapsed << endl;
 		for (int i = 0; i < size; i++){
       		cout << arr[i] << " ";
     		}
