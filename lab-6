@@ -1,0 +1,45 @@
+class Solution {
+public:
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> graph(n);
+        for (const auto& edge : edges) {
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
+        }
+
+        vector<int> count(n, 1); // количество узлов в поддереве
+        vector<int> answer(n, 0); // итоговые расстояния
+        vector<int> dist(n, 0); // расстояние от корня
+
+        // DFS для подсчета расстояний и количества узлов
+        function<void(int, int)> dfs = [&](int node, int parent) {
+            for (int neighbor : graph[node]) {
+                if (neighbor != parent) {
+                    dfs(neighbor, node);
+                    count[node] += count[neighbor];
+                    dist[node] += dist[neighbor] + count[neighbor];
+                }
+            }
+        };
+
+        // Второй DFS для расчета ответов для всех узлов
+        function<void(int, int)> dfs2 = [&](int node, int parent) {
+            for (int neighbor : graph[node]) {
+                if (neighbor != parent) {
+                    answer[neighbor] = answer[node] + 
+                    (n - count[neighbor]) - count[neighbor];
+                    dfs2(neighbor, node);
+                }
+            }
+        };
+
+        // Первый DFS с корнем 0
+        dfs(0, -1);
+        answer[0] = dist[0];
+
+        // Второй DFS для распространения ответов
+        dfs2(0, -1);
+
+        return answer;
+    }
+};
