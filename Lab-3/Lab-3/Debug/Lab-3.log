@@ -1,0 +1,3 @@
+﻿  lab-3.cpp
+c:\users\admin\documents\proga\c++\lab-3\lab-3\lab-3.cpp(6): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  Lab-3.vcxproj -> C:\Users\ADMIN\Documents\proga\C++\Lab-3\Debug\Lab-3.exe
