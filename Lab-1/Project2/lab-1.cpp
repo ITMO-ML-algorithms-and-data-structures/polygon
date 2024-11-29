@@ -1,27 +1,56 @@
 #include <iostream>
 #include <cstdlib> // для system
+#include <set> // уникальные значения
 using namespace std;
 
-// Найти количество чисел в массиве, которые делятся на 3
-int main()
-{
-	int n = 10;
-	int A[10];
+//Удалить дублирующиеся значения из входного массива
 
-	// std::cout << sizeof(A) << "\n";
-
+int function(int mas[], int n) {         // Создание функциии, которая принимает входной массив и его размер
+	int sumn = 0;                            // Создание множества, откуда будут выходить значения, занимаемая память - 12 байтов 
 	for (int i = 0; i < n; i++) {
-		std::cin >> A[i];
-	}
-
-	int sum = 0;
-
-	for (int i = 0; i < n; i++) {
-		if (A[i] % 3 == 0) {
-			sum++;
+		if (mas[i] % 3 == 0) {
+			sumn++;
 		}
 	}
+	return sumn;
+}
 
-	std::cout << "Sum number of massiv, which del 3: " << sum;
+void test1() {
+	int n = 4;
+	int mas[] = { 1, 2, 3, 1 };               // Занимаемая память 12 байт (нашли через sizeof)
+	int sumn = function(mas, n);
+
+	if (sumn == 1)
+	{
+		cout << "Test1 passed" << " ";
+	}
+	else {
+		cout << "Test1 failed" << " ";
+		cout << sumn << " ";
+	}
+}
+
+void test2() {
+	int n = 10;
+	int mas[] = { 1, 2, 3, 3, 5, 6, 4, 6, 4, 2 };               // Занимаемая память 12 байт (нашли через sizeof)
+	int sumn = function(mas, n);
+
+	if (sumn == 4)
+	{
+		cout << "Test2 passed" << " ";
+	}
+	else {
+		cout << "Test2 failed" << " ";
+		cout << sumn << " ";
+	}
+}
+
+int main()
+{
+	test1();
+	//set<int>soul = set<int>{ 1, 2, 3, 1 };
+	//std::cout << sizeof(soul) << "\n";
+	std::cout << "\n";
+	test2();
 	return 0;
 }
