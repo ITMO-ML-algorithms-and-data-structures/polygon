@@ -8,6 +8,7 @@
 /.vscode
 *.dSYM
 .pytest_cache
+lab5/build
 # Файл сборки по умолчанию на mac (когда output не указан)
 /a.out 
 
