@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-
+//
 TEST(CPPLibTest, classificate_smth) {
   CPPLib cpplib;
   std::vector<double> input_array = {1.0, 2.0, 10.0, 11.0, 20.0, 22.0, 45.0, 46.0, 15.5, 100.0, 101.0, 2000.0, 5000.0, 2.5};
