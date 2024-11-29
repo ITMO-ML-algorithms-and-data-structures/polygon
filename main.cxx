@@ -26,6 +26,7 @@ vector<char> read_file(string name){ // O(1)
 
 vector<int> cocsort(vector<int> arr){
     int last = arr.size();
+    int start = 0;
     bool flag = true;
     
     while(flag){
@@ -37,6 +38,15 @@ vector<int> cocsort(vector<int> arr){
             }
         }
         --last;
+
+        flag = false;
+        for(int i = last-1;i>=start;i--){
+            if(arr[i]>arr[i+1]){
+                swap(arr[i],arr[i+1]);
+                flag = true;
+            }
+        }
+        ++start;
     }
     return arr;
 }
@@ -140,4 +150,59 @@ int main(int argc, char *argv[])
 	}
 	cout<<endl;
 	cout<<"подсчëт не работает с отрицательными, но можно поставить начало не с 0, а с минимального элемента и тогда всë будет работать.";
+	
+	cout<<endl<<endl;
+	
+	cout<<"Неотсортированный 3 (лучший): ";
+	arr = {1,2,3,6,8,9,17,19};
+	for(int i= 0;i<arr.size();i++){
+	    cout<<arr[i]<<" ";
+	}
+	cout<<endl;
+	cout<<"Коктель: ";
+	cocarr = cocsort(arr);
+	for(int i= 0;i<cocarr.size();i++){
+	    cout<<cocarr[i]<<" ";
+	}
+	cout<<endl;
+	cout<<"Кучей: (всегда O(n log n)) в любом случае";
+	heaparr = heapsort(arr);
+	for(int i= 0;i<heaparr.size();i++){
+	    cout<<heaparr[i]<<" ";
+	}
+	cout<<endl;
+	cout<<"Подсчëт (+ средний): ";
+	countarr = countsort(arr);
+	for(int i= 0;i<countarr.size();i++){
+	    cout<<countarr[i]<<" ";
+	}
+	cout<<endl;
+	
+	cout<<endl<<endl;
+	
+	cout<<"Худший коктель: ";
+	arr = {9,8,7,5,3,2,1,0};
+	for(int i= 0;i<arr.size();i++){
+	    cout<<arr[i]<<" ";
+	}
+	cout<<endl;
+	cout<<"Коктель: ";
+	cocarr = cocsort(arr);
+	for(int i= 0;i<cocarr.size();i++){
+	    cout<<cocarr[i]<<" ";
+	}
+	cout<<endl;
+	
+	cout<<"Худший подсчëт: ";
+	arr = {10000000, 1, 6};
+	for(int i= 0;i<arr.size();i++){
+	    cout<<arr[i]<<" ";
+	}
+	cout<<endl;
+	cout<<"Подсчëт (зависит от размера макс. элемента): ";
+	countarr = countsort(arr);
+	for(int i= 0;i<countarr.size();i++){
+	    cout<<countarr[i]<<" ";
+	}
+	cout<<endl;
 }
