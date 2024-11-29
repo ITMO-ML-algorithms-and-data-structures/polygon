@@ -1,0 +1,5 @@
+﻿  lab_01.cpp
+Source.obj : error LNK2005: "void __cdecl test1(void)" (?test1@@YAXXZ) уже определен в lab_01.obj
+Source.obj : error LNK2005: "class std::vector<int,class std::allocator<int> > __cdecl values(class std::vector<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::allocator<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > > >,int)" (?values@@YA?AV?$vector@HV?$allocator@H@std@@@std@@V?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@2@H@Z) уже определен в lab_01.obj
+Source.obj : error LNK2005: main уже определен в lab_01.obj
+D:\C++ VS\lab_01\x64\Debug\lab_01.exe : fatal error LNK1169: обнаружен многократно определенный символ - один или более
