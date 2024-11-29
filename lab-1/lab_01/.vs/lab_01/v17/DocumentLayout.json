@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\C\u002B\u002B VS\\lab_01\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3BAB5F7B-B17A-4B79-9A33-CCEB1D5C1F44}|lab_01.vcxproj|D:\\C\u002B\u002B VS\\lab_01\\lab_01.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3BAB5F7B-B17A-4B79-9A33-CCEB1D5C1F44}|lab_01.vcxproj|solutionrelative:lab_01.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3BAB5F7B-B17A-4B79-9A33-CCEB1D5C1F44}|lab_01.vcxproj|D:\\C\u002B\u002B VS\\lab_01\\Source.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3BAB5F7B-B17A-4B79-9A33-CCEB1D5C1F44}|lab_01.vcxproj|solutionrelative:Source.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "lab_01.cpp",
+              "DocumentMoniker": "D:\\C\u002B\u002B VS\\lab_01\\lab_01.cpp",
+              "RelativeDocumentMoniker": "lab_01.cpp",
+              "ToolTip": "D:\\C\u002B\u002B VS\\lab_01\\lab_01.cpp",
+              "RelativeToolTip": "lab_01.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC4AAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-17T20:19:38.895Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Source.cpp",
+              "DocumentMoniker": "D:\\C\u002B\u002B VS\\lab_01\\Source.cpp",
+              "RelativeDocumentMoniker": "Source.cpp",
+              "ToolTip": "D:\\C\u002B\u002B VS\\lab_01\\Source.cpp",
+              "RelativeToolTip": "Source.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-03T16:51:30.499Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
