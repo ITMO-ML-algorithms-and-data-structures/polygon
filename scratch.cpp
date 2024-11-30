@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <complex>
-std::vector<std::vector<char>> generate_all_masks(const int arr1[], const char k = 2) {
+std::vector<std::vector<char>> generate_all_masks(const float arr1[], const char k = 2) {
     const int size = sizeof(arr1) / sizeof(arr1[0]);
     std::vector<std::vector<char>> all_masks(std::pow(k, size));
     std::vector<char> mask(size, 0);
@@ -22,16 +22,36 @@ std::vector<std::vector<char>> generate_all_masks(const int arr1[], const char k
     }
     return all_masks;
 }
-float calculate_metric(cluster)
+float calculate_cluster_metric(std::vector<float> cluster) {
+    float summa = 0;
+    float mean = 0;
+    float rate = 0;
+    for(int i = 0; i < cluster.size(); i++) {
+        summa += cluster[i];
+    }
+    mean = summa / (sizeof(cluster) / sizeof(cluster[0]));
+    for(int i = 0; i < cluster.size(); i++) {
+            rate += std::abs(cluster[i] - mean);
+    }
+    return rate;
+}
+float calculate_metric(std::vector<float> cluster1, std::vector<float> cluster2) {
+    float metric1 = calculate_cluster_metric(cluster1);
+    float metric2 = calculate_cluster_metric(cluster2);
+    float rate = 0;
+    rate = std::abs(metric1 - metric2);
+    return rate;
+}
 int main(){
-    int arr1[] = {1, 2, 3, 4, 5, 6};
-    int arr2[] = {1, 2, 3,10, 9, 8};
-    double arr3[] = {99.5, 101, -1.1};
+    float arr1[] = {1, 2, 3, 4, 5, 6};
+    float arr2[] = {1, 2, 3,10, 9, 8};
+    float arr3[] = {99.5, 101, -1.1};
     std::vector<std::vector<char>> masks = generate_all_masks(arr1);
+    float min_rate = 0;
     for (int i = 0; i < masks.size(); i++){
         std::vector<char> mask = masks[i];
-        std::vector<int> cluster1;
-        std::vector<int> cluster2;
+        std::vector<float> cluster1 = {};
+        std::vector<float> cluster2 = {};
         for (int j = 0; j < mask.size(); j++){
             if (mask[j] == 0) {
                 cluster1.push_back(arr1[j]);
@@ -39,6 +59,10 @@ int main(){
                 cluster2.push_back(arr1[j]);
             }
         }
+        if(min_rate > calculate_metric(cluster1, cluster2)) {
+            min_rate = calculate_metric(cluster1, cluster2);
+        }
     }
+    std::cout << min_rate;
     return 0;
 }
