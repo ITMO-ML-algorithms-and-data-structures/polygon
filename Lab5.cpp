@@ -68,6 +68,34 @@ void heapSort(vector<int>& arr) {
 	}
 }
 
+vector<int> countingSort(const vector<int>& arr) {
+
+	int minVal = *min_element(arr.begin(), arr.end());
+	int maxVal = *max_element(arr.begin(), arr.end());
+
+	int range = maxVal - minVal + 1;
+
+	vector<int> count(range, 0);
+
+	for (int num : arr) {
+		count[num - minVal]++;
+	}
+
+	for (int i = 1; i < count.size(); i++) {
+		count[i] += count[i - 1];
+	}
+
+	vector<int> output(arr.size());
+
+	for (int i = arr.size() - 1; i >= 0; i--) {
+		int num = arr[i];
+		output[count[num - minVal] - 1] = num;
+		count[num - minVal]--;
+	}
+
+	return output;
+}
+
 int main()
 {
 	ifstream input_file("test5.1.txt");
@@ -80,7 +108,8 @@ int main()
 	}
 	input_file.close();
 
-	comb_sort(arr);
+	vector<int> arr = countingSort(arr);
+
 	for (int num : arr) cout << num << " ";
 	cout << endl;
 }
