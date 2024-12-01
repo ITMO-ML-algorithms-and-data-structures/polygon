@@ -1,0 +1,36 @@
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int numberOfDay = prices.size(); // 4 байта.
+        vector<int> firstProfit(numberOfDay); // O(n), 32 + 4n, где n - кол-во элементов в массиве.
+        vector<int> secondProfit(numberOfDay); // O(n), 32 + 4n.
+
+        // Счет максимальной прибыли от покупки.
+        int minimumPrice = prices[0]; // Минимальная цена для покупки; 4 байта.
+        for (int i = 1; i < numberOfDay; ++i) { // O(n).
+            minimumPrice = min(minimumPrice, prices[i]);
+            firstProfit[i] = max(firstProfit[i - 1], prices[i] - minimumPrice);
+        }
+
+        // Счет максимальной прибыли от продажи.
+        int maximumPrice = prices[numberOfDay - 1]; // Максимальная цена для продажи; 4 байта.
+        for (int i = numberOfDay - 2; i >= 0; --i) { // O(n).
+            maximumPrice = max(maximumPrice, prices[i]);
+            secondProfit[i] = max(secondProfit[i + 1], maximumPrice - prices[i]);
+        }
+
+        // Счет максимальной общей прибыли.
+        int maxTotalProfit = 0; // 4 байта.
+        for (int i = 0; i < numberOfDay; ++i) { // O(n).
+            maxTotalProfit = max(maxTotalProfit, firstProfit[i] + secondProfit[i]);
+        }
+        return maxTotalProfit;
+    }
+
+    // Итого по памяти примерно 4 + 32 + 4n + 32 + 4n + 4 + 4 + 4 = 80 + 8n байт, где n - кол-во элементов в массиве.
+    // Общая временная сложность - O(n) + O(n) + O(n) = O(n).
+};
