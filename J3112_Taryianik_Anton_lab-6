@@ -1,0 +1,140 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#define int long long
+using namespace std;
+struct Element {
+    // значение в массиве
+    int value;
+    // позиция по вертикали
+    int col; 
+    // позиция по горизонтали
+    int row; 
+    // лучший путь, из условий по умолчанию равен единице (грубо говоря, пришли в себя же)
+    int best_way = 1; 
+    // 0 - не проверяли этот элемент, 1 - проверяем в данный момент, 2 - уже проверили его
+    int color = 0; 
+    Element() = default;
+    Element(int value)
+    {
+        this->value = value;
+    }
+};
+vector<vector<Element>> new_matrix; // наша матрица, которую мы заресайзим в main или solution
+int get_way(Element last, int col, int row)
+{   
+    // если вышли за границы матрицы
+    if (col < 0 || row < 0 || col >= new_matrix.size() || row >= new_matrix[col].size())
+    { 
+        return 0;
+    }
+    // для читаемости кода сделал отдельную переменную, чтобы не писать каждый раз к new_matrix[col][row].value
+    Element current = new_matrix[col][row]; 
+    // если последовательность пошла на убывание, то считаем, что путь равен нулю
+    if (current.value <= last.value)
+    { 
+        return 0;
+    }
+    // если уже посчитали лучший возрастающий путь для данного элемента матрицы, то возвращаем его же
+    if (current.color == 2)
+    {
+        return current.best_way;
+    }
+    // если мы пришли из этой вершины, то данное действие смысла не имеет, возвращаем 0
+    if (current.color == 1)
+    {
+
+        return 0;
+    }
+    // "Закрашиваем" элемент матрицы
+    new_matrix[col][row].color = 1;
+    // Считаем пути для всех соседних элементов матрицы
+    int top = get_way(new_matrix[col][row], col - 1, row);
+    int bottom = get_way(new_matrix[col][row], col + 1, row);
+    int left = get_way(new_matrix[col][row], col, row - 1);
+    int right = get_way(new_matrix[col][row], col, row + 1);
+    // т.к. max принимает только 2 аргумента, записал в ещё две переменные лучшие пути по вертикали и горизонтали
+    int best_vertical = max(top, bottom);
+    int best_horizontal = max(left, right);
+    // итоговый лучший путь
+    int best = max(best_vertical, best_horizontal);
+    // обновляем лучший путь для элемента матрицы и закрашиваем этот элемент
+    new_matrix[col][row].best_way += best;
+    new_matrix[col][row].color = 2;
+    return new_matrix[col][row].best_way;
+}
+// так решение выглядит на leetcode
+class Solution { 
+public:
+    int longestIncreasingPath(vector<vector<int>> matrix) {
+        int n, m;
+        n = matrix.size();
+        m = matrix[0].size();
+        new_matrix.resize(n, vector<Element>(m, Element(0)));
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                new_matrix[i][j].value = matrix[i][j];
+                new_matrix[i][j].col = i;
+                new_matrix[i][j].row = j;
+            }
+        }
+        int sum = 0;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                Element last = Element(new_matrix[i][j].value - 1);
+                sum = max(sum, get_way(last, i, j));
+            }
+        }
+        return sum;
+    }
+};
+// ! ВАЖНО !
+/*
+    На leetcode данный код почему-то выдаёт неправильные ответы на тестах
+    Но в других компиляторах всё работает нормально
+    Пример: leetcode: matrix = [[1, 2]]
+                      Output = 1
+                      Expected = 2
+    Пример: leetcode: matrix = [[1, 2], [2, 3]]
+                      Output = 2
+                      Expected = 3
+    В других компиляторах ответ выдаёт правильный: 2. С чем это связано, я не понял. Стандартные 3 теста проходят нормально.
+*/
+// на leetcode main-функции нет, есть только код выше
+int32_t main()
+{
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> matrix(n, vector<int>(m, 0));
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            cin >> matrix[i][j];
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    Solution sol;
+    int ans = sol.longestIncreasingPath(matrix);
+    cout << ans;
+
+
+}
+/*
+3 3
+9 9 4
+6 6 8
+2 1 1
+*/
+/*
+3 3
+3 4 5
+3 2 6
+2 2 1
+*/
