@@ -6,7 +6,6 @@
 #include <fstream>
 
 void selectionSort(std::vector<int>& array) {
-    // Use std::vector<int>::size_type for the size and indices
     std::vector<int>::size_type n = array.size();
 
     for (std::vector<int>::size_type i = 0; i < n - 1; i++) {
