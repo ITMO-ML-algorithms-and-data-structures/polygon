@@ -32,7 +32,7 @@ void readFromFile(std::vector<int>& array, const std::string& filename) {
 
 int main() {
     std::vector<int> array;
-    std::string filename = "numbers10e6.txt"; 
+    std::string filename = "numbers10e5.txt"; 
 
     readFromFile(array, filename);
 
