@@ -2,6 +2,8 @@
 #include <vector>
 
 using namespace std;
+class Solution {
+public:
     int n;
     int dp[301][301]; // матрица для хранения ранее подсчитанных значений (4 байта * 90601)
 
@@ -36,22 +38,27 @@ using namespace std;
             res = max(res, count); // обновляем итоговую сумму
         }
         // находим все возможные промежутки [i, j] - таких всего n^2 / 2 * 2.
-        // так мы заполним матрицу dp - повторные подсчеты производиться не будут. всего k - n штук.  
+        // так мы заполним матрицу dp - повторные подсчеты производиться не будут.      всего k - n штук.  
         // следовательно, итоговая сложность - O(n^2 * n) = O(n^3)
         // по памяти имеем 4 байта * 90604 = 362 416 байт
-        dp[i][j] = res;
+	    dp[i][j] = res;
         return res;
     }
 
-    int main() {
+    int maxCoins(vector<int>& arr) {
         for (int i = 0; i < 301; ++i) { // заполним матрицу -1, чтобы было ясно, что ячейка пуста (незначительные 90601 операция)
             for (int j = 0; j < 301; ++j) {
                 dp[i][j] = -1;
             }
         }
-        vector<int> narr = { 1, 3, 1, 5, 8, 1 };
+        vector<int> narr = { 1 };
+        for (int y : arr) {
+            narr.push_back(y);
+        }
+        narr.push_back(1);
         int i = 1;
         int j = narr.size() - 2;
         n = narr.size();
-        cout << rec_solve(narr, i, j);
+        return rec_solve(narr, i, j);
     }
+};
