@@ -5,6 +5,9 @@ const int MIN_MERGE = 32;
 
 using namespace std; 
 
+
+// Сортировка вставками. Так как на вход подаются очень маленькие подмассивы, при это частично отсортированные 
+// в среднем O(k^2) где k = MIN_MERGE
 void insertionSort(vector<long int>& arr, long int left, long int right) {
     for (long int i = left + 1; i <= right; i++) {
         long int temp = arr[i];
@@ -16,10 +19,11 @@ void insertionSort(vector<long int>& arr, long int left, long int right) {
         arr[j + 1] = temp;
     }
 }
-// Merge function used in TimSort
+// Функция соеденения подмассивов 
+// O(k)
 void merge(vector<long int>& arr, long int left, long int mid, long int right) {
     long int len1 = mid - left + 1, len2 = right - mid;
-    vector<int> leftArr(len1), rightArr(len2);
+    vector<int> leftArr(len1), rightArr(len2); // дополнительные O(n)
     for (long int i = 0; i < len1; i++)
 		leftArr[i] = arr[left + i];
     for (long int i = 0; i < len2; i++)
@@ -35,7 +39,7 @@ void merge(vector<long int>& arr, long int left, long int mid, long int right) {
 }
 
 
-// Calculate the minimum run size
+// Вычисление minrun ~O(1)
 long int calculateMinRun(long int n) {
     long int r = 0;
     while (n >= MIN_MERGE) {
@@ -44,15 +48,16 @@ long int calculateMinRun(long int n) {
     }
     return n + r;
 }
-// TimSort function
+// Реализация самого алгоритма сортировки
+// Финальная асимптотика O(n*log(n))
 void timSort(vector<long int>& arr) {
     long int n = arr.size();
     long int minRun = calculateMinRun(n);
-    // Sort individual subarrays of size minRun
+    // Cортировка подмассивов длинны minrun
     for (long int i = 0; i < n; i += minRun) {
         insertionSort(arr, i, min(i + minRun - 1, n - 1));
     }
-    // Merge runs
+    // Объединение runs
     for (long int size = minRun; size < n; size = 2 * size) {
         for (long int left = 0; left < n; left += 2 * size) {
             long int mid = left + size - 1;
