@@ -1,0 +1,222 @@
+#include <iostream>
+#include <vector>
+#include <chrono>  // Для работы с временем
+#include <random>
+#include <cassert> // Для юнит-тестов
+#include <algorithm> // Для std::reverse
+
+using namespace std;
+using namespace chrono;  // Для удобства использования chrono
+
+
+// Функция для генерации вектора случайных чисел
+std::vector<int> generateRandomVector(int size, int minValue, int maxValue) {
+    // Генератор случайных чисел
+    std::random_device rd;               // Получаем случайное число
+    std::mt19937 gen(rd());              // Инициализируем генератор случайных чисел
+    std::uniform_int_distribution<> dis(minValue, maxValue); // Распределение от minValue до maxValue
+
+    // Вектор для хранения случайных чисел
+    std::vector<int> randomNumbers;
+
+    // Генерируем случайные числа и добавляем их в вектор
+    for (int i = 0; i < size; ++i) {
+        randomNumbers.push_back(dis(gen)); // Генерируем и добавляем в вектор
+    }
+
+    return randomNumbers;
+}
+
+// Функция для создания массива с наилучшим случаем (массив уже отсортирован)
+vector<int> generate_sorted_vector(int size){
+    vector<int>arr = generateRandomVector(size, 1, 100);
+    sort(arr.begin(), arr.end());
+    return arr;
+}
+
+// Функция для создания массива с худшим случаем (массив отсортирован в обратном порядке)
+vector<int> generate_reverse_sorted_vector(int size){
+    vector<int>arr = generateRandomVector(size, 1, 100);
+    sort(arr.begin(), arr.end(), greater<int>());
+    return arr;
+}
+
+
+// Проверка, что массив отсортирован
+bool isSorted(const vector<int>& arr) {
+    for (size_t i = 1; i < arr.size(); ++i) {
+        if (arr[i - 1] > arr[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
+// Функция сортировки расческой
+void combSort(vector<int> &mas) {
+    int n = mas.size();
+    int step = n;
+    bool isSwap = true;
+    while (step > 1 || isSwap == true) {
+        step = (int)(step / 1.25);
+        isSwap = false;
+        for (int i = 0; i < n - step; i++) {
+            if (mas[i] > mas[i + step]) {
+                swap(mas[i], mas[i + step]);
+                isSwap = true;
+            }
+        }
+    }
+}
+
+
+// Функция сортировки подсчётом
+void countingSort(vector<int>& arr) {
+    if (arr.empty()) return;
+
+    // Находим максимальное значение в массиве
+    int maxElement = *max_element(arr.begin(), arr.end());
+
+    // Создаем массив для подсчёта частот элементов
+    vector<int> count(maxElement + 1, 0);
+
+    // Подсчитываем частоту каждого элемента в массиве
+    for (int num : arr) {
+        count[num]++;
+    }
+
+    // Перезаписываем исходный массив, используя массив подсчёта
+    int index = 0;
+    for (int i = 0; i <= maxElement; i++) {
+        while (count[i] > 0) {
+            arr[index++] = i;
+            count[i]--;
+        }
+    }
+}
+
+
+
+// Функция сортировки выбором
+void selectionSort(vector<int>& arr) {
+    int n = arr.size();
+
+    // Проходим по всему массиву
+    for (int i = 0; i < n - 1; i++) {
+        // Ищем минимальный элемент в оставшейся части массива
+        int minIndex = i;
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+
+        // Меняем местами текущий элемент с минимальным найденным
+        if (minIndex != i) {
+            swap(arr[i], arr[minIndex]);
+        }
+    }
+}
+
+
+
+// Функция для вывода массива
+void printArray(const vector<int>& arr) {
+    for (int i = 0; i < arr.size(); ++i) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
+// Юнит-тесты для каждой функции сортировки
+void testCombSort() {
+    // Лучший случай (массив уже отсортирован)
+    vector<int> arr =generate_sorted_vector(10);
+    combSort(arr);
+    assert(isSorted(arr));
+    cout << "Comb Sort (лучший случай) успешно" << endl;
+
+    // Средний случай (случайный массив)
+    arr = generateRandomVector(10, 1, 100);
+    combSort(arr);
+    assert(isSorted(arr));
+    cout << "Comb Sort (средний случай) успешно" << endl;
+
+    // Худший случай (массив в обратном порядке)
+    arr = generate_reverse_sorted_vector(10);
+    combSort(arr);
+    assert(isSorted(arr));
+    cout << "Comb Sort (худший случай) успешно" << endl;
+}
+
+void testCountingSort() {
+    // Лучший случай (массив уже отсортирован)
+    vector<int> arr = generate_sorted_vector(10);
+    countingSort(arr);
+    assert(isSorted(arr));
+    cout << "Counting Sort (лучший случай) успешно" << endl;
+
+    // Средний случай (случайный массив)
+    arr = generateRandomVector(10, 1, 100);
+    countingSort(arr);
+    assert(isSorted(arr));
+    cout << "Counting Sort (средний случай) успешно" << endl;
+
+    // Худший случай (массив в обратном порядке)
+    arr = generate_reverse_sorted_vector(10);
+    countingSort(arr);
+    assert(isSorted(arr));
+    cout << "Counting Sort (худший случай) успешно" << endl;
+}
+
+void testSelectionSort() {
+    // Лучший случай (массив уже отсортирован)
+    vector<int> arr = generate_sorted_vector(10);
+    selectionSort(arr);
+    assert(isSorted(arr));
+    cout << "Selection Sort (лучший случай) успешно" << endl;
+
+    // Средний случай (случайный массив)
+    arr = generateRandomVector(10, 1, 100);
+    selectionSort(arr);
+    assert(isSorted(arr));
+    cout << "Selection Sort (средний случай) успешно" << endl;
+
+    // Худший случай (массив в обратном порядке)
+    arr = generate_reverse_sorted_vector(10);
+    selectionSort(arr);
+    assert(isSorted(arr));
+    cout << "Selection Sort (худший случай) успешно" << endl;
+}
+
+
+
+int main() {
+    //тестирование функций
+    testCombSort();
+    testCountingSort();
+    testSelectionSort();
+
+
+    vector<int> arr = generateRandomVector(30, 20, 1000000);
+
+    cout << "Исходный массив: ";
+    printArray(arr);
+
+    auto start_time = high_resolution_clock::now();
+
+    combSort(arr);
+    // countingSort(arr);
+    // selectionSort(arr);
+
+    auto end_time = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(end_time - start_time);
+
+    cout << "Отсортированный массив: ";
+    printArray(arr);
+
+    // Выводим время работы алгоритма
+    cout << duration.count() << endl;
+    }
