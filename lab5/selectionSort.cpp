@@ -6,11 +6,12 @@
 #include <fstream>
 
 void selectionSort(std::vector<int>& array) {
-    int n = array.size();
+    // Use std::vector<int>::size_type for the size and indices
+    std::vector<int>::size_type n = array.size();
 
-    for (int i = 0; i < n - 1; i++) {
-        int indexOfMinimal = i;
-        for (int j = i + 1; j < n; j++) {
+    for (std::vector<int>::size_type i = 0; i < n - 1; i++) {
+        std::vector<int>::size_type indexOfMinimal = i;
+        for (std::vector<int>::size_type j = i + 1; j < n; j++) {
             if (array[j] < array[indexOfMinimal]) {
                 indexOfMinimal = j;
             }
@@ -32,7 +33,7 @@ void readFromFile(std::vector<int>& array, const std::string& filename) {
 
 int main() {
     std::vector<int> array;
-    std::string filename = ""; // Replace with your file name
+    std::string filename = "numbers10e6.txt"; 
 
     readFromFile(array, filename);
 
@@ -43,10 +44,6 @@ int main() {
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
 
-    std::cout << "Sorted array:" << std::endl;
-    for (int i = 0; i < array.size(); i++) {
-        std::cout << array[i] << " ";
-    }
     std::cout << std::endl;
 
     std::cout << std::fixed << std::setprecision(5);
