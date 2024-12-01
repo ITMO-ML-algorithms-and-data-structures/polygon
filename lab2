@@ -1,0 +1,51 @@
+// есть массив, нужно посчитать кол-во уникальных значений и заменить каждое значение кол-вом
+
+#include <fstream>
+#include <iostream> 
+#include <unordered_map>
+#include <string>
+#include <vector>
+using namespace std;
+
+
+int main(){
+          
+
+    ifstream inputFile("c:\\Users\\Home\\Desktop\\labs.alg\\data.txt");    //открываем файл  
+    if (!inputFile.is_open()){
+        cout << "Ошибка, не удалось открыть файл" << endl;
+        return 1;
+    }
+
+
+    vector <string> arr;    //создаем вектор для хранения
+    string line;       
+
+
+    while (getline(inputFile, line)){    //считываем строки из файла   24 + L(50) байт 
+        arr.push_back(line);        //добавляем каждую строчку в вектор N* (24+(L+1))  N- колво строк L-средняя длина строки
+    }
+      
+    inputFile.close(); //
+
+
+
+    unordered_map<string, int> countMap;     //      
+                                                       //подсчет количества вхождений строк
+    for (const auto& str : arr){        //N * (L+28)   N- колво строк   L - средняя длина строки
+        countMap[str]++;
+    }
+
+    for (string& str : arr){       //     //замена строк на количество их вхождений 
+        str = to_string(countMap[str]);
+    }
+
+    for (const auto& str : arr){    //
+        cout << str << endl;    
+    }
+
+    return 0; 
+}
+
+
+// Total Memory = N*(L + 24) + N*(L + 28) = about 12 160 bytes  or 12,16kbytes

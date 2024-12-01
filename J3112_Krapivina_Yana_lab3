@@ -1,0 +1,62 @@
+#include <iostream>
+#include <fstream>
+#include <numeric>
+#include <vector>
+#include <random>
+#include <algorithm>
+using namespace std;
+
+// Функция для генерации случайной перестановки
+vector<int> generateRandomPermutation(int n) {
+    vector<int> permutation(n);
+    iota(permutation.begin(), permutation.end(), 0); // Заполняем от 0 до n-1     O(n)
+    random_device rd;
+    mt19937 g(rd());
+    shuffle(permutation.begin(), permutation.end(), g);        //O(n)
+    return permutation;
+}
+
+int main() {
+    string inputFileName = "datalab3.txt";     //O(n)
+    string outputFileName = "mixed.txt";
+
+    // Читаем данные из файла
+    ifstream inputFile(inputFileName);
+    if (!inputFile.is_open()) {
+        cerr << "Не удалось открыть файл " << inputFileName << std::endl;
+        return 1;
+    }
+
+    vector<int> data;
+    int value;
+    while (inputFile >> value) {  // Читаем до конца файла
+        data.push_back(value);
+    }
+    inputFile.close();
+
+    // Генерируем случайную перестановку
+    vector<int> permutation = generateRandomPermutation(data.size()); //O(n)
+
+    // Перемешиваем массив, используя перестановку
+    vector<int> shuffledData(data.size());
+    for (int i = 0; i < data.size(); ++i) {                            //O(n)
+        shuffledData[i] = data[permutation[i]];
+    }
+
+    // Записываем перемешанные данные в файл
+    ofstream outputFile(outputFileName);
+    if (!outputFile.is_open()) {
+        cerr << "Не удалось открыть файл " << outputFileName << std::endl;
+        return 1;
+    }
+
+    for (int i = 0; i < data.size(); ++i) {                       //O(n)
+        outputFile << shuffledData[i] << " ";
+    }
+    outputFile.close();
+
+    return 0;
+}
+
+//сложность всего алгоритма составляет O(n)
+
