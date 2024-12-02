@@ -1,0 +1,120 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <ctime>
+#include <cmath>
+#include <fstream>
+#include <random>
+using namespace std;
+//Bitonic sort
+// https://www.geeksforgeeks.org/bitonic-sort/ - описание работы алгоритма
+// Функция для сравнения и свапа элементов
+void compAndSwap(vector<int>& arr, int i, int j, bool dir) {
+    if (dir == (arr[i] > arr[j])) {
+        swap(arr[i], arr[j]);
+    }
+}
+
+// Функция для слияния битонической последовательности
+void bitonicMerge(vector<int>& arr, int low, int cnt, bool dir) {
+    if (cnt > 1) {
+        int k = cnt / 2;
+        for (int i = low; i < low + k; i++) {
+            compAndSwap(arr, i, i + k, dir);
+        }
+        bitonicMerge(arr, low, k, dir);
+        bitonicMerge(arr, low + k, k, dir);
+    }
+}
+
+// Функция для сортировки битонической последовательности
+void bitonicSort(vector<int>& arr, int low, int cnt, bool dir) {
+    if (cnt > 1) { // dir - отвечает за то - сортируем по убыванию или возрастанию
+        int k = cnt / 2;
+        // Сортируем первую половину в порядке возрастания
+        bitonicSort(arr, low, k, true);
+        // Сортируем вторую половину в порядке убывания
+        bitonicSort(arr, low + k, k, false);
+        // верхние две сортировки дают сложность log(N)
+        // Сливаем обе половины
+        bitonicMerge(arr, low, cnt, dir);
+        // Слияние так же даёт сложность log(N)
+    }
+}// Выполняем с каждым элементом, поэтому сложность O(N * log^2(N))
+
+// Вспомогательная функция для запуска сортировки
+void arr_sort(vector<int>& arr, bool up) {
+    bitonicSort(arr, 0, arr.size(), up);
+}
+void generate_file(int size)
+{
+    // написал небольшой генератор файла (gpt немного помогал, лень было в питоне генерить)
+    fstream file;
+    file.open("C:\\Users\\Huawei\\Desktop\\test.txt");
+    file << size << '\n';
+    random_device rd; // Получаем случайное число от устройства
+    mt19937 gen(rd()); // Инициализируем генератор
+    uniform_int_distribution<> dis(-1000, 1000); // Генерация чисел от 1 до 100
+    for(int i = 0; i < size; i++)
+    {
+        file << dis(gen) << " ";
+    }
+    file.close();
+}
+// функция проверки
+void checkSort(vector<int> &arr, int id_test)
+{
+    vector<int> sorted_arr = arr;
+    sort(sorted_arr.begin(), sorted_arr.end());
+    for(int i = 0; i < arr.size(); i++)
+    {
+        if(arr[i] > sorted_arr[i])
+        {
+            cerr << "Attention: test " << id_test << " failed!";
+            return;
+        }
+    }
+    cout << "Test: " << id_test << " completed";
+}
+void run(/*int n_size, fstream &data*/)
+{
+    //unsigned int start_time = clock();
+    fstream file;
+    file.open("C:\\Users\\Huawei\\Desktop\\test.txt");
+    int size;
+    file >> size;
+    //size = n_size;
+    int x = ceil(log2(size));
+    vector<int> arr(pow(2, x), -1e9); // предполагаем, что -1e9 значительно меньше входных данных
+    // память 4 * 2^(ceil(log2(N))) + 24 байт, т.к. мы "расширяем" массив по степеням двойки, 24 - размер пустого vector
+    int count = size - x; // количество ненужных элементов, которые, если потребуется, можно удалить
+    for(int i = count; i < size; i++)
+    {
+        file >> arr[i];
+    }
+    // с помощью данного кода мы применяем битоническую сортировку
+    // даже для массивов, размеры которых не кратны 2^N
+    arr_sort(arr, true);
+    //arr.erase(arr.begin(), arr.begin() + count);
+    checkSort(arr, 1);
+    file.close();
+   // unsigned int end_time = clock();
+   // data << size << " " << (end_time - start_time) / (double)CLOCKS_PER_SEC * 1000 << '\n'; 
+}
+int main() {
+    fstream data;
+    run();
+    //data.open("C:\\Users\\Huawei\\Desktop\\data_time.txt");
+    
+   /* for(int i = 1000; i <= 1e6; i += 1000)
+    {
+        run(i, data);
+        if(i % 100000 == 0)
+        {
+            cout << i << '\n';
+        }
+    }
+    */
+   // data.close();
+    return 0;
+}
