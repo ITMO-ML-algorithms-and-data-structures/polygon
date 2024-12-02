@@ -1,0 +1,48 @@
+//Leetcode dynamic programming #132
+#include <iostream>
+#include <vector>
+#include <string>
+#include <climits>
+using namespace std;
+class Solution {
+public:
+    int minCut(string s) {
+
+    int n = s.length();
+    vector<vector<bool>> isPalindrome(n, vector<bool>(n, false));
+
+    for (int i = 0; i < n; ++i) {
+        isPalindrome[i][i] = true;
+    }
+
+    for (int length = 2; length <= n; ++length) {
+        for (int i = 0; i <= n - length; ++i) {
+            int j = i + length - 1;
+            if (s[i] == s[j]) {
+                if (length == 2) {
+                    isPalindrome[i][j] = true; 
+                } else {
+                    isPalindrome[i][j] = isPalindrome[i + 1][j - 1];
+                }
+            }
+        }
+    }
+
+    vector<int> minCuts(n, INT_MAX);
+    for (int j = 0; j < n; ++j) {
+        if (isPalindrome[0][j]) {
+            minCuts[j] = 0;
+        } 
+        else {
+            for (int k = 0; k < j; ++k) {
+                if (isPalindrome[k + 1][j]) {
+                    minCuts[j] = min(minCuts[j], minCuts[k] + 1);
+                }
+            }
+        }
+    }
+
+    return minCuts[n - 1];
+
+    }
+};
