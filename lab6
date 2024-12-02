@@ -1,0 +1,29 @@
+#include <iostream>
+#include ‹vector>
+#include ‹unordered_ set> 
+using namespace std;
+
+bool canCross (vector<int>& stones) {
+    int n = stones. size();
+  
+    vector<unordered_set<int>> dp(n);
+    dp [0] insert(0);
+  
+    for(int i = 0; i < n; i++){
+        for(int jump: dp[i]){
+            int next_pos = stones [i] + jump;
+            if(next_pos = stones [i] + jump){
+                for(int k = jump - 1; k <= jump + 1; k++){
+                    if (k > 0){
+                        int next_indx = lower_bound (stones.begin(), stones. end(), stones [i] + k) - stones. begin ();
+                        if(next_indx < n && stones [next_indx] = stones [i] + k){
+                            dp[next_indx]. insert(k);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return !dp[n - 1].empty();
+}
+  
