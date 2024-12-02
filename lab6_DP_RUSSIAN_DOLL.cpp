@@ -3,6 +3,13 @@
 #include <algorithm>
 using namespace std;
 
+/*ЭТО ЗАДАЧА О ВЛОЖЕНИИ МАТРЁШЕК, hard
+1) ВХОД: МАССИВ ИЗ ПАР (WIDTH, HEIGHT)
+2) НЕЛЬЗЯ МЕНЯТЬ ЭТИ ПАРАМЕТРЫ МЕСТАМИ
+3) НЕОХОДИМО НАЙТИ МАКСИМАЛЬНОЕ КОЛИЧЕСТВО
+МАТРЁШЕК, КОТОРЫЕ МОЖНО СЛОЖИТЬ В ОДНУ 
+(ОТВЕТ С УЧЁТОМ ЭТОЙ ОДНОЙ)*/
+
 bool IfFirstMax(const vector<int>& pair1, const vector<int>& pair2) {
     return pair1[0] < pair2[0];
 }
