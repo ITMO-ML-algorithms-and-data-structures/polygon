@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+void Sort(vector<int>& bucket) {
+    for (size_t i = 1; i < bucket.size(); i++) {
+        int key = bucket[i];
+        int j = i - 1;
+        while (j >= 0 && bucket[j] > key) {
+            bucket[j + 1] = bucket[j];
+            j--;
+        }
+        bucket[j + 1] = key;
+    }
+}
+
+
+void bucketSort(vector<int>& arr, int bucketCount) {
+    if (arr.empty()) return;
+
+    
+    int maxValue = *max_element(arr.begin(), arr.end());
+    int minValue = *min_element(arr.begin(), arr.end());
+    
+    
+    vector<vector<int>> buckets(bucketCount);
+
+    
+    for (int num : arr) {
+        int bucketIndex = (num - minValue) * bucketCount / (maxValue - minValue + 1);
+        buckets[bucketIndex].push_back(num);
+    }
+
+    
+    arr.clear();
+    for (auto& bucket : buckets) {
+        Sort(bucket);
+        arr.insert(arr.end(), bucket.begin(), bucket.end());
+    }
+}
+
+
+int main() {
+    vector<int> arr = {1, 4, 6, 8, 82, 34, 2, 69};
+    int bucketCount = 5; 
+    bucketSort(arr, bucketCount);
+    
+    cout << "отсортированный массив: ";
+    for (int num : arr) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
