@@ -1,0 +1,1 @@
+python generate_dataset.py --mode numeric --num-rows 1000000 --min-unique 20 --min-value -10 --max-value 1000000 --delimiter "," --output-file dataset.txt
