@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <cmath> // для std::round
+
+std::vector<int> fillMissingValues(int size, const std::vector<int>& arr) {
+    std::vector<int> result = arr; // создаем копию входного массива
+
+    int sum = 0;
+    int count = 0;
+
+    // Подсчет суммы и количества не-null значений
+    for (const auto& value : arr) {
+        if (value != 0) {  // считаем только существующие значения
+            sum += value;
+            count++;
+        }
+    }
+
+    // Находим среднее значение
+    int average = count == 0 ? 0 : static_cast<int>(std::round(static_cast<double>(sum) / count));
+
+    // Заполнение пропусков
+    for (auto& value : result) {
+        if (value == 0) {  // заменяем пропуски на среднее значение
+            value = average;
+        }
+    }
+
+    return result;
+}
+
+void runTests() {
+    // Тест 1: Обычный случай
+    std::vector<int> test1 = {1, 0, 10, 4};
+    std::vector<int> result1 = fillMissingValues(test1.size(), test1);
+    std::cout << "Test 1: ";
+    for (const auto& val : result1) std::cout << val << " ";
+    std::cout << std::endl; // Ожидаемый вывод: 1 5 10 4 (среднее = 5)
+
+    // Тест 2: Все значения пропущены
+    std::vector<int> test2 = {0, 0, 0, 0};
+    std::vector<int> result2 = fillMissingValues(test2.size(), test2);
+    std::cout << "Test 2: ";
+    for (const auto& val : result2) std::cout << val << " ";
+    std::cout << std::endl; // Ожидаемый вывод: 0 (нет значений для среднего)
+
+    // Тест 3: Нет пропусков
+    std::vector<int> test3 = {1, 2, 3, 4};
+    std::vector<int> result3 = fillMissingValues(test3.size(), test3);
+    std::cout << "Test 3: ";
+    for (const auto& val : result3) std::cout << val << " ";
+    std::cout << std::endl; // Ожидаемый вывод: 1 2 3 4
+
+    // Тест 4: Одно значение пропущено
+    std::vector<int> test4 = {5, 0, 15};
+    std::vector<int> result4 = fillMissingValues(test4.size(), test4);
+    std::cout << "Test 4: ";
+    for (const auto& val : result4) std::cout << val << " ";
+    std::cout << std::endl; // Ожидаемый вывод: 5 10 15 (среднее = 10)
+
+    // Тест 5: Пограничное состояние - один элемент
+    std::vector<int> test5 = {0};
+    std::vector<int> result5 = fillMissingValues(test5.size(), test5);
+    std::cout << "Test 5: ";
+    for (const auto& val : result5) std::cout << val << " ";
+    std::cout << std::endl; // Ожидаемый вывод: 0
+
+    // Тест 6: Пограничное состояние - два элемента
+    std::vector<int> test6 = {0, 10};
+    std::vector<int> result6 = fillMissingValues(test6.size(), test6);
+    std::cout << "Test 6: ";
+    for (const auto& val : result6) std::cout << val << " ";
+    std::cout << std::endl; // Ожидаемый вывод: 5 10 (среднее = 5)
+
+}
+
+int main() {
+    runTests();
+    
+    return 0;
+}
+
+
