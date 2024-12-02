@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+#include <cassert>
+using namespace std;
+
+void quicksort(vector<int>& arr, int low, int high) {
+    if (low < high) {
+        int pivot = arr[high];  // опорный элемент
+        int i = low - 1;
+
+        // разбиение массива на две части
+        for (int j = low; j <= high - 1; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                swap(arr[i], arr[j]);
+            }
+        }
+        swap(arr[i + 1], arr[high]);
+
+        //вызов для двух частей массива
+        int pi = i + 1;
+        quicksort(arr, low, pi - 1);
+        quicksort(arr, pi + 1, high);
+    }
+}
+
+void test_quick_sort() {
+    vector<int> arr1 = {};
+    quicksort(arr1, 0, arr1.size() - 1);
+    assert(arr1 == vector<int>({}));
+
+    vector<int> arr2 = {18};
+    quicksort(arr2, 0, arr2.size() - 1);
+    assert(arr2 == vector<int>({18}));
+
+    vector<int> arr3 = {8, 4, 7, 2, 7, 12};
+    quicksort(arr3, 0, arr3.size() - 1);
+    assert(arr3 == vector<int>({2, 4, 7, 7, 8, 12}));
+
+    vector<int> arr4 = {1, 2, 3, 4, 5};
+    quicksort(arr4, 0, arr4.size() - 1);
+    assert(arr4 == vector<int>({1, 2, 3, 4, 5}));
+
+     vector<int> arr5 = {5, 4, 3, 2, 1};
+    quicksort(arr5, 0, arr5.size() - 1 );
+    assert(arr4 == vector<int>({1, 2, 3, 4, 5}));
+
+    cout << "Tests passed" << endl;
+}
+
+int main() {
+    vector<int> arr = { 8, 12, 3, 1, 12, 9, 1, 2, 16};
+    quicksort(arr, 0, arr.size() - 1);
+    for (int i = 0; i < arr.size(); i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+    test_quick_sort();
+    
+    vector<int> sizes;         // размеры массивов
+    vector<double> times;      // время сортировки для каждого массива
+
+    for (int n = 1000; n <= 1000000; n += 1000) {
+        sizes.push_back(n);
+        vector<int> arr(n);
+
+        for (int i = 0; i < n; ++i) {
+            arr[i] = rand() % 1000;
+        }
+
+        clock_t start = clock();
+        quicksort(arr, 0, arr.size() - 1);  
+        clock_t end = clock();
+
+        double duration = double(end - start) / CLOCKS_PER_SEC;
+        times.push_back(duration);  
+
+    }
+
+    cout << "size of array - sorting time" << endl;
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        cout  << times[i] << endl;
+    }
+
+    return 0;
+}

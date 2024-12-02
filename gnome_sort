@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <ctime>
+#include <cassert>
+#include <cstdlib>
+using namespace std;
+
+
+void gnome_sort(vector<int>& arr) {
+    int index = 0;
+    int n = arr.size();
+    while (index < n) {
+        if (index == 0 || arr[index] >= arr[index - 1]) {
+            index++;  
+        } else {
+            swap(arr[index], arr[index - 1]);
+            index--;  
+        }
+    }
+}
+
+
+void test_gnome_sort() {
+    //пустой массив
+    vector<int> arr1 = {};
+    gnome_sort(arr1);
+    assert(arr1 == vector<int>({}));
+
+    //один элемент
+    vector<int> arr2 = {18};
+    gnome_sort(arr2);
+    assert(arr2 == vector<int>({18}));
+    
+    //средний случай
+    vector<int> arr3 = {8, 4, 7, 2, 7, 12};
+    gnome_sort(arr3);
+    assert(arr3 == vector<int>({2, 4, 7, 7, 8, 12}));
+    
+    //лучший случай
+    vector<int> arr4 = {1, 2, 3, 4, 5};
+    gnome_sort(arr4);
+    assert(arr4 == vector<int>({1, 2, 3, 4, 5}));
+    
+    //худший случай
+    vector<int> arr5 = {5, 4, 3, 2, 1};
+    gnome_sort(arr5);
+    assert(arr4 == vector<int>({1, 2, 3, 4, 5}));
+
+    cout << "Tests passed" << endl;
+ }
+
+
+int main() {
+    vector<int> arr = { 8, 12, 3, 1, 12, 9, 1, 2, 16};
+    gnome_sort(arr);
+    for (int i = 0; i < arr.size(); i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+
+    test_gnome_sort();
+
+    vector<int> sizes;   // размеры массивов
+    vector<float> times; // время сортировки для каждого массива
+
+    for (int n = 1000; n <= 10000; n += 1000) {
+        sizes.push_back(n);
+        vector<int> arr(n);
+
+        for (int i = 0; i < n; ++i) {
+            arr[i] = rand() % 1000;
+        }
+
+        clock_t start = clock();
+        gnome_sort(arr);  
+        clock_t end = clock();
+
+        double duration = double(end - start) / CLOCKS_PER_SEC;
+        times.push_back(duration); 
+    }
+    
+    cout << "size of array - sorting time" << endl;
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        cout << times[i] <<  endl;
+    }
+    
+    return 0;
+
+}

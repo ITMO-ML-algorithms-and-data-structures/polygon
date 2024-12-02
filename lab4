@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int n;
+    cout << "Enter the size of the array N: ";
+    cin >> n;
+    int k=8;
+
+    vector<int> arr(n);
+    cout << "Enter the elements of the array: ";
+    for (int i = 0; i < n; ++i) {
+        cin >> arr[i];
+    }
+
+    for (int i = 0; i <= n - k; ++i) {
+        int sum = 0;
+        for (int j = i; j < i + k; ++j) {
+            sum += arr[j];
+        }
+
+        if (sum == 0) {
+            for (int j = i; j < i + k; ++j) {
+                cout << j << " ";
+            }
+            cout << endl;
+        }
+    }
+    return 0;
+}
