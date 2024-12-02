@@ -1,0 +1,265 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include <cassert>
+#include <chrono>
+
+using namespace std;
+
+/*
+Дан набор множеств B и множество A, 
+нужно выбрать минимальное количество множеств B,
+ чтобы покрыть все элементы из множества A.
+
+
+
+-----------------------------------------------------------------------
+ДАЛЕЕ РЕАЛИЗАЦИЯ ЧЕРЕЗ ПОЛНЫЙ ПЕРЕБОР O(2**n * n) (через эту формулу удобно считать и время)
+
+Общая память = O(m + n * (k + 1) + 2^n), n - кол-во подмн-в сабсетс, m - длина universe, k - средний размер подмножества
+-----------------------------------------------------------------------
+
+
+функция для проверки на покрытие через includes*/
+
+bool covers(const set<int>& universe, const vector<set<int>>& subsets) { // O(n) линейная сложность
+    set<int> joined_subsets;
+    for (const set<int>& subset : subsets) {
+        joined_subsets.insert(subset.begin(), subset.end());
+    }
+    
+    return includes(joined_subsets.begin(), joined_subsets.end(), universe.begin(), universe.end());
+    /* я проверяю что все элементы второго сета universe находятся в первом, а не наоборот,
+    тк мы рассматриваем не точное, а полное покрытие, где в subsets могут быть лишние значения */
+}
+
+
+
+/* функция для генерации всех возмоных комбинаций подмножеств для subsets, рекурсивная
+
+сложность O(2^n * n) = O(2^n) */
+
+void generateSubsets(const vector<set<int>>& subsets, vector<set<int>>& current, int index, set<vector<set<int>>>& all_subsets) {
+    if (index == subsets.size()) { // все подмножества в наборе обработаны
+        all_subsets.insert(current);
+        return;
+    }
+
+    current.push_back(subsets[index]);
+    generateSubsets(subsets, current, index + 1, all_subsets); // снова вызов с включением текущего подмножества
+    
+    current.pop_back();
+    generateSubsets(subsets, current, index + 1, all_subsets); //  без включения текущего подмножества.
+}
+
+
+
+
+/* CoveringSets_comb функция для поиска минимального из всех 
+полученных с помощью generateSubsets() подмножеств;
+сложность линейная O(n), не считая использования generateSubsets() 
+
+общая формула памяти для этой функции: O(m) + O(n * (k + 1)) + O(2^n * p)
+*/
+
+set<vector<set<int>>> CoveringSets_comb(const vector<set<int>>& subsets, const set<int>& universe) {
+    set<vector<set<int>>> all_subsets;
+    vector<set<int>> current;
+    generateSubsets(subsets, current, 0, all_subsets);
+
+    set<vector<set<int>>> covering_sets;
+    int min_size = 10666; // взяла рандомное большое на первые сравнния
+
+    for (const vector<set<int>>& subset_combination : all_subsets) {
+        if (covers(universe, subset_combination)) {
+            if (subset_combination.size() < min_size) {
+                min_size = subset_combination.size();
+                covering_sets.clear(); // удаляю предыдущие минимальные
+                covering_sets.insert(subset_combination);
+            }  // отсуюда память O(2^n * m(=n) * k) в худшем случае (если мы сохраняем все минимальные подмножества)
+        }
+    }
+
+    return covering_sets;
+}
+
+
+
+int main() {
+    // Далее (до след. комментария) просто примеры работы алгоритма по времени для примера из табл и больших размеров
+    /*
+    
+    set<int> universe1 = {1, 2, 3, 4};
+    vector<set<int>> subsets1 = {{1, 2}, {2, 3}, {3, 4}}; // 0.1155 ms (примерно)
+    auto start1 = chrono::high_resolution_clock::now();
+    set<vector<set<int>>> covering_sets1 = CoveringSets_comb(subsets1, universe1);
+    auto end1 = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> duration1 = end1 - start1;
+    
+    set<vector<set<int>>> answer1 = {{{1, 2}, {3, 4}}};
+    assert(covering_sets1 == answer1);
+    cout << "Тест 1: ";
+    cout << duration1.count() << " миллисекунд" << endl;
+
+    set<int> universe2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    vector<set<int>> subsets2 = {
+        {1, 2, 13}, {2, 8, 3}, {3, 4}, {4, 5, 6, 7, 10}, {5, 6}, 
+        {6, 7}, {7, 8, 1441, 13, 1, 4, 6}, {8, 9}, {9, 10},
+        {1, 3}, {2, 1, 8, 5, 0, 4}, {3, 5}, {4, 6}, 
+        {5, 7, 4}, {6, 8, 9, 12, 13}, {7, 9, 10, 11}, 
+        {5, 3, 1, 7, 8, 9}, {1, 3, 4}, {5} // 111721 ms (примерно)
+    };
+    
+    auto start2 = chrono::high_resolution_clock::now();
+    set<vector<set<int>>> covering_sets2 = CoveringSets_comb(subsets2, universe2);
+    auto end2 = chrono::high_resolution_clock::now();
+
+    chrono::duration<double, milli> duration2 = end2 - start2;
+
+    cout << "Тест 2: ";
+    cout << duration2.count() << " миллисекунд" << endl;
+
+    for (const vector<set<int>>& subset : covering_sets2) {
+        cout << endl;
+        for (const set<int>& set1 : subset) {
+            for (int i : set1) {
+                cout << i << " ";
+            }
+        }
+    }
+    */
+
+
+
+    /* Далее данные взяты для графика, беру universe = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, кол-во
+    подмножеств меняется, график строю в зависимости от количества подмножеств
+    записанных в subsets */
+
+    // 1 элемент около 0.004926 миллисекунд \\ у меня на ноуте около 0.0751 миллисекунд
+
+    set<int> universe_forgraph = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    vector<set<int>> subsets_forgraph1 = {{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}}; //  ms (примерно)
+    auto start01 = chrono::high_resolution_clock::now();
+    set<vector<set<int>>> covering_sets_forgraph1 = CoveringSets_comb(subsets_forgraph1, universe_forgraph);
+    auto end01 = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> duration01 = end01 - start01;
+    cout << "Тест для 1 подмножества: ";
+    cout << duration01.count() << " миллисекунд" << endl;
+
+    // 2 элемента около 0.006857 миллисекунд \\ у меня на ноуте около 0.2027 миллисекунд
+
+    vector<set<int>> subsets_forgraph2 = {{1, 2, 3, 4}, {5, 6, 7, 8, 9, 10}}; //  ms (примерно)
+    auto start02 = chrono::high_resolution_clock::now();
+    set<vector<set<int>>> covering_sets_forgraph2 = CoveringSets_comb(subsets_forgraph2, universe_forgraph);
+    auto end02 = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> duration02 = end02 - start02;
+    cout << "Тест для 2 подмножеств: ";
+    cout << duration02.count() << " миллисекунд" << endl;
+
+     // 5 элементов около 0.033028 миллисекунд \\ у меня на ноуте около 1.976 миллисекунд
+    vector<set<int>> subsets_forgraph5 = {{1, 2, 5}, {3, 4}, {5, 6, 7}, {7, 8}, {9, 10}};
+    auto start05 = chrono::high_resolution_clock::now();
+    set<vector<set<int>>> covering_sets_forgraph5 = CoveringSets_comb(subsets_forgraph5, universe_forgraph);
+    auto end05 = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> duration05 = end05 - start05;
+    cout << "Тест для пяти подмножеств: ";
+    cout << duration05.count() << " миллисекунд" << endl;
+
+    // 10 элементов около 1.76595 миллисекунд \\ у меня на ноуте около 125.7 миллисекунд
+    vector<set<int>> subsets_forgraph10 = {
+        {1, 5, 6}, {2, 3}, {3, 1}, {4}, {5},
+        {6}, {7}, {8, 4}, {9}, {10, 2, 5, 6}
+    };
+    
+    auto start10 = chrono::high_resolution_clock::now();
+    set<vector<set<int>>> covering_sets_forgraph10 = CoveringSets_comb(subsets_forgraph10, universe_forgraph);
+    auto end10 = chrono::high_resolution_clock::now();
+    
+    chrono::duration<double,milli> duration10 = end10 - start10;
+    
+    cout << "Тест для десяти подмножеств: ";
+    cout << duration10.count() << " миллисекунд" << endl;
+
+    // 12 элементов около 6.96111 миллисекунд \\ у меня на ноуте около 3512.85 миллисекунд
+   vector<set<int>> subsets_forgraph12 = {
+        {1, 5, 6}, {2, 3}, {3, 1}, {4}, {5},
+        {6}, {7}, {8, 4}, {9, 4}, {10, 2, 5, 6}, 
+        {2, 3, 4}, {7}
+    };
+
+   auto start12=chrono::high_resolution_clock::now();
+   set<vector<set<int>>> covering_sets_forgraph12=CoveringSets_comb(subsets_forgraph12 , universe_forgraph);
+   auto end12=chrono::high_resolution_clock::now();
+
+   chrono::duration<double,milli> duration12=end12-start12;
+
+   cout<< "Тест для двенадцати подмножеств: ";
+   cout<< duration12.count() <<" миллисекунд" << endl;
+
+   // 14 элементов около 36.9946 миллисекунд \\ у меня на ноуте около 7208.59 миллисекунд
+   vector<set<int>> subsets_forgraph14 = {
+        {1, 5, 6}, {2, 3}, {3, 1}, {4}, {5},
+        {6}, {7}, {8, 4}, {9}, {10, 2, 5, 6}, 
+        {2, 3, 4}, {7}, {1, 5}, {8, 1, 9}
+    };
+
+   auto start14=chrono::high_resolution_clock::now();
+   set<vector<set<int>>> covering_sets_forgraph14=CoveringSets_comb(subsets_forgraph14 , universe_forgraph);
+   auto end14=chrono::high_resolution_clock::now();
+
+   chrono::duration<double,milli> duration14=end14-start14;
+
+   cout<< "Тест для четырнадцати подмножеств: ";
+   cout<< duration14.count() <<" миллисекунд" << endl;
+
+
+   // 15 элементов около 76.8445 миллисекунд // у меня на ноуте около 14108.59 миллисекунд
+    vector<set<int>> subsets_forgraph15 = {
+        {1, 5, 6}, {2, 3}, {3, 1}, {4}, {5},
+        {6}, {7}, {8, 4}, {9}, {10, 2, 5, 6}, 
+        {2, 3, 4}, {7}, {1, 5}, {5, 6}, {8, 1, 9}
+    };
+
+   auto start15 = chrono::high_resolution_clock::now();
+   set<vector<set<int>>> covering_sets_forgraph15 = CoveringSets_comb(subsets_forgraph15 , universe_forgraph);
+   auto end15= chrono::high_resolution_clock::now();
+
+   chrono::duration<double,milli> duration15= end15 - start15;
+
+   cout<< "Тест для пятнадцати подмножеств: ";
+   cout<< duration15.count() <<" миллисекунд" << endl;
+
+   // у меня на ноуте около 451456 миллисекунд
+    vector<set<int>> subsets_forgraph20 = {
+        {1, 2}, {1, 3}, {1, 4}, {1, 4, 5}, {5, 6},
+        {6, 1}, {7, 1}, {8, 2}, {9, 2}, {10, 2},
+        {1, 10}, {3, 4}, {5, 3}, {6, 3}, {7, 3},
+        {3, 8}, {7, 4}, {4, 8}, {4, 9}, {5, 9}
+    };
+
+    auto start20 = chrono::high_resolution_clock::now();
+    set<vector<set<int>>> covering_sets_forgraph20 = CoveringSets_comb(subsets_forgraph20 , universe_forgraph);
+    auto end20 = chrono::high_resolution_clock::now();
+    chrono::duration<double,milli> duration20 = end20 - start20;
+    cout << "Тест для двадцати подмножеств: ";
+    cout << duration20.count() << " миллисекунд" << endl;
+
+    // у меня на ноуте около ---(14446392) миллисекунд
+    vector<set<int>> subsets_forgraph25 = {
+        {1, 2}, {2}, {3, 6}, {4, 1, 2, 3}, {5},
+        {6, 3, 5}, {7, 6}, {8, 10, 2}, {9, 2, 3}, {10, 4},
+        {1, 10}, {1, 2}, {1, 3}, {1, 4}, {1, 7, 5},
+        {1, 6}, {1, 7}, {1, 8}, {1, 9}, {1, 4, 9},
+        {2, 3, 4}, {7}, {1, 5}, {5, 6}, {8, 1, 9}
+    };
+
+    auto start25 = chrono::high_resolution_clock::now();
+    set<vector<set<int>>> covering_sets_forgraph25 = CoveringSets_comb(subsets_forgraph25 , universe_forgraph);
+    auto end25 = chrono::high_resolution_clock::now();
+    chrono::duration<double,milli> duration25 = end25 - start25;
+    cout << "Тест для двадцати пяти подмножеств: ";
+    cout << duration25.count() << " миллисекунд" << endl;
+    return 0; //
+}
+//--------------------------------------------------------------------------------------------
