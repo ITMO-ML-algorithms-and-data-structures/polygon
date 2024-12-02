@@ -3,7 +3,7 @@
 #include <algorithm>
 using namespace std;
 
-// НИЖЕ ПЕРВАЯ РЕАЛИЗАЦИЯ, КОТОРАЯ ОКАЗАЛАСЬ НЕ DP(((
+// НИЖЕ ПЕРВАЯ РЕАЛИЗАЦИЯ, КОТОРАЯ ОКАЗАЛАСЬ НЕ DP((( и вообще неправильной)))
 
 
 bool IfFirstMax(const vector<int>& pair1, const vector<int>& pair2) {
