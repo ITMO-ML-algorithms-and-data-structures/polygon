@@ -69,7 +69,7 @@ bool AreIsomorphic(const string &str1, const string &str2){
 int main(){
     // string str1, str2;
     // cin >> str1 >> str2;
-
+    //
     // if (AreIsomorphic(str1, str2)) cout << "isomorphic";
     // else cout << "not isomorphic";
     
