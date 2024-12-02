@@ -1,7 +1,0 @@
-C:/Users/ASUS'/CLionProjects/sorts/build/CMakeFiles/comb_sort.dir
-C:/Users/ASUS'/CLionProjects/sorts/build/CMakeFiles/timsort.dir
-C:/Users/ASUS'/CLionProjects/sorts/build/CMakeFiles/introsort.dir
-C:/Users/ASUS'/CLionProjects/sorts/build/CMakeFiles/test_sorts.dir
-C:/Users/ASUS'/CLionProjects/sorts/build/CMakeFiles/RUN_TESTS.dir
-C:/Users/ASUS'/CLionProjects/sorts/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/ASUS'/CLionProjects/sorts/build/CMakeFiles/ZERO_CHECK.dir
