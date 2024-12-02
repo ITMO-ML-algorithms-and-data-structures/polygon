@@ -1,0 +1,196 @@
+1 код
+
+
+
+
+
+
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<int> swap_sort(vector<int>& arr) {
+    int n = arr.size();
+    // Сортировка с применением различных способов индексации
+
+    for (int i = 0; i < n-1; ++i) {
+        for (int j = i+1; j < n; ++j) {
+            if (arr[i] > arr[j]) {
+                // Перестановка значений
+                arr[i] = arr[i] + arr[j];
+                arr[j] = arr[i] - arr[j];
+                arr[i] = arr[i] - arr[j];
+            }
+        }
+    }
+    return arr;
+}
+
+int main() {
+    // Пример входных данных
+    vector<int> arr = {34, 12, 56, 9, 1, 77};
+    
+    // Применение сортировки
+    arr = swap_sort(arr);
+    
+    // Вывод отсортированного массива
+    for (int num : arr) {
+        cout << num << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}
+
+
+
+
+2 код 
+
+
+
+
+
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Сортировка подсчётом
+void countingSort(vector<int>& arr) {
+    int n = arr.size();
+
+    if (n <= 1) return;
+
+    // 1. Находим максимальный элемент в массиве
+    int maxElem = arr[0];
+    for (int i = 1; i < n; ++i) {
+        if (arr[i] > maxElem) {
+            maxElem = arr[i];
+        }
+    }
+
+    // 2. Создаем массив для подсчета вхождений элементов
+    vector<int> count(maxElem + 1, 0);
+
+    // 3. Заполняем массив count
+    for (int i = 0; i < n; ++i) {
+        count[arr[i]]++;
+    }
+
+    // 4. Перезаписываем исходный массив отсортированными значениями
+    int index = 0;
+    for (int i = 0; i <= maxElem; ++i) {
+        while (count[i] > 0) {
+            arr[index++] = i;
+            count[i]--;
+        }
+    }
+}
+
+int main() {
+    // Пример ввода
+    vector<int> arr = {4, 2, 2, 8, 3, 3, 1, 7, 5};
+
+    // Выводим исходный массив
+    cout << "Исходный массив: ";
+    for (int num : arr) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    // Применяем сортировку подсчётом
+    countingSort(arr);
+
+    // Выводим отсортированный массив
+    cout << "Отсортированный массив: ";
+    for (int num : arr) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+
+
+
+
+
+3 код 
+
+
+
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Функция для подсчёта по разряду и возвращения отсортированного массива
+vector<int> countingSortByDigit(const vector<int>& arr, int exp) {
+    int n = arr.size();
+    vector<int> output(n);  // Массив для хранения отсортированных чисел
+    vector<int> count(10, 0);  // Массив для подсчёта разрядов (0-9)
+
+    // Подсчитываем количество вхождений для каждого разряда
+    for (int i = 0; i < n; i++) {
+        count[(arr[i] / exp) % 10]++;
+    }
+
+    // Преобразуем count[i] в индекс, где будет храниться каждый элемент
+    for (int i = 1; i < 10; i++) {
+        count[i] += count[i - 1];
+    }
+
+    // Строим отсортированный массив
+    for (int i = n - 1; i >= 0; i--) {
+        int digit = (arr[i] / exp) % 10;
+        output[count[digit] - 1] = arr[i];
+        count[digit]--;
+    }
+
+    return output;  // Возвращаем отсортированный массив
+}
+
+// Функция для реализации поразрядной сортировки
+vector<int> radixSort(const vector<int>& arr) {
+    int maxElem = arr[0];
+
+    // Находим максимальное число, чтобы знать, сколько разрядов нужно сортировать
+    for (int i = 1; i < arr.size(); i++) {
+        if (arr[i] > maxElem) {
+            maxElem = arr[i];
+        }
+    }
+
+    vector<int> sortedArr = arr;  // Создаем копию исходного массива для сортировки
+
+    // Выполняем сортировку для каждого разряда (единицы, десятки, сотни и т.д.)
+    for (int exp = 1; maxElem / exp > 0; exp *= 10) {
+        sortedArr = countingSortByDigit(sortedArr, exp);  // Сортируем по разряду
+    }
+
+    return sortedArr;  // Возвращаем отсортированный массив
+}
+
+int main() {
+    // Пример массива
+    vector<int> arr = {170, 45, 75, 90, 802, 24, 2, 66};
+
+    // Применяем поразрядную сортировку
+    vector<int> sortedArr = radixSort(arr);
+
+    // Выводим отсортированный массив
+    cout << "Отсортированный массив: ";
+    for (int num : sortedArr) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
