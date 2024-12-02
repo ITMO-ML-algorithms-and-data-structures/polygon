@@ -1,7 +1,8 @@
 #include <fstream> 
 #include <vector>
 #include <iostream>
-
+#include <ctime>
+#include <string>
 using namespace std; 
 
 // У алгоритма для работы очень много ограничений, чтобы работать эффективно.
@@ -61,9 +62,43 @@ void BucketSort(vector<double> &data){
 
 }
 
+
+
+void tests(){
+	ofstream fout("output_test_bucket.txt");
+	ofstream fout_time("output_time_bucket.txt");
+	for (int i=0; i<7; i++){
+		if (i == 3)
+			continue;
+		long int n;  
+		clock_t start, end;
+		start = clock();
+		string a = to_string(i) + "input.txt";
+		fstream fin(a);
+		fin >> n; 
+		vector <double> data(n); 
+		for (long int i=0; i<n; i++){
+			fin >> data[i]; 
+		}
+		BucketSort(data);
+		
+		end = clock();
+		double time_taken = double(end - start) / double(CLOCKS_PER_SEC); 
+		fout_time << time_taken << ' ';
+		
+//		for (long int i=0; i<n; i++)
+//			fout << data[i] << ' ';
+		fin.close();
+	}
+	fout_time.close();
+	fout.close();
+	
+}
+
 int main(){
+  tests();
   long int n; 
-  ifstream fin("bucketInput.txt"); 
+  ifstream fin("input.txt"); 
 
   fin >> n; 
   vector <double> data(n);

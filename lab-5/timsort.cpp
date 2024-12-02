@@ -1,6 +1,7 @@
 #include <fstream>
 #include <vector>
-#include <algorithm>
+#include <ctime>
+#include <string>
 const int MIN_MERGE = 32;
 
 using namespace std; 
@@ -68,7 +69,39 @@ void timSort(vector<long int>& arr) {
         }
     }
 }
+
+
+void tests(){
+	ofstream fout("output_test_tim.txt");
+	ofstream fout_time("output_time_tim.txt");
+	for (int i=0; i<7; i++){
+		long int n;  
+		clock_t start, end;
+		start = clock();
+		string a = to_string(i) + "input.txt";
+		fstream fin(a);
+		fin >> n; 
+		vector <long int> data(n); 
+		for (long int i=0; i<n; i++){
+			fin >> data[i]; 
+		}
+		timSort(data);
+		
+		end = clock();
+		double time_taken = double(end - start) / double(CLOCKS_PER_SEC); 
+		fout_time << time_taken << ' ';
+		
+//		for (long int i=0; i<n; i++)
+//			fout << data[i] << ' ';
+		fin.close();
+	}
+	fout_time.close();
+	fout.close();
+	
+}
+
 int main() {
+	tests();
 	ifstream fin("input.txt");
 	long int n = 0;
 	fin >> n;
