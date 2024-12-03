@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <numeric> 
 #include <functional>
+#include <chrono>
+#include <iomanip>
 
 class Clusterizer {
 private:
@@ -87,7 +89,42 @@ public:
     size_t get_memory_usage() const {
         return memory_usage;
     }
+
+    static void performanceTest() {
+        const std::vector<int> sizes = {10, 15, 20, 25, 30};
+        const int K = 7; // Фиксированное количество кластеров для тестов
+        
+        std::cout << "Размер массива\tВремя (с)\tO(2^N) (теор.)\n";
+        
+        for (const int size : sizes) {
+            // Генерируем тестовый массив
+            std::vector<int> test_arr(size);
+            std::iota(test_arr.begin(), test_arr.end(), 1); // Заполняем числами от 1 до size
+            
+            // Замеряем время выполнения
+            auto start = std::chrono::high_resolution_clock::now();
+            
+            Clusterizer clusterizer;
+            clusterizer.bruteForceClustering(test_arr, K);
+            
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = end - start;
+            
+            // Теоретическое время O(2^N), нормализованное к первому измерению
+            const double theoretical = 0.5 * std::pow(2, size - 5);
+            
+            std::cout << size << "\t\t" 
+                     << std::fixed << std::setprecision(1) << duration.count() << "\t\t"
+                     << theoretical << "\n";
+        }
+    }
 };
+
+// тестовая функция main для проверки времени работы
+int main() {
+    Clusterizer::performanceTest();
+    return 0;
+}
 
 // // тестовая функция main
 // int main() {
