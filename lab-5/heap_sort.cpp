@@ -59,16 +59,16 @@ void heapSort(std::vector<int>& arr, int n) {
 
 
 int main() {
-    std::vector<std::string> data_samples = {"1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000", "9000", 
-                                            "10000", "20000", "30000", "40000", "50000", "60000", "70000", "80000", "90000",
-                                           "100000", "200000", "300000", "400000", "500000", "600000", "700000", "800000", "900000",
-                                            "1000000"};
-//    std::vector<std::string> data_samples = {"100000"};
+//    std::vector<std::string> data_samples = {"1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000", "9000", 
+//                                            "10000", "20000", "30000", "40000", "50000", "60000", "70000", "80000", "90000",
+//                                           "100000", "200000", "300000", "400000", "500000", "600000", "700000", "800000", "900000",
+//                                            "1000000"};
+    std::vector<std::string> data_samples = {"10000"};
     std::vector<float> corr_median_time;
     std::cout << data_samples.size() << std::endl;
     for(int i=0; i < data_samples.size(); i++){
         float sum_time = 0;
-        for (int j = 1; j <= 10; j ++) {
+        for (int j = 1; j <= 50; j ++) {
         std::vector<int> arr;        
         std::string tmp_file = data_samples[i] + "_" + std::to_string(j) + ".csv";
 

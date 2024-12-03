@@ -5,14 +5,14 @@
 #include <random>
 
 int main() {
-    int n = 1000000;
+    int n = 10000;
     // Генерируем массив из натуральных чисел
     std::vector<int> numbers(n);
     for (int i = 0; i < n; ++i) {
         numbers[i] = i + 1;  // Заполняем числами от 1 до n
     }
 
-    for (int i = 1; i <= 10; i ++) {
+    for (int i = 11; i <= 50; i ++) {
         // Перемешиваем массив с использованием random_device и mt19937
         std::random_device rd;
         std::mt19937 g(rd());
