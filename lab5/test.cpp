@@ -48,6 +48,9 @@ vector<int> BubbleSort(vector<int> inp) {
             }
         }
     }
+
+    // Memory usage - N, where N - inp.size
+
     return inp;
 }
 
@@ -66,6 +69,9 @@ vector<int> QuickSortHelper(vector<int>& inp, int low, int high) {
         QuickSortHelper(inp, low, pi - 1);
         QuickSortHelper(inp, pi + 1, high);
     }
+
+    // Memory usage - N, where N - inp.size; doesn't get any bigger since we use pointer.
+
     return inp;
 }
 
@@ -91,6 +97,8 @@ vector<int> BucketSort(vector<int> inp) {
         sortedArray.insert(sortedArray.end(), bucket.begin(), bucket.end());
     }
 
+    // Memory usage - buckets*bucket_size (N*k); N - sorted array
+
     return sortedArray;
 }
 
@@ -110,6 +118,30 @@ bool isSorted(vector<int> A) {
 
 using namespace std::chrono;
 
+void saveFloatsToFile(const std::string& filename, const std::vector<double>& array, size_t size) {
+    std::ofstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open the file '" << filename << "'" << std::endl;
+        return;
+    }
+
+    // Set precision to 2 decimal places
+    //file << std::fixed << std::setprecision(2);
+
+    for (size_t i = 0; i < size; ++i) {
+        file << array[i];
+        // Add a space after each number, except for the last one
+        if (i < size - 1) {
+            file << " ";
+        }
+    }
+
+    file.close();
+}
+
+#include <iomanip>
+
 void test() {
 
     struct {
@@ -121,21 +153,52 @@ void test() {
         //{{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 9, 9}, {{1, 2, 3}, {4}, {5}, {6}, {7}, {8}, {9, 9, 9}, {10, 10, 10}}},
     };
 
+    vector<string> files = { "test1.txt", "test2.txt", "test3.txt", "test4.txt", "test5.txt", "test6.txt", "test7.txt", "test8.txt", "test9.txt", "test10.txt", "test11.txt", "test12.txt", "test13.txt", "test14.txt", "test15.txt", "test16.txt", "test17.txt", "test18.txt", "test19.txt", "test20.txt", "test21.txt", "test22.txt", "test23.txt", "test24.txt", "test25.txt", "test26.txt", "test27.txt", "test28.txt", "test29.txt", "test30.txt", "test31.txt", "test32.txt", "test33.txt", "test34.txt", "test35.txt", "test36.txt", "test37.txt", "test38.txt", "test39.txt", "test40.txt", "test41.txt", "test42.txt", "test43.txt", "test44.txt", "test45.txt", "test46.txt", "test47.txt", "test48.txt", "test49.txt", "test50.txt", "test51.txt", "test52.txt", "test53.txt", "test54.txt", "test55.txt", "test56.txt", "test57.txt", "test58.txt", "test59.txt", "test60.txt", "test61.txt", "test62.txt", "test63.txt", "test64.txt", "test65.txt", "test66.txt", "test67.txt", "test68.txt", "test69.txt", "test70.txt", "test71.txt", "test72.txt", "test73.txt", "test74.txt", "test75.txt", "test76.txt", "test77.txt", "test78.txt", "test79.txt", "test80.txt", "test81.txt", "test82.txt", "test83.txt", "test84.txt", "test85.txt", "test86.txt", "test87.txt", "test88.txt", "test89.txt", "test90.txt", "test91.txt", "test92.txt", "test93.txt", "test94.txt", "test95.txt", "test96.txt", "test97.txt", "test98.txt" };
+
+    vector<double> Bubbles;
+    vector<double> Bucket;
+    vector<double> Quick;
+
     int size = sizeof(tests) / sizeof(tests[0]);
+    
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < files.size(); i++) {
 
-        auto t = tests[i];
+        std::ifstream file(files[i]);
+
+        if (!file.is_open()) {
+            std::cerr << "Error: Could not open the file '" << files[i] << "'" << std::endl;
+            return;
+        }
+
+        vector<int> integers;
+
+        std::string line;
+        while (std::getline(file, line)) {
+            std::stringstream ss(line);
+            int value;
+            while (ss >> value) {
+                integers.push_back(value);
+            }
+        }
+
+        file.close();
+
+        auto t = integers;
 
         auto start = high_resolution_clock::now();
 
-        vector<int> out = BubbleSort(t.input);
+        vector<int> out = BubbleSort(integers);
 
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
 
         cout << duration.count() / 1000 << endl;
 
+        double durationInSeconds = static_cast<double>(duration.count()) / 1'000;
+
+        Bubbles.push_back(durationInSeconds);
+
         ASSERT_MSG(isSorted(out), i + 1);
 
         //
@@ -143,12 +206,16 @@ void test() {
 
         start = high_resolution_clock::now();
 
-        out = QuickSort(t.input);
+        out = QuickSort(integers);
 
         stop = high_resolution_clock::now();
         duration = duration_cast<microseconds>(stop - start);
 
         cout << duration.count() / 1000 << endl;
+
+        durationInSeconds = static_cast<double>(duration.count()) / 1'000;
+
+        Quick.push_back(durationInSeconds);
 
         ASSERT_MSG(isSorted(out), i + 1);
 
@@ -156,16 +223,30 @@ void test() {
 
         start = high_resolution_clock::now();
 
-        out = BucketSort(t.input);
+        out = BucketSort(integers);
 
         stop = high_resolution_clock::now();
         duration = duration_cast<microseconds>(stop - start);
 
         cout << duration.count() / 1000 << endl;
 
+        durationInSeconds = static_cast<double>(duration.count()) / 1'000;
+
+        Bucket.push_back(durationInSeconds);
+
         ASSERT_MSG(isSorted(out), i + 1);
+
+        if (i == 10) {
+            break;
+        }
+
+        //break;
 
     }
+
+    saveFloatsToFile("bubbles.txt", Bubbles, Bubbles.size());
+    saveFloatsToFile("quick.txt", Quick, Bubbles.size());
+    saveFloatsToFile("Bucket.txt", Bucket, Bubbles.size());
 
     cout << "All tests Passed!";
 
