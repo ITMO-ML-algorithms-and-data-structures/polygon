@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
-vector<int> comb_sort(vector<int>& arr)
+vector<int> comb_sort(vector<int>& arr) // 60 байт, O(N**2)
 {
 	int length_arr = arr.size();
 	int gap = length_arr;
@@ -32,30 +33,33 @@ vector<int> comb_sort(vector<int>& arr)
 	return arr;
 }
 
-void swap(int& a, int& b) {
+void swap(int& a, int& b)
+{
 	int temp = a;
 	a = b;
 	b = temp;
 }
 
-void heapify(vector<int>& arr, int n, int i) {
-	int largest = i;  
-	int left = 2 * i + 1;  
-	int right = 2 * i + 2;  
+void heapify(vector<int>& arr, int n, int i)
+{
+	int index_largest = i;
+	int index_left = 2 * i + 1;
+	int index_right = 2 * i + 2;
 
-	if (left < n && arr[left] > arr[largest])
-		largest = left;
+	if (index_left < n && arr[index_left] > arr[index_largest])
+		index_largest = index_left;
 
-	if (right < n && arr[right] > arr[largest])
-		largest = right;
+	if (index_right < n && arr[index_right] > arr[index_largest])
+		index_largest = index_right;
 
-	if (largest != i) {
-		swap(arr[i], arr[largest]);
-		heapify(arr, n, largest);
+	if (index_largest != i) {
+		swap(arr[i], arr[index_largest]);
+		heapify(arr, n, index_largest);
 	}
 }
 
-void heapSort(vector<int>& arr) {
+void heapSort(vector<int>& arr) // 84 байт, O(n log n)
+{
 	int n = arr.size();
 
 	for (int i = n / 2 - 1; i >= 0; i--) {
@@ -68,17 +72,18 @@ void heapSort(vector<int>& arr) {
 	}
 }
 
-vector<int> countingSort(const vector<int>& arr) {
+vector<int> countingSort(const vector<int>& arr) // 120 байт, O(n + k)
+{
 
-	int minVal = *min_element(arr.begin(), arr.end());
-	int maxVal = *max_element(arr.begin(), arr.end());
+	int min_value = *min_element(arr.begin(), arr.end());
+	int max_value = *max_element(arr.begin(), arr.end());
 
-	int range = maxVal - minVal + 1;
+	int range = max_value - min_value + 1;
 
 	vector<int> count(range, 0);
 
 	for (int num : arr) {
-		count[num - minVal]++;
+		count[num - min_value]++;
 	}
 
 	for (int i = 1; i < count.size(); i++) {
@@ -89,8 +94,8 @@ vector<int> countingSort(const vector<int>& arr) {
 
 	for (int i = arr.size() - 1; i >= 0; i--) {
 		int num = arr[i];
-		output[count[num - minVal] - 1] = num;
-		count[num - minVal]--;
+		output[count[num - min_value] - 1] = num;
+		count[num - min_value]--;
 	}
 
 	return output;
@@ -98,8 +103,7 @@ vector<int> countingSort(const vector<int>& arr) {
 
 int main()
 {
-	ifstream input_file("test5.1.txt");
-
+	ifstream input_file("light_test.txt");
 	vector<int> arr;
 	int value;
 
@@ -108,8 +112,9 @@ int main()
 	}
 	input_file.close();
 
-	vector<int> arr = countingSort(arr);
-
+	//heapSort(arr);
+	//comb_sort(arr);
+	//vector<int> arr = countingSort(arr);
 	for (int num : arr) cout << num << " ";
 	cout << endl;
 }
