@@ -1,0 +1,12 @@
+"C:\Program Files\JetBrains\CLion 2024.2.1\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.2.1/bin/ninja/win/x64/ninja.exe" -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=conan_provider.cmake -G Ninja -S C:\Users\iviak\kaggling\itmo_labs\polygon\lab4 -B C:\Users\iviak\kaggling\itmo_labs\polygon\lab4\cmake-build-debug
+CMake Warning at conan_provider.cmake:651 (message):
+  Conan is correctly configured as dependency provider, but Conan has not
+  been invoked.  Please add at least one call to `find_package()`.
+Call Stack (most recent call first):
+  conan_provider.cmake:666 (conan_provide_dependency_check)
+  CMakeLists.txt:DEFERRED
+
+
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/Users/iviak/kaggling/itmo_labs/polygon/lab4/cmake-build-debug
