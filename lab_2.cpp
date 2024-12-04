@@ -1,14 +1,8 @@
 #include <iostream> 
-#include <iomanip> 
 #include <vector> 
 #include <cmath> 
 #include <string>
 #include <fstream> 
-#include <map> 
-#include <set> 
-#include <queue> 
-#include <stack> 
-#include <deque>
 
 #define ll long long
 using namespace std;
