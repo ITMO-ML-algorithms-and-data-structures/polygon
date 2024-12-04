@@ -1,25 +1,9 @@
 #include <iostream> 
-#include <iomanip> 
-#include <algorithm> 
-#include <vector> 
-#include <cmath> 
-#include <string> 
-#include <map> 
-#include <set> 
-#include <queue> 
-#include <stack> 
-#include <deque>
 
 #define ll long long
- using namespace std;
+using namespace std;
  
  int main() {
- 
-    // freopen("input.txt", "r", stdin);
-    // freopen("output.txt", "w", stdout);
-    // ios_base::sync_with_stdio(false);
-    // cin.tie(nullptr);
-    // cout.tie(nullptr);
 
     cout << "size: ";
 
