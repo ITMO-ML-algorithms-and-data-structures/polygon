@@ -70,7 +70,50 @@ void filter_information_gain(arma::mat &dataset, double procent) {
   dataset.shed_rows(sheded_rows);
 }
 
+arma::uvec transorf_dataset_comb(arma::mat &dataset, int comb) {
 
+  std::vector<arma::uword> sheded_rows_vec;
+  sheded_rows_vec.reserve(dataset.n_rows - 2);
+  for (int i = 0; i < dataset.n_rows - 2; ++i) {
+    if (!(comb & (1 << i))) {
+      sheded_rows_vec.push_back(i);
+    }
+  }
+  arma::uvec sheded_rows(sheded_rows_vec);
+
+  dataset.shed_rows(sheded_rows);
+  return sheded_rows;
+}
+float get_val_with_dataset_comb(arma::mat dataset,
+                                float (*model)(arma::mat, short int, short int),
+                                int comb, bool print = false) {
+  auto sheded_rows = transorf_dataset_comb(dataset, comb);
+  float val = model(dataset, dataset.n_rows - 2, -1);
+  if (print) {
+    std::cout << "Combination:\t" << comb << "\tValue\t" << val << std::endl;
+    sheded_rows.print();
+  }
+  return val;
+}
+
+void exhaustive_selection(arma::mat &dataset,
+                          float (*model)(arma::mat, short int, short int),
+                          bool print = false) {
+  float best_val = 1;
+  int best_comb = 0;
+  for (int comb = 0; comb < std::pow(2, dataset.n_rows - 2) - 10; comb++) {
+    auto val = get_val_with_dataset_comb(dataset, model, comb, print);
+    if (val < best_val) {
+      best_val = val;
+      best_comb = comb;
+    }
+  }
+  transorf_dataset_comb(dataset, best_comb);
+  if (print)
+    std::cout << "\n\tBest combination:\t" << best_comb << "\tVal:\t"
+              << best_val << "\n\tFinal n_rows: \t" << dataset.n_rows
+              << std::endl;
+}
 
 int feature_selection() {
   // path to *.csv file
@@ -91,11 +134,9 @@ int feature_selection() {
 
   // Тут нужно перебрать все комбинации (глупый цикл - это просто заглушка)
   for (int i = 0; i < 1; i++) {
-    std::cout << dataset.n_rows;
-    filter_information_gain(dataset, 1);
-    std::cout << '\n' << dataset.n_rows << '\n';
+    exhaustive_selection(dataset, evaluate_dataset, true);
     // Обучить модель (черный ящик), и получить метрику качество
-    score = evaluate_dataset(dataset, dataset.n_rows - 2, dataset.n_rows - 1);
+    score = evaluate_dataset(dataset, dataset.n_rows - 2);
 
     // Это просто пример вывода для отладки
     std::cout << "RMSE: " << score << std::endl;
