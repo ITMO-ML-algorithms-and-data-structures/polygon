@@ -99,6 +99,7 @@ float get_val_with_dataset_comb(arma::mat dataset,
 void exhaustive_selection(arma::mat &dataset,
                           float (*model)(arma::mat, short int, short int),
                           bool print = false) {
+                            // 2^n selection
   float best_val = 1;
   int best_comb = 0;
   for (int comb = 0; comb < std::pow(2, dataset.n_rows - 2) - 10; comb++) {
