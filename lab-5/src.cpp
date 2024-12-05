@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#define all(x) (x).begin(), (x).end()
 using namespace std;
 
 // PANCAKE SORT
@@ -70,14 +72,27 @@ vector <int> treeSort(vector <int> a){
 
 // SORT 3
 
-vector <int> sort3(vector <int> a){
-	return a;
+vector <int> countingSort(vector <int> a){
+    int mn = *min_element(all(a));
+    int mx = *max_element(all(a));
+
+    vector<int> cnt(mx - mn + 1, 0);
+    vector<int> b;
+
+    for (int now : a) cnt[now - mn]++;
+
+		for (int i = 0; i < cnt.size(); i++){
+			for (int j = 0; j < cnt[i]; j++)
+				b.push_back(i + mn);
+		}
+
+    return b;
 }
 
 // signed main(void){
 
-// 	vector <int> a = {5, 4, 1, 2, 3};
-// 	for (auto c : treeSort(a)){
+// 	vector <int> a = {5, 4, 1, 2, 3, 3};
+// 	for (auto c : countingSort(a)){
 // 		cout << c << " ";
 // 	}
 

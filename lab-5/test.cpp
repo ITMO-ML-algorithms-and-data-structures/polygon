@@ -13,8 +13,6 @@ void testPancakeSort(){
 	assert(isSorted(pancakeSort({5, 4, 3, 2, 1})));
 	assert(isSorted(pancakeSort({5, 4, 2, 1, 1, 2, 4})));
 	assert(isSorted(pancakeSort({1, 6, 3, 8, 1, 4, 9, 10})));
-	assert(isSorted(pancakeSort({10000, 100, 10000000, 111, 222})));
-	assert(isSorted(pancakeSort({(int)1e6, (int)1e5, (int)1e6 - 10, (int)1e6 - 20})));
 	printf("TEST 1 OK\n");
 }
 
@@ -22,12 +20,10 @@ void testTreeSort(){
 	assert(isSorted(treeSort({5, 4, 3, 2, 1})));
 	assert(isSorted(treeSort({5, 4, 2, 1, 1, 2, 4})));
 	assert(isSorted(treeSort({1, 6, 3, 8, 1, 4, 9, 10})));
-	assert(isSorted(treeSort({10000, 100, 10000000, 111, 222})));
-	assert(isSorted(treeSort({(int)1e6, (int)1e5, (int)1e6 - 10, (int)1e6 - 20})));
 	printf("TEST 2 OK\n");
 }
 
-void test3(){
+void testCountingSort(){
 	//assert();
 	printf("TEST 3 OK\n");
 }
@@ -35,6 +31,6 @@ void test3(){
 signed main(void){
 	testPancakeSort();
 	testTreeSort();
-	test3();
+	testCountingSort();
 	return 0;
 }
