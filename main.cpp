@@ -26,14 +26,37 @@ template <typename T> void print_vec(const std::vector<T> v) {
   std::cout << std::endl;
 }
 int main() {
-  std::vector<int> vec = {
-      3, 6, 1, 3, 56, 78, 9, 12, 24, 5,
-
-  };
   void (*sort)(std::vector<int>::iterator, std::vector<int>::iterator) =
       gnome_sort<std::vector<int>::iterator>;
 
-  print_vec(vec);
-  sort(vec.begin(), vec.end());
-  print_vec(vec);
+  std::vector<int> vec = {};
+
+  {
+    vec = {};
+    print_vec(vec);
+    sort(vec.begin(), vec.end());
+    print_vec(vec);
+    std::cout << std::endl;
+  }
+  {
+    vec = {1, 2, 3};
+    print_vec(vec);
+    sort(vec.begin(), vec.end());
+    print_vec(vec);
+    std::cout << std::endl;
+  }
+  {
+    vec = {3, 2, 1, 3, 2, 1};
+    print_vec(vec);
+    sort(vec.begin(), vec.end());
+    print_vec(vec);
+    std::cout << std::endl;
+  }
+  {
+    vec = {10, 0, 0, 5, 0, 0, 1};
+    print_vec(vec);
+    sort(vec.begin(), vec.end());
+    print_vec(vec);
+    std::cout << std::endl;
+  }
 }
