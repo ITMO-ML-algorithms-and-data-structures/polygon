@@ -55,11 +55,10 @@ int max_rectangle(vector <vector <int>> &matrix){
     return max_size;
 }
 
- int main(){
-    vector <vector<int>> ass = {{1, 0, 1, 0, 0},   
-                                {1, 0, 1, 1, 1},    
-                                {1, 1, 1, 1, 1},    
-                                {1, 0, 0, 1, 0}};   
-    cout << "Answer: " << max_rectangle(ass);
-    
- }
+int main(){
+vector <vector<int>> ass = {{1, 0, 1, 0, 0},   
+                            {1, 0, 1, 1, 1},    
+                            {1, 1, 1, 1, 1},    
+                            {1, 0, 0, 1, 0}};   
+cout << "Answer: " << max_rectangle(ass);
+}
