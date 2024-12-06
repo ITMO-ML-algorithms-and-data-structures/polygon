@@ -55,15 +55,14 @@ public:
 int main() {
     Solution solution;
 
-    // Пример входных данных
-    vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8}; // Пример массива
+    vector<int> nums = {1, 2, 3, 4, 5, 6, 7, 8};
     
     bool result = solution.splitArraySameAverage(nums);
 
     if (result) {
-        cout << "Можно разбить массив на подмножества с одинаковой средней величиной." << endl;
+        cout << "True" << endl;
     } else {
-        cout << "Невозможно разбить массив на подмножества с одинаковой средней величиной." << endl;
+        cout << "False" << endl;
     }
 
     return 0;
