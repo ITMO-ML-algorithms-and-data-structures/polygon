@@ -1,20 +1,20 @@
 #include <iostream>
 #include <vector>
+#include <numeric>
 
-std::vector<int> null_to_sr_ar(std::vector<int> &arr, const int size) {
-    double srar = 0;
-    int count = 0;
-    int sum = 0;
-    for (int i = 0; i < size; ++i) {
-        if (arr[i] != -1) {
-            count += 1;
-            sum = sum + arr[i];
-            std::cout << sum;
-    srar = sum / count;
+std::vector<int> null_to_sr_ar(std::vector<int> arr, const int size) {
+    int count = size; // O(1)
+    int sum = std::accumulate(arr.begin(), arr.end(), 0); // O(1)
+    for (int i = 0; i < size; i++) { // O(N)
+        if (arr[i] == 0) { // O(1)
+            count--;
         }
-        for (int i = 0; i < size; ++i) {
-            if (arr[i] == -1) {
-                arr[i] = srar;
+    }
+    int srar = sum / count; // O(1)
+    if (count > 0) {
+        for (int i = 0; i < size; i++) { // (O(N)
+            if (arr[i] == 0) { // O(1)
+                arr[i] = srar; // O(1)
             }
         }
     }
@@ -22,12 +22,12 @@ std::vector<int> null_to_sr_ar(std::vector<int> &arr, const int size) {
 }
 
 int main() {
-    std::vector<int> arr = {1, -1, 10, 4};
-    const int size = 4;
-        std::vector<int> out = null_to_sr_ar(arr, size);
-        std::cout << "Filled vector: ";
-        for (int i = 0; i < size; ++i) {
-            std::cout << out[i];
-    }
+    std::vector<int> arr = {0, 1, 0, 0}; // O(N)
+    const int size = arr.size(); // O(1)
+        std::vector<int> out = null_to_sr_ar(arr, size); // O(1)
+        std::cout << "Filled vector: " << std::endl;
+        for (int i = 0; i < size; i++) { // O(N)
+            std::cout << out[i] << std::endl; // O(1)
+        }
     return 0;
 }
