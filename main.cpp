@@ -90,7 +90,12 @@ template <typename T> void print_vec(const std::vector<T> v) {
 }
 int main() {
   void (*sort)(std::vector<int>::iterator, std::vector<int>::iterator) =
-      radix_sort<std::vector<int>::iterator>;
+      gnome_sort<std::vector<int>::iterator>;
 
-  std::vector<int> vec = {};
+  std::vector<int> vec = {1234, 2356,  35,   856, 8,   1245,
+                          2134, 23524, 6745, 8,   123, 125};
+
+  print_vec(vec);
+  sort(begin(vec), end(vec));
+  print_vec(vec);
 }
