@@ -1,5 +1,6 @@
 // std=c++20
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <iterator>
 #include <vector>
@@ -92,43 +93,4 @@ int main() {
       radix_sort<std::vector<int>::iterator>;
 
   std::vector<int> vec = {};
-
-  {
-    vec = {};
-    print_vec(vec);
-    sort(vec.begin(), vec.end());
-    print_vec(vec);
-    std::cout << std::endl;
-  }
-  {
-    vec = {1, 2, 3};
-    print_vec(vec);
-    sort(vec.begin(), vec.end());
-    print_vec(vec);
-    std::cout << std::endl;
-  }
-  {
-    vec = {3, 2, 1, 3, 2, 1};
-    print_vec(vec);
-    sort(vec.begin(), vec.end());
-    print_vec(vec);
-    std::cout << std::endl;
-  }
-  {
-    vec = {1234, 4567, 9342, 12347, 91734, 1394, 134, 110};
-    print_vec(vec);
-    sort(vec.begin(), vec.end());
-    print_vec(vec);
-    std::cout << std::endl;
-  }
-  {
-    vec = {10, 0, 0, 5, 0, 0, 1};
-    print_vec(vec);
-    struct {
-      bool operator()(int a, int b) const { return a > b; }
-    } customLess;
-    shel_sort(vec.begin(), vec.end(), customLess);
-    print_vec(vec);
-    std::cout << std::endl;
-  }
 }
