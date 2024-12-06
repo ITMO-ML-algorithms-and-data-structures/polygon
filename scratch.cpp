@@ -1,68 +1,21 @@
-#include <vector>
 #include <iostream>
-#include <complex>
-std::vector<std::vector<char>> generate_all_masks(const float arr1[], const char k = 2) {
-    const int size = sizeof(arr1) / sizeof(arr1[0]);
-    std::vector<std::vector<char>> all_masks(std::pow(k, size));
-    std::vector<char> mask(size, 0);
-    if (size > 20){
-        throw "Size is above 20";
-    }
-    for (int i = 0; std::pow(k, size); i++){
-        std::vector<char> mask_to_add(mask);
-        all_masks.push_back(mask_to_add);
-        for (int j = size - 1; j > -1; j--) {
-            if (mask[j] == 1) {
-                mask[j] = 0;
-            } else if (mask[j] == 0) {
-                mask[j] = 1;
-                break;
-            }
-        }
-    }
-    return all_masks;
-}
-float calculate_cluster_metric(std::vector<float> cluster) {
-    float summa = 0;
-    float mean = 0;
-    float rate = 0;
-    for(int i = 0; i < cluster.size(); i++) {
-        summa += cluster[i];
-    }
-    mean = summa / (sizeof(cluster) / sizeof(cluster[0]));
-    for(int i = 0; i < cluster.size(); i++) {
-            rate += std::abs(cluster[i] - mean);
-    }
-    return rate;
-}
-float calculate_metric(std::vector<float> cluster1, std::vector<float> cluster2) {
-    float metric1 = calculate_cluster_metric(cluster1);
-    float metric2 = calculate_cluster_metric(cluster2);
-    float rate = 0;
-    rate = std::abs(metric1 - metric2);
-    return rate;
-}
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
 int main(){
-    float arr1[] = {1, 2, 3, 4, 5, 6};
-    float arr2[] = {1, 2, 3,10, 9, 8};
-    float arr3[] = {99.5, 101, -1.1};
-    std::vector<std::vector<char>> masks = generate_all_masks(arr1);
-    float min_rate = 0;
-    for (int i = 0; i < masks.size(); i++){
-        std::vector<char> mask = masks[i];
-        std::vector<float> cluster1 = {};
-        std::vector<float> cluster2 = {};
-        for (int j = 0; j < mask.size(); j++){
-            if (mask[j] == 0) {
-                cluster1.push_back(arr1[j]);
-            } else {
-                cluster2.push_back(arr1[j]);
-            }
-        }
-        if(min_rate > calculate_metric(cluster1, cluster2)) {
-            min_rate = calculate_metric(cluster1, cluster2);
-        }
-    }
-    std::cout << min_rate;
-    return 0;
+
+    cout << "Size: ";
+    int len; cin >> len;
+
+    vector <double> ass(len);
+
+    cout << "Numbers: ";
+    for (int i = 0; i < len; i++) cin >> ass[i];
+
+    sort(ass.begin(), ass.end());
+
+    if (len % 2 == 0) cout << (ass[len / 2] + ass[len / 2 - 1]) / 2;
+    else cout << ass[len / 2];
 }
