@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <chrono>
 
+using namespace std::chrono;
 
 // сначала реализовал через next_permutation, но так нельзя
 
@@ -94,3 +96,19 @@ void out_double_vector(const std::vector<std::vector<double>>& input) {
 }
 
 
+int main() {
+    std::vector<double> example = {1.0, 2.0, 10.0, 11.0, 20.0, 22.0, 45.0, 46.0, 15.5, 100.0, 101.0, 2000.0, 5000.0, 6000.0, 15000.0};
+
+    auto start = high_resolution_clock::now();
+
+    std::vector<std::vector<double>> res = cluster_array(example, 7);
+
+    auto end = high_resolution_clock::now();
+
+    out_double_vector(res);
+
+    auto duration = duration_cast<milliseconds>(end - start);
+    std::cout << "Время выполнения: " << duration.count() << " ms" << std::endl;
+
+    return 0;
+}
