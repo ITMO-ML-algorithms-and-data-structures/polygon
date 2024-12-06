@@ -1,13 +1,15 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <chrono>
+#include <cstdlib>
 
 using namespace std;
 
 void bucketSort(int arr[], int size) {
     // находим максимальное и минимальное значение в массиве
-    int maxVal = arr[0]; 
-    int minVal = arr[0]; 
+    int maxVal = arr[0]; // 4 байта
+    int minVal = arr[0]; // 4 байта
     for (int i = 1; i < size; i++) {
         if (arr[i] > maxVal) { // O(n)
             maxVal = arr[i];
@@ -39,7 +41,7 @@ void bucketSort(int arr[], int size) {
     for (int i = 0; i < bucketCount; i++) {
         // используем сортировку вставками для небольших ведер
         if (!buckets[i].empty()) {
-            std::sort(buckets[i].begin(), buckets[i].end());
+            sort(buckets[i].begin(), buckets[i].end());
             for (int j = 0; j < buckets[i].size(); j++) {
                 arr[index++] = buckets[i][j]; // собираем отсортированные элементы обратно в массив
             }
@@ -53,6 +55,15 @@ void assertTest(bool ans) {
         cout << "The test is passed" << '\n';
     } else {
         cout << "The test is not passed" << '\n';
+    }
+}
+
+void generateRandomNumbers(vector<int>& numbers, int count) {
+    // Инициализация генератора случайных чисел
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    for (int i = 0; i < count; ++i) {
+        numbers.push_back(rand() % 100); // Генерация случайного числа от 0 до 99
     }
 }
 
@@ -101,5 +112,30 @@ int main() {
 
     runTest();
 
+    const int count = 10000; // Количество случайных чисел
+    vector<int> randomNumbers;
+
+    // Генерация случайных чисел
+    generateRandomNumbers(randomNumbers, count);
+
+    // Преобразование std::vector в массив для сортировки
+    int* randomArr = randomNumbers.data();
+    
+    // Записываем текущее время работы
+    auto start = chrono::high_resolution_clock::now();
+
+    bucketSort(randomArr, count);
+
+    // Текущее время окончания выполнения работы
+    auto end = chrono::high_resolution_clock::now();
+    
+    // Продолжительность выполнения работы
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+
+    cout << "Sorting completed." << endl;
+    cout << "Running time: " << duration.count() << " microseconds" << endl;
+ 
     return 0;
 }
+
+// Итоговая память для функции bucketSor составляет 8 байт

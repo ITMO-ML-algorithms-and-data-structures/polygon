@@ -1,12 +1,16 @@
 #include <iostream>
+#include <chrono>
+#include <cstdlib>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
 
 void shakerSort(int* arr, int array_size) {
-    int i; // переменная для итерации
-    int t; // переменная для временного хранения значения при обмене элементов
-    int left = 0; // переменная для отслеживания индекса текущей левой границы
-    int right = array_size - 1; // переменная для отслеживания индекса текущей правой границы
+    int i; // переменная для итерации; 4 байта
+    int t; // переменная для временного хранения значения при обмене элементов; 4 байта
+    int left = 0; // переменная для отслеживания индекса текущей левой границы; 4 байта
+    int right = array_size - 1; // переменная для отслеживания индекса текущей правой границы; 4 байта
 
     // основной цикл, выполняется, пока левая граница меньше правой
     do {
@@ -76,6 +80,16 @@ bool result_worst_case = equal(begin(worst_case), end(worst_case), begin(expecte
 assertTest(result_worst_case);
 }
 
+void generateRandomNumbers(vector<int>& numbers, int count) {
+    // Инициализация генератора случайных чисел
+    srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    for (int i = 0; i < count; ++i) {
+        numbers.push_back(rand() % 100); // Генерация случайного числа от 0 до 99
+    }
+}
+
+
 int main() {
     int arr[] = {2, 78, 56, 34, 2, 12, 67, 90, 42, 11};
     int size =sizeof(arr) / sizeof(arr[0]);
@@ -86,7 +100,34 @@ int main() {
         cout << arr[i] << " ";
     }
     
-    runTest();
+    runTest(); 
+
+    const int count = 10000; // Количество случайных чисел
+    vector<int> randomNumbers;
+
+    // Генерация случайных чисел
+    generateRandomNumbers(randomNumbers, count);
+
+    // Преобразование std::vector в массив для сортировки
+    int* randomArr = randomNumbers.data();
+    
+    // Записываем текущее время работы
+    auto start = chrono::high_resolution_clock::now();
+
+    shakerSort(randomArr, count);
+
+    // Текущее время окончания выполнения работы
+    auto end = chrono::high_resolution_clock::now();
+    
+    // Продолжительность выполнения работы
+    auto duration = chrono::duration_cast< chrono::microseconds>(end - start);
+
+    cout << "Sorting completed." << endl;
+    cout << "Running time: " << duration.count() << " milliseconds" << endl;
+ 
+
 
     return 0;
 }
+
+// Итоговая память для функции shakerSort составляет 16 байт

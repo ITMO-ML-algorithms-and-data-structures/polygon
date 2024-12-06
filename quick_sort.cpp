@@ -1,4 +1,8 @@
 #include <iostream>
+#include <chrono>
+#include <cstdlib>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -6,9 +10,9 @@ void qsortRecursive(int *arr, int size) {
     // базовый случай: если размер массива меньше или равен 1, массив отсортирован
     if (size <= 1) return; 
     
-    int i = 0; // указатель для перебора слева
-    int j = size - 1; // указатель для перебора справа
-    int mid = arr[size / 2];  // центральный элемент массива (опорный элемент)
+    int i = 0; // указатель для перебора слева; 4 байта
+    int j = size - 1; // указатель для перебора справа; 4 байта
+    int mid = arr[size / 2];  // центральный элемент массива (опорный элемент); 4 байта
 
     // делим массив на 2 части
     do {
@@ -23,7 +27,7 @@ void qsortRecursive(int *arr, int size) {
 
         // если указатели i и j не пересеклись, меняем элементы местами
         if (i <= j) {
-            std::swap(arr[i], arr[j]); // Используем std::swap для удобства
+            swap(arr[i], arr[j]); // Используем std::swap для удобства
             i++; 
             j--;
         }
@@ -50,11 +54,20 @@ void assertTest(bool ans) {
     }
 }
 
+void generateRandomNumbers(vector<int>& numbers, int count) {
+    // Инициализация генератора случайных чисел
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    for (int i = 0; i < count; ++i) {
+        numbers.push_back(rand() % 100); // Генерация случайного числа от 0 до 99
+    }
+}
+
 // тесты
 void runTest() {
 
 // лучший случай
-// O(n*log n)
+// O(n*log(n))
 int best_case[] = {1, 2, 4, 6, 8, 12};
 int expected_best_case[] = {1, 2, 4, 6, 8, 12};
 int size_best_case = sizeof(best_case) / sizeof(best_case[0]);
@@ -92,6 +105,33 @@ int main() {
     }
 
     runTest();
+
+    const int count = 10000; // Количество случайных чисел
+    vector<int> randomNumbers;
+
+    // Генерация случайных чисел
+    generateRandomNumbers(randomNumbers, count);
+
+    // Преобразование std::vector в массив для сортировки
+    int* randomArr = randomNumbers.data();
+    
+    // Записываем текущее время работы
+    auto start = chrono::high_resolution_clock::now();
+
+    qsortRecursive(randomArr, count);
+
+    // Текущее время окончания выполнения работы
+    auto end = chrono::high_resolution_clock::now();
+    
+    // Продолжительность выполнения работы
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+
+    cout << "Sorting completed." << endl;
+    cout << "Running time: " << duration.count() << " microseconds" << endl;
+ 
+
     
     return 0;
 }
+
+// Итоговая память для функции qsortRecursive составляет 12 байт
