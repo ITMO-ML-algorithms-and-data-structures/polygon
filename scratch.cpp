@@ -2,7 +2,7 @@
 #include <vector>
 #include <unordered_map>
 
-void print_vector(std::string prefix, const std::vector<int> &vec) {
+void print_vector(std::string prefix, const std::vector<short int> &vec) {
     // 1 * prefix.size() byte + 4 * vec.size() byte + additional bytes
     std::cout << prefix;
     for (auto val : vec) { // + 4 bytes
@@ -11,11 +11,11 @@ void print_vector(std::string prefix, const std::vector<int> &vec) {
     std::cout << std::endl;
 }
 
-std::vector<int> label_encoder(const std::string arr[], const int size) { // size * string[i].size() + 4 + 4 * size
-    std::vector<int> out(size, 0);
+std::vector<short int> label_encoder(const std::string arr[], const short int size) { // size * arr[i].size() + 4 + 4 * size
+    std::vector<short int> out(size, 0);
 
-    std::unordered_map<std::string, int> word_map; // w.p.c. size * string[i].size() + 4 * size
-    int counter = 0; // 4
+    std::unordered_map<std::string, short int> word_map; // w.p.c. size * arr[i].size() + 4 * size
+    short int counter = 0; // 4
     for (int i = 0; i < size; i++) { // 4
         std::string word = arr[i]; // word.size() bytes
 
@@ -30,9 +30,9 @@ std::vector<int> label_encoder(const std::string arr[], const int size) { // siz
 }
 int main() {
     const std::string arr[] {"red", "green", "yellow", "yellow"};
-    const int size = 4;
+    const short int size = 4;
 
-    std::vector<int> out = label_encoder(arr, size);
+    std::vector<short int> out = label_encoder(arr, size);
 
     print_vector("Encoded vector: ", out);
 
