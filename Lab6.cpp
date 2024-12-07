@@ -20,7 +20,6 @@ int max_income(int k, vector<int>& prices)
             maxDiff = max(maxDiff, dp[i - 1][j] - prices[j]);
         }
     }
-
     return dp[k][n - 1];
 }
 
