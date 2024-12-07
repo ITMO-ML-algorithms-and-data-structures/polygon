@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 using namespace std;
 
@@ -22,12 +23,20 @@ int max_income(int k, vector<int>& prices)
 
     return dp[k][n - 1];
 }
-}
+
 int main() //память - 84 байта, сложность - O(n * k)
 {
-    vector<int> prices = { 3, 2, 6, 5, 0, 3 };
+    ifstream input_file("test_lab6.txt");
+    vector<int> prices;
     int k = 2;
-    cout << maxProfit(k, prices) << endl;
+
+    int value;
+    while (input_file >> value) {
+        prices.push_back(value);
+    }
+    input_file.close();
+
+    cout << max_income(k, prices) << endl;
 
 	return 0;
 }
