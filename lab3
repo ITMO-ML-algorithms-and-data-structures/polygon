@@ -1,0 +1,44 @@
+#include <iostream>
+#include <unordered_map>
+#include <string>
+#include <vector>
+#include <cassert>
+using namespace std;
+
+// Функция для замены строк в массиве на количество их вхождений
+void processFrequencies(vector<string>& arr) {
+    unordered_map<string, int> frequencyMap; // счетчик числа вхождений строки
+
+    // O(N) в худшем случае или O(1) в лучшем // считаем количество вхождений каждой строки
+    for (const auto& str : arr) {
+        frequencyMap[str]++;
+    }
+
+    // O(N) в худшем случае или O(1) в лучшем // меняем значения в массиве на число вхождений согласно условию
+    for (int i = 0; i < arr.size(); i++) {
+        arr[i] = std::to_string(frequencyMap[arr[i]]);
+    }
+}
+// итого O(N) + O(N) = O(N)
+//O(N) - в худшем случае
+//O(1) - в лучшем случае
+//O(K) - в среднем случае, который равномерно распределен от 1 до N
+int main() // функция для тестов
+{
+    //задаем тестовые массивы строк
+    std::vector<std::string> inputArray = { "1", "2", "4", "3", "2", "1" };
+    std::vector<std::string> inputArray2 = { "apple", "apple", "apple" };
+    std::vector<std::string> inputArray3 = { " ", " ", " ", " ", " ", " " };
+    std::vector<std::string> inputArray4 = { "1", "2", "3", "4", "5" };
+    std::vector<std::string> inputArray5 = { "" };
+
+    //вызываем функцию для каждого заданного массива
+    processFrequencies(inputArray);
+    processFrequencies(inputArray2);
+    processFrequencies(inputArray3);
+    processFrequencies(inputArray4);
+    processFrequencies(inputArray5);
+
+
+    return 0;
+}
