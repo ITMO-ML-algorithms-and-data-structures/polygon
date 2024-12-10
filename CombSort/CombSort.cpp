@@ -1,5 +1,9 @@
-#include<iostream>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <chrono>
 using namespace std;
+using namespace chrono;
 
 int getNextGap(int gap)
 {
@@ -10,8 +14,9 @@ int getNextGap(int gap)
     return gap;
 }
 
-void combSort(int a[], int n)
+void combSort(vector<int>& a)
 {
+    int n = a.size();
     int gap = n;
 
     bool swapped = true;
@@ -33,23 +38,41 @@ void combSort(int a[], int n)
     }
 }
 
-void printArray(int arr[], int n)
-{
-	for (int i = 0; i < n; ++i)
-		cout << arr[i] << " ";
-	cout << "\n";
-}
-
 int main()
 {
-    int a[] = {60, 20, 40, 70, 30, 10};
-    int n = sizeof(a) / sizeof(a[0]);
-    printf("Исходный массив\n");
-    printArray(a, n);
+    ifstream inputFile("C:/Users/mosko/PycharmProjects/h/f.txt");
 
-    combSort(a, n);
-    printf("Отсортированный массив\n");
-    printArray(a, n);
+    if (!inputFile) {
+        cerr << "Ошибка: не удалось открыть файл!" << endl;
+        return 1;
+    }
+    
+    vector<int> a;
+    int value;
+
+    // Считывание данных из файла
+    while (inputFile >> value) {
+        a.push_back(value);
+    }
+    
+    inputFile.close();
+
+    // Проверка, что вектор не пуст
+    if (a.empty()) {
+        cerr << "Ошибка: файл пуст!" << endl;
+        return 1;
+    }
+
+    auto start = high_resolution_clock::now();  
+
+    combSort(a); // Сортировка
+
+    auto end = high_resolution_clock::now();
+
+    duration<double> duration_sec = end - start;
+
+    // Вывод времени выполнения
+    cout << "Время выполнения: " << duration_sec.count() << " секунд" << endl;
 
     return 0;
 }
