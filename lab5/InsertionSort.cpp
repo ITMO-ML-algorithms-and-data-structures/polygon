@@ -11,7 +11,7 @@
 std::vector<int> insertionSort(std::vector<int> arr) {
     int n = arr.size();
     for (int i=1; i<n; i++) // Проходим все эл-ты
-        // Если пред эл больше текцщего, то меняем местами и сдвигает вправо
+        // Если пред эл больше текущего, то меняем местами и сдвигает вправо
         for (int j=i; j>0 && arr[j-1]>arr[j]; j--)
             std::swap(arr[j-1], arr[j]);
 
@@ -58,7 +58,7 @@ void display(const std::vector<int>& arr, const std::vector<int>& arrSort, std::
     std::cout << "\nРазмер массива:" << n;
     */
 
-    std::cout << duration.count() << ", ";
+    std::cout << duration.count() << "\n";
     /*
     std::cout << "\nИсходный массив:\n";
     for (int i = 0; i < n; i++) std::cout << arr[i] << " ";
@@ -95,7 +95,6 @@ void test(const int& n = 10, const int& arrMax = 100, const int& arrMin = 0) {
 
 
 int main() {
-    for (int i=1000; i <= 50000; i+=1000)
-        test(i, 999999, 0);
+    test(100, 999999, 0);
     return 0;
 }

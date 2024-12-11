@@ -104,7 +104,7 @@ void display(const std::vector<int>& arr, const std::vector<int>& arrSort, std::
     std::cout << "\nРазмер массива:" << n;
     */
 
-    std::cout << duration.count() << ", ";
+    std::cout << duration.count() << "\n";
     /*
     std::cout << "\nИсходный массив:\n";
     for (int i = 0; i < n; i++) std::cout << arr[i] << " ";
@@ -141,7 +141,6 @@ void test(const int& n = 10, const int& arrMax = 100, const int& arrMin = 0) {
 
 
 int main() {
-    for (int i=1000; i <= 50000; i+=1000)
-        test(i, 999999, 0);
+    test(100, 999999, 0);
     return 0;
 }

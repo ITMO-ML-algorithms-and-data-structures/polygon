@@ -12,7 +12,7 @@ void countingSort(std::vector<int>& arr, const int& exp) {
     std::vector<int> res(n);
     int count[10] = {0}; // Массив для подсчёта кол-во цифр 0-9 
 
-    // Подсчёт появленме разряда
+    // Подсчёт появление Разряда
     for (int i=0; i<n; i++) count[(arr[i] / exp) % 10]++;
     
     // Чтобы count[i] содержал индекс разряда в итоговом массиве
@@ -81,8 +81,8 @@ void display(const std::vector<int>& arr, const std::vector<int>& arrSort, std::
     int n = arr.size();
     std::cout << "\nРазмер массива:" << n;
     */
-
-    std::cout << duration.count() << ", ";
+    
+    std::cout << duration.count() << "\n";
     /*
     std::cout << "\nИсходный массив:\n";
     for (int i = 0; i < n; i++) std::cout << arr[i] << " ";
@@ -106,7 +106,7 @@ bool check(const std::vector<int>& arr) {
 
 // Тест для алгоритма сортировки
 void test(const int& n = 10, const int& arrMax = 100, const int& arrMin = 0) {
-    std::vector<int> arr = arrRand(n, arrMax, arrMin);
+    std::vector<int> arr = arrRand(n, arrMin, arrMax);
 
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<int> arrSort = radixSort(arr);
@@ -119,7 +119,6 @@ void test(const int& n = 10, const int& arrMax = 100, const int& arrMin = 0) {
 
 
 int main() {
-    for (int i=1000; i <= 50000; i+=1000)
-        test(i, 999999, 0);
+    test(100, 999999, 0);
     return 0;
 }
