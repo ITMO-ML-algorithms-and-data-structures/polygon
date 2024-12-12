@@ -58,43 +58,45 @@ void treeSort(vector<int>& arr)
 	storeSorted(root, arr, i);
 }
 
-int main() 
-{ 
-	ifstream inputFile("C:/Users/mosko/PycharmProjects/h/f.txt");
+// int main() 
+// { 
+// 	ifstream inputFile("E:/СLabs/lab1/polygon/generateArr/f.txt");
 
-    if (!inputFile) {
-        cerr << "Ошибка: не удалось открыть файл!" << endl;
-		return 1;
-    }
+//     if (!inputFile) {
+//         cerr << "Ошибка: не удалось открыть файл!" << endl;
+// 		return 1;
+//     }
     
-    vector<int> arr;
-    int value;
+//     vector<int> arr;
+//     int value;
 
-	// Считывание данных из файла
-    while (inputFile >> value) {
-        arr.push_back(value);
-    }
+// 	// Считывание данных из файла
+//     while (inputFile >> value) {
+//         arr.push_back(value);
+//     }
     
-    inputFile.close();
+//     inputFile.close();
 
-	// Проверка, что вектор не пуст
-    if (arr.empty()) {
-        cerr << "Ошибка: файл пуст!" << endl;
-        return 1;
-    }
+// 	cout << "Размер массива: " << arr.size() << endl;
 
-	int n = arr.size();
+// 	// Проверка, что вектор не пуст
+//     if (arr.empty()) {
+//         cerr << "Ошибка: файл пуст!" << endl;
+//         return 1;
+//     }
 
-	auto start = high_resolution_clock::now();
+// 	int n = arr.size();
 
-	treeSort(arr); // Сортировка
+// 	auto start = high_resolution_clock::now();
 
-	auto end = high_resolution_clock::now();
+// 	treeSort(arr); // Сортировка
 
-	duration<double> duration_sec = end - start;
+// 	auto end = high_resolution_clock::now();
 
-	// Вывод времени выполнения
-	cout << "\nВремя выполнения: " << duration_sec.count() << " секунд" << endl;
+// 	duration<double> duration_sec = end - start;
 
-	return 0;
-}
+// 	// Вывод времени выполнения
+// 	cout << "Время выполнения: " << duration_sec.count() << " секунд" << endl;
+
+// 	return 0;
+// }

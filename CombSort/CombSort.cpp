@@ -38,41 +38,43 @@ void combSort(vector<int>& a)
     }
 }
 
-int main()
-{
-    ifstream inputFile("C:/Users/mosko/PycharmProjects/h/f.txt");
+// int main()
+// {
+//     ifstream inputFile("E:/СLabs/lab1/polygon/generateArr/f.txt");
 
-    if (!inputFile) {
-        cerr << "Ошибка: не удалось открыть файл!" << endl;
-        return 1;
-    }
+//     if (!inputFile) {
+//         cerr << "Ошибка: не удалось открыть файл!" << endl;
+//         return 1;
+//     }
     
-    vector<int> a;
-    int value;
+//     vector<int> a;
+//     int value;
 
-    // Считывание данных из файла
-    while (inputFile >> value) {
-        a.push_back(value);
-    }
+//     // Считывание данных из файла
+//     while (inputFile >> value) {
+//         a.push_back(value);
+//     }
     
-    inputFile.close();
+//     inputFile.close();
 
-    // Проверка, что вектор не пуст
-    if (a.empty()) {
-        cerr << "Ошибка: файл пуст!" << endl;
-        return 1;
-    }
+//     cout << "Размер массива: " << a.size() << endl;
 
-    auto start = high_resolution_clock::now();  
+//     // Проверка, что вектор не пуст
+//     if (a.empty()) {
+//         cerr << "Ошибка: файл пуст!" << endl;
+//         return 1;
+//     }
 
-    combSort(a); // Сортировка
+//     auto start = high_resolution_clock::now();  
 
-    auto end = high_resolution_clock::now();
+//     combSort(a); // Сортировка
 
-    duration<double> duration_sec = end - start;
+//     auto end = high_resolution_clock::now();
 
-    // Вывод времени выполнения
-    cout << "Время выполнения: " << duration_sec.count() << " секунд" << endl;
+//     duration<double> duration_sec = end - start;
 
-    return 0;
-}
+//     // Вывод времени выполнения
+//     cout << "Время выполнения: " << duration_sec.count() << " секунд" << endl;
+
+//     return 0;
+// }
