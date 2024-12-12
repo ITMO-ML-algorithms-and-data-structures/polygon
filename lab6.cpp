@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 int calculateMinimumHP(vector<vector<int>>& dungeon) {
     int m = dungeon.size(); // количество строк
     int n = dungeon[0].size(); // количество столбцов
