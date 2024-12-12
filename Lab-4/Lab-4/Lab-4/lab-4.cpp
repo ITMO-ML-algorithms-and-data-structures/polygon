@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include <vector>
 
 std::vector<std::vector<int>> findSublists( const std::vector<int>& nums, int target, int& coun ) {
@@ -50,15 +51,22 @@ bool checkout(std::vector<std::vector<int>> mn_array, std::vector<int> nums, int
 
 void test1(int coun) {
 	int target = 0;
-	std::vector<int> nums = { 3, 4, -7, 1, 3, 3, 1, 4, 3, 1 };              
+	auto start = std::chrono::steady_clock::now();
+
+	std::vector<int> nums = { -2, 3, 4, -7, 1, 2, 3, 3, 1, 4, 0, 1, 2, 7, -3, 0 };              
 	auto mn_array = findSublists(nums, target, coun);
+	//struct tm *now = localtime(&mytime);
+
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsed = end - start;
+	std::cout << "Time: " << elapsed.count() << "\n";
 
 	if (checkout(mn_array, nums, coun))
 		std::cout << "Test passed\n";
 	else
 		std::cout << "Test not passed\n";
 
-	coun += sizeof(nums) + sizeof(mn_array) + sizeof(target);
+	coun += sizeof(nums) + sizeof(mn_array) + sizeof(target) + sizeof(coun);
 	std::cout << coun << "bt\n";
 }
 
@@ -72,7 +80,7 @@ void test2(int coun) {
 	else
 		std::cout << "Test not passed\n";
 
-	coun += sizeof(nums) + sizeof(mn_array) + sizeof(target);
+	coun += sizeof(nums) + sizeof(mn_array) + sizeof(target) + sizeof(coun);
 	std::cout << coun << "bt\n";
 }
 
