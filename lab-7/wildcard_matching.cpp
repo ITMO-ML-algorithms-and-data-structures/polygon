@@ -11,9 +11,9 @@ bool isMatch(const std::string& s, const std::string& p) {
 
     while (sIndex < sLen) {
         // Если символы совпадают или есть '?'
-        if (pIndex < pLen && (s[pIndex] == p[sIndex] || p[pIndex] == '?')) {
-            sIndex ++;
-            pIndex ++;
+        if (pIndex < pLen && (s[sIndex] == p[pIndex] || p[pIndex] == '?')) {
+            sIndex++;
+            pIndex++;
         }
         // Если встречаем '*', запоминаем текущее положение
         else if (pIndex < pLen && p[pIndex] == '*') {
@@ -37,9 +37,9 @@ bool isMatch(const std::string& s, const std::string& p) {
         pIndex++;
     }
     
-    return pIndex == pLen; // Возвращаем true, если шаблон полностью обработан
+    // Проверяем на соответствие, если шаблон полностью обработан
+    return pIndex == pLen;
 }
-
 
 int main() {
     std::string s, p;
