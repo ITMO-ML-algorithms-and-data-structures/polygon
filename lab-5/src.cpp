@@ -49,7 +49,6 @@ TreeNode* insert(TreeNode* root, int value) {
     return root;
 }
 
-// Функция для in-order обхода дерева и сохранения элементов в векторе
 void treeTour(TreeNode* root, vector<int>& a) {
     if (root != nullptr) {
         treeTour(root->left, a);
