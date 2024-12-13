@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-
 using namespace std;
 
 // Функция для просеивания элемента вниз по куче

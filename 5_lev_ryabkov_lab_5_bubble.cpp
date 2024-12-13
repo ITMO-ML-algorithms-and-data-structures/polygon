@@ -3,6 +3,7 @@
 #include <fstream>
 using namespace std;
 
+
 void bubbleSort(vector<int>& arr) {
     size_t n = arr.size();
     // n: 8 байт (размер переменной size_t) // O(1) для вычисления размера вектора
