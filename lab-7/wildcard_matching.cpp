@@ -3,29 +3,29 @@
 #include <chrono>
 
 
-bool isMatch(const std::string& s, const std::string& p) {
-    int sLen = s.length();
-    int pLen = p.length();
+bool wildcard_matching(const std::string& string, const std::string& pattern) {
+    int string_len = string.length();
+    int pattern_len = pattern.length();
     
-    int sIndex = 0, pIndex = 0;
-    int starIndex = -1, matchIndex = -1;
+    int string_index = 0, pattern_index = 0;
+    int star_pattern_index = -1, star_match_string_index = -1;
 
-    while (sIndex < sLen) { // проход по символам строки - O(N), где N - длина строки
-        // Если символы совпадают или есть '?'
-        if (pIndex < pLen && (s[sIndex] == p[pIndex] || p[pIndex] == '?')) {
-            sIndex++;
-            pIndex++;
+    while (string_index < string_len) { // проход по символам строки - O(N), где N - длина строки
+        // Если символы совpпадают или есть '?'
+        if (pattern_index < pattern_len && (string[string_index] == pattern[pattern_index] || pattern[pattern_index] == '?')) {
+            string_index++;
+            pattern_index++;
         }
         // Если встречаем '*', запоминаем текущее положение
-        else if (pIndex < pLen && p[pIndex] == '*') {
-            starIndex = pIndex;       // запоминаем позицию '*'
-            matchIndex = sIndex;      // запоминаем позицию строки
-            pIndex++;                 // переходим к следующему символу шаблона
+        else if (pattern_index < pattern_len && pattern[pattern_index] == '*') {
+            star_pattern_index = pattern_index;       // запоминаем позицию '*'
+            star_match_string_index = string_index;      // запоминаем позицию строки
+            pattern_index++;                 // переходим к следующему символу шаблона
         }
         // Если символы не совпадают, но есть предыдущее '*'
-        else if (starIndex != -1) {
-            pIndex = starIndex + 1;  // возвращаемся к '*' в шаблоне
-            sIndex = ++matchIndex;    // увеличиваем позицию в строке
+        else if (star_pattern_index != -1) {
+            pattern_index = star_pattern_index + 1;  // возвращаемся к '*' в шаблоне
+            string_index = ++star_match_string_index;    // увеличиваем позицию в строке
         }
         // Если ничего не подходит, возвращаем false
         else {
@@ -34,12 +34,12 @@ bool isMatch(const std::string& s, const std::string& p) {
     }
 
     // Проверяем оставшиеся символы в шаблоне
-    while (pIndex < pLen && p[pIndex] == '*') { // проход по оставщимся символам шаблона - O(M) в худшем случае, где M - длина шаблона
-        pIndex++;
+    while (pattern_index < pattern_len && pattern[pattern_index] == '*') { // проход по оставщимся символам шаблона - O(M) в худшем случае, где M - длина шаблона
+        pattern_index++;
     }
     
     // Проверяем на соответствие, если шаблон полностью обработан
-    return pIndex == pLen;
+    return pattern_index == pattern_len;
 
     // Итоговая сложность:
     // О(N) + O(M) = O(N + M)
@@ -108,7 +108,7 @@ int main() {
     for (const auto& test : tests) {
         auto start = std::chrono::high_resolution_clock::now(); // Фиксируем время старта
 
-        bool result = isMatch(test.s, test.p);
+        bool result = wildcard_matching(test.s, test.p);
 
         auto end = std::chrono::high_resolution_clock::now(); // Фиксируем время окончания
         std::chrono::duration<double> duration = end - start;
