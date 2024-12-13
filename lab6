@@ -1,0 +1,37 @@
+class Solution {
+public:
+    bool isScramble(std::string s1, std::string s2) {
+        // Кэш для мемоизации
+        std::unordered_map<std::string, bool> memo;
+        return isScrambleHelper(s1, s2, memo);
+    }
+
+private:
+    bool isScrambleHelper(std::string s1, std::string s2, std::unordered_map<std::string, bool>& memo) {
+        if (s1 == s2) return true; // Если строки равны, они "перемешанные"
+        if (s1.length() != s2.length()) return false; // Если длины не совпадают
+        
+        // Формируем уникальный ключ для мемоизации
+        std::string key = s1 + "#" + s2;
+        if (memo.count(key)) return memo[key];
+
+        // Проверяем все возможные разбиения
+        int n = s1.length();
+        for (int i = 1; i < n; ++i) {
+            // Вариант 1: части строк не перемешаны
+            if (isScrambleHelper(s1.substr(0, i), s2.substr(0, i), memo) &&
+                isScrambleHelper(s1.substr(i), s2.substr(i), memo)) {
+                return memo[key] = true;
+            }
+
+            // Вариант 2: части строк перемешаны
+            if (isScrambleHelper(s1.substr(0, i), s2.substr(n - i), memo) &&
+                isScrambleHelper(s1.substr(i), s2.substr(0, n - i), memo)) {
+                return memo[key] = true;
+            }
+        }
+
+        // Если ни один из вариантов не подошел
+        return memo[key] = false;
+    }
+};
