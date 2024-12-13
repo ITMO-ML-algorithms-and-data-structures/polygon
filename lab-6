@@ -1,0 +1,86 @@
+#include <vector>
+#include <iostream>
+#include <unordered_map>
+#include <unordered_set>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
+
+        vector<int> totalDistance(n, 0); // подсчет расстояния
+        vector<int> nodeCount(n, 1); // подсчет количества узлов
+
+        unordered_map<int, unordered_set<int>> tree; // список смежности
+
+        // строим дерево на основе списка смежности
+        for (const auto& edge : edges) {
+            tree[edge[0]].insert(edge[1]);
+            tree[edge[1]].insert(edge[0]);
+        }
+
+        // запускаем оба обхода с узла 0 (корень по условию задачи)
+        // так как у корня нет родителя, допустим значение -1, чтобы избежать попадания в родителя и остановки на корне
+        dfs(0, -1, tree, totalDistance, nodeCount);
+        adjustDistancesForParents(0, -1, tree, totalDistance, nodeCount, n);
+
+        return totalDistance;
+    }
+
+private:
+    // вычисляем количество узлов в поддеревьях и сумму расстояний для каждого из узлов с помощью поиска в глубину
+    void dfs(int node, int parent, unordered_map<int, unordered_set<int>>& tree,
+             vector<int>& totalDistance, vector<int>& nodeCount) {
+        // обрабатываем всех детей данного узла
+        for (int child : tree[node]) {
+            if (child == parent) continue;
+            dfs(child, node, tree, totalDistance, nodeCount); // рекурсивно проходим по детям
+            nodeCount[node] += nodeCount[child];
+            totalDistance[node] += totalDistance[child] + nodeCount[child];
+        }
+    }
+
+    // перераспределяем суммы расстояний, исходя из информации о родителе
+    void adjustDistancesForParents(int node, int parent,
+                                   unordered_map<int, unordered_set<int>>& tree,
+                                   vector<int>& totalDistance, vector<int>& nodeCount, int n) {
+        for (int child : tree[node]) {
+            if (child == parent) continue; // Пропускаем родителя
+            totalDistance[child] = totalDistance[node] - nodeCount[child] + (n - nodeCount[child]);
+            adjustDistancesForParents(child, node, tree, totalDistance, nodeCount, n); // рекурсивно обрабатываем детей
+        }
+    }
+};
+
+int main() {
+    Solution sol;
+
+    int n1 = 6;
+    vector<vector<int>> edges1 = {{0, 1}, {0, 2}, {2, 3}, {2, 4}, {2, 5}};
+    vector<int> result1 = sol.sumOfDistancesInTree(n1, edges1);
+    cout << "1: ";
+    for (int i : result1) {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    int n2 = 1;
+    vector<vector<int>> edges2 = {};
+    vector<int> result2 = sol.sumOfDistancesInTree(n2, edges2);
+    cout << "2: ";
+    for (int i : result2) {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    int n3 = 2;
+    vector<vector<int>> edges3 = {{1, 0}};
+    vector<int> result3 = sol.sumOfDistancesInTree(n3, edges3);
+    cout << "3: ";
+    for (int i : result3) {
+        cout << i << " ";
+    }
+    cout << endl;
+    return 0;
+}
