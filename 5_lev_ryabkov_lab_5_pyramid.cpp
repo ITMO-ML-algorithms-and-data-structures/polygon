@@ -4,7 +4,7 @@
 using namespace std;
 
 // Функция для просеивания элемента вниз по куче
-void heapify(vector<int>& arr, int n, int i)
+void pyram(vector<int>& arr, int n, int i)
 {
     int largest = i;  // 4 байта // O(1)
     int left = 2 * i + 1;  // 4 байта // O(1)
@@ -23,27 +23,27 @@ void heapify(vector<int>& arr, int n, int i)
     if (largest != i)  // Проверка: O(1)
     {
         swap(arr[i], arr[largest]);  // O(1)
-        heapify(arr, n, largest);  // Рекурсивный вызов: O(log n) в худшем случае
+        pyram(arr, n, largest);  // Рекурсивный вызов: O(log n) в худшем случае
     }
     // Итог по памяти: 12 байт (largest, left, right)
     // Итоговая сложность: O(log n) в худшем случае
 }
 
-void heapSort(vector<int>& arr)
+void pyrsort(vector<int>& arr)
 {
     int n = arr.size();  // 4 байта // O(1)
 
     // Построение кучи
     for (int i = n / 2 - 1; i >= 0; i--)  // Переменная i: 4 байта // O(n)
     {
-        heapify(arr, n, i);  // Вызов heapify: O(log n)
+        pyram(arr, n, i);  // Вызов pyram: O(log n)
     }
 
     // Извлечение элементов из кучи
     for (int i = n - 1; i >= 1; i--)  // Переменная i: 4 байта // O(n)
     {
         swap(arr[0], arr[i]);  // O(1)
-        heapify(arr, i, 0);  // Вызов heapify: O(log n)
+        pyram(arr, i, 0);  // Вызов pyram: O(log n)
     }
     // Итог по памяти: 4 байта (n) + 4 байта (i)
     // Итоговая сложность: O(n log n)
@@ -65,7 +65,7 @@ int main() {
     }
 
     infile.close();  // Закрытие файла // O(1)
-    heapSort(arr);  // Сортировка // O(n log n)
+    pyrsort(arr);  // Сортировка // O(n log n)
 
     for (int i = 0; i < n; ++i)  // Переменная i: 4 байта // O(n)
     {
@@ -82,19 +82,19 @@ int main() {
 // 1. n: 4 байта
 // 2. ifstream infile: 152 байт
 // 3. vector arr: 24 байта (объект вектора) + 4 * n байт (1000 элементов) = 4024 байта
-// 4. Внутренние переменные в heapify: largest (4 байта), left (4 байта), right (4 байта)
-// 5. Внутренние переменные в heapSort: n (4 байта), i (4 байта)
+// 4. Внутренние переменные в pyram: largest (4 байта), left (4 байта), right (4 байта)
+// 5. Внутренние переменные в pyrsort: n (4 байта), i (4 байта)
 // Общая память: ~ 4200 байт
 
 // Подсчет сложности:
 // 1. В main:
 //    - Чтение файла: O(n)
 //    - Присвоение остатка: O(n)
-//    - Вызов heapSort: O(n log n)
+//    - Вызов pyrsort: O(n log n)
 //    - Вывод массива: O(n)
-// 2. В heapSort:
+// 2. В pyrsort:
 //    - Построение кучи: O(n)
 //    - Извлечение из кучи: O(n log n)
-// 3. В heapify:
+// 3. В pyram:
 //    - Вызов рекурсии: O(log n) в худшем случае
 // Итоговая сложность: O(n log n)
