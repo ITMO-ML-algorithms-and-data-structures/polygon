@@ -1,0 +1,153 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <chrono>
+
+//cocktail shaker sort - разновидность пузырьковой сортировки (двунаправленная сортировка)
+void CocktailShakerSort(std::vector<int>& arr) {
+    bool flag = true;
+    int start = 0;
+    int end = arr.size() - 1;
+    while (flag) {
+        flag = false;
+        for (int i = start; i < end; ++i) {
+            if (arr[i] > arr[i + 1]) {
+                std::swap(arr[i], arr[i + 1]);
+                flag = true;
+            }
+        }
+        if (!flag)
+            break;
+        flag = false;
+        --end;
+        for (int i = end - 1; i >= start; --i) {
+            if (arr[i] > arr[i + 1]) {
+                std::swap(arr[i], arr[i + 1]);
+                flag = true;
+            }
+        }
+        ++start;
+    }
+}
+//Память и асимптотика:
+//Память O(1), тк мы просто переставляем местами элементы
+//Сложность: в лучшем случае (когда массив практически отсортирован) - О(n), в среднем и худшем - О(n^2) (большое количество операций)
+
+
+//heap sort - пирамидальная сортировка (дополнительно реализованна функция составления кучи)
+void HeapCreation(std::vector<int>& arr, int n, int root) {
+    int largest = root;
+    int leftChild = 2 * root + 1;
+    int rightChild = 2 * root + 2;
+
+    if (leftChild < n && arr[leftChild] > arr[largest]) {
+        largest = leftChild;
+    }
+
+    if (rightChild < n && arr[rightChild] > arr[largest]) {
+        largest = rightChild;
+    }
+
+    if (largest != root) {
+        std::swap(arr[root], arr[largest]);
+        HeapCreation(arr, n, largest);
+    }
+}
+// основная функция Heap Sort
+void HeapSort(std::vector<int>& arr) { 
+    int n = arr.size();
+
+    for (int i = n / 2 - 1; i >= 0; --i) {
+        HeapCreation(arr, n, i);
+    }
+
+    for (int i = n - 1; i > 0; --i) {
+        std::swap(arr[0], arr[i]);
+        HeapCreation(arr, i, 0);
+    }
+}
+//Память и асимптотика:
+//Память: О(1), тк храним только некоторые индексы и другие временные данные
+//Сложность: при любом случае будет О(n log n) (тк используется бинарная куча)
+
+
+
+
+// функция Bucket Sort
+void BucketSort(std::vector<int>& arr) {
+    if (arr.empty()) return;
+
+    int minVal = *std::min_element(arr.begin(), arr.end());
+    int maxVal = *std::max_element(arr.begin(), arr.end());
+
+    int range = maxVal - minVal + 1;
+    // количество корзин и диапазон значений в корзине
+    int bucketCount = std::max(static_cast<int>(arr.size() / 10), 1);
+    int bucketRange = (range + bucketCount - 1) / bucketCount;
+
+    std::vector<std::vector<int>> buckets(bucketCount);
+    for (int num : arr) {
+        int bucketIndex = (num - minVal) / bucketRange;
+        buckets[bucketIndex].push_back(num);
+    }
+    for (auto& bucket : buckets) {
+        std::sort(bucket.begin(), bucket.end());
+    }
+    // Объединяем отсортированные корзины обратно в массив
+    int index = 0;
+    for (const auto& bucket : buckets) {
+        for (int num : bucket) {
+            arr[index++] = num;
+        }
+    }
+}
+//Память и асимптотика:
+//Память: О(n + k), где n - количество элементов в массиве, k - количество корзин
+//Сложность: в среднем работает за О(n log (max-min)), в худшем за О(n^2), в лучшем за О(n+k)
+
+
+void MeasureTime(void (*sortFunction)(std::vector<int>&), std::vector<int>& arr, const std::string& caseName) {
+    auto start = std::chrono::high_resolution_clock::now();
+    sortFunction(arr);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    std::cout << caseName << " time: " << duration << " microseconds" << std::endl;
+}
+
+int main() {
+    // Cocktail Shaker Sort
+    std::cout << "Cocktail Shaker Sort:" << std::endl;
+    std::vector<int> cocktailBestCase(1000);
+    for (int i = 0; i < 1000; ++i) cocktailBestCase[i] = i;
+    MeasureTime(CocktailShakerSort, cocktailBestCase, "Best case");
+
+    std::vector<int> cocktailWorstCase(1000);
+    for (int i = 0; i < 1000; ++i) cocktailWorstCase[i] = 1000 - i;
+    MeasureTime(CocktailShakerSort, cocktailWorstCase, "Worst case");
+
+    std::vector<int> cocktailRandomCase = cocktailBestCase;
+    std::random_shuffle(cocktailRandomCase.begin(), cocktailRandomCase.end());
+    MeasureTime(CocktailShakerSort, cocktailRandomCase, "Random case");
+    // Heap Sort
+    std::cout << "\nHeap Sort:" << std::endl;
+    std::vector<int> heapCase(1000);
+    for (int i = 0; i < 1000; ++i) heapCase[i] = rand() % 10000;
+    MeasureTime(HeapSort, heapCase, "Heap case (random values)");
+
+    // Bucket Sort
+    std::cout << "\nBucket Sort:" << std::endl;
+
+    std::vector<int> bucketWorstCase(1000);
+    for (int i = 0; i < 1000; ++i) bucketWorstCase[i] = 500;
+    MeasureTime(BucketSort, bucketWorstCase, "Best case");
+
+    std::vector<int> bucketBestCase(1000);
+    for (int i = 0; i < 1000; ++i) bucketBestCase[i] = i * 10;
+    MeasureTime(BucketSort, bucketBestCase, "Worst case");
+
+    std::vector<int> bucketRandomCase = bucketBestCase;
+    std::random_shuffle(bucketRandomCase.begin(), bucketRandomCase.end());
+    MeasureTime(BucketSort, bucketRandomCase, "Random case");
+
+    return 0;
+}
