@@ -51,6 +51,7 @@ void test_binary_insertion_sort() {
     cout << "Binary Insertion Sort успешно прошел все тесты!" << endl;
 }
 
+
 void test_flash_sort() {
     cout << "Flash Sort..." << endl;
 
