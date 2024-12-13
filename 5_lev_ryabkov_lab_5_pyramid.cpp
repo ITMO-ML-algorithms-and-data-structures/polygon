@@ -4,7 +4,7 @@
 using namespace std;
 
 // Функция для просеивания элемента вниз по куче
-void pyram(vector<int>& arr, int n, int i)
+void pyramid(vector<int>& arr, int n, int i)
 {
     int largest = i;  // 4 байта // O(1)
     int left = 2 * i + 1;  // 4 байта // O(1)
@@ -23,7 +23,7 @@ void pyram(vector<int>& arr, int n, int i)
     if (largest != i)  // Проверка: O(1)
     {
         swap(arr[i], arr[largest]);  // O(1)
-        pyram(arr, n, largest);  // Рекурсивный вызов: O(log n) в худшем случае
+        pyramid(arr, n, largest);  // Рекурсивный вызов: O(log n) в худшем случае
     }
     // Итог по памяти: 12 байт (largest, left, right)
     // Итоговая сложность: O(log n) в худшем случае
@@ -36,14 +36,14 @@ void pyrsort(vector<int>& arr)
     // Построение кучи
     for (int i = n / 2 - 1; i >= 0; i--)  // Переменная i: 4 байта // O(n)
     {
-        pyram(arr, n, i);  // Вызов pyram: O(log n)
+        pyramid(arr, n, i);  // Вызов pyramid: O(log n)
     }
 
     // Извлечение элементов из кучи
     for (int i = n - 1; i >= 1; i--)  // Переменная i: 4 байта // O(n)
     {
         swap(arr[0], arr[i]);  // O(1)
-        pyram(arr, i, 0);  // Вызов pyram: O(log n)
+        pyramid(arr, i, 0);  // Вызов pyramid: O(log n)
     }
     // Итог по памяти: 4 байта (n) + 4 байта (i)
     // Итоговая сложность: O(n log n)
@@ -82,7 +82,7 @@ int main() {
 // 1. n: 4 байта
 // 2. ifstream infile: 152 байт
 // 3. vector arr: 24 байта (объект вектора) + 4 * n байт (1000 элементов) = 4024 байта
-// 4. Внутренние переменные в pyram: largest (4 байта), left (4 байта), right (4 байта)
+// 4. Внутренние переменные в pyramid: largest (4 байта), left (4 байта), right (4 байта)
 // 5. Внутренние переменные в pyrsort: n (4 байта), i (4 байта)
 // Общая память: ~ 4200 байт
 
@@ -95,6 +95,6 @@ int main() {
 // 2. В pyrsort:
 //    - Построение кучи: O(n)
 //    - Извлечение из кучи: O(n log n)
-// 3. В pyram:
+// 3. В pyramid:
 //    - Вызов рекурсии: O(log n) в худшем случае
 // Итоговая сложность: O(n log n)
