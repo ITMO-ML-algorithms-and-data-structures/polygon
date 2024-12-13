@@ -1,0 +1,252 @@
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <chrono>
+#include <fstream>
+// Радиксная сортировка для целых чисел
+// Вспомогательная функция для сортировки массива по определённому разряду с использованием подсчёта
+void countingSort(std::vector<int>& arr, int exp) {
+    int n = arr.size();
+    std::vector<int> output(n); // Массив для отсортированных элементов
+    std::vector<int> count(10, 0); // Счётчик для цифр от 0 до 9
+
+    // Подсчитываем количество вхождений каждого разряда
+    for (int i = 0; i < n; i++) {
+        count[(arr[i] / exp) % 10]++;
+    }
+
+    // Преобразуем count[i] так, чтобы count[i] содержал позицию в output
+    for (int i = 1; i < 10; i++) {
+        count[i] += count[i - 1];
+    }
+
+    // Строим отсортированный массив output
+    for (int i = n - 1; i >= 0; i--) {
+        int digit = (arr[i] / exp) % 10;
+        output[count[digit] - 1] = arr[i];
+        count[digit]--;
+    }
+
+    // Копируем отсортированные элементы обратно в оригинальный массив
+    for (int i = 0; i < n; i++) {
+        arr[i] = output[i];
+    }
+}
+
+// Функция для выполнения радиксной сортировки
+std::vector<int> radixSort(const std::vector<int>& inputArr) {
+    if (inputArr.empty()) {
+        return {}; // Если массив пустой, возвращаем пустой массив
+    }
+
+    std::vector<int> arr = inputArr; // Создаём копию входного массива
+
+    int max_val = *std::max_element(arr.begin(), arr.end()); // Находим максимальное значение в массиве
+
+    // Выполняем сортировку по каждому разряду, начиная с младшего
+    for (int exp = 1; max_val / exp > 0; exp *= 10) {
+        countingSort(arr, exp);
+    }
+
+    return arr; // Возвращаем отсортированный массив
+}
+
+//Пирамидальная сортировка (Heap Sort) для целых чисел.
+void heapify(std::vector<int>& arr, int n, int i) {
+    int largest = i;        // Изначально считаем, что корень (i) — наибольший элемент
+    int left = 2 * i + 1;   // Левый потомок
+    int right = 2 * i + 2;  // Правый потомок
+
+    // Если левый потомок больше корня
+    if (left < n && arr[left] > arr[largest]) {
+        largest = left;
+    }
+
+    // Если правый потомок больше самого большого на текущий момент
+    if (right < n && arr[right] > arr[largest]) {
+        largest = right;
+    }
+
+    // Если самый большой элемент — не корень
+    if (largest != i) {
+        std::swap(arr[i], arr[largest]); // Меняем местами корень и самый большой элемент
+
+        // Рекурсивно преобразуем затронутое поддерево в кучу
+        heapify(arr, n, largest);
+    }
+}
+
+// Функция Heap Sort для сортировки массива целых чисел
+std::vector<int> heapSort(const std::vector<int>& inputArr) {
+    std::vector<int> arr = inputArr; // Создаём копию входного массива
+    int n = arr.size();
+
+    // Построение max-кучи
+    // Временная сложность: O(n)
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+
+    // Извлечение элементов из кучи один за другим
+    for (int i = n - 1; i > 0; i--) {
+        // Перемещаем текущий корень в конец массива
+        std::swap(arr[0], arr[i]);
+
+        // Восстанавливаем кучу для уменьшенного массива
+        heapify(arr, i, 0);
+    }
+
+    // Возвращаем отсортированный массив
+    return arr;
+}
+
+
+//Pancake Sort (Блинная сортировка)
+// Функция для переворота первых k элементов массива
+void flip(std::vector<int>& arr, int k) {
+    std::reverse(arr.begin(), arr.begin() + k);
+}
+
+// Функция для нахождения индекса максимального элемента в первых n элементах массива
+int findMaxIndex(const std::vector<int>& arr, int n) {
+    int maxIndex = 0;
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > arr[maxIndex]) {
+            maxIndex = i;
+        }
+    }
+    return maxIndex;
+}
+
+// Функция Pancake Sort
+std::vector<int> pancakeSort(const std::vector<int>& inputArr) {
+    std::vector<int> arr = inputArr; // Создаём копию входного массива
+    int n = arr.size();
+
+    // Проходим по всем элементам, начиная с самого большого
+    for (int size = n; size > 1; size--) {
+        // Находим индекс максимального элемента в текущем диапазоне
+        int maxIndex = findMaxIndex(arr, size);
+
+        // Если максимальный элемент не на своём месте, переворачиваем
+        if (maxIndex != size - 1) {
+            // Переворачиваем, чтобы максимальный элемент оказался в начале
+            flip(arr, maxIndex + 1);
+            // Переворачиваем, чтобы переместить максимальный элемент в конец текущего диапазона
+            flip(arr, size);
+        }
+    }
+
+    return arr; // Возвращаем отсортированный массив
+}
+
+// Глобальные переменные для подсчета пройденных и не пройденных тестов
+int test_passed = 0;
+int test_failed = 0;
+
+// Функция для сравнения массивов и отчета о тесте
+void assertEqual(const std::vector<int>& result, const std::vector<int>& expected, const std::string& testName) {
+    if (result == expected) {
+        test_passed++;
+        std::cout << testName << " - PASSED\n";
+    } else {
+        test_failed++;
+        std::cout << testName << " - FAILED\n";
+    }
+}
+
+// Тестирование Radix Sort
+void testRadixSort(const std::vector<int>& input, const std::vector<int>& expected, const std::string& testName) {
+    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<int> result = radixSort(input);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << testName << " - Execution time: " << duration.count() << " seconds\n";
+    assertEqual(result, expected, testName);
+}
+
+// Тестирование Heap Sort
+void testHeapSort(const std::vector<int>& input, const std::vector<int>& expected, const std::string& testName) {
+    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<int> result = heapSort(input);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << testName << " - Execution time: " << duration.count() << " seconds\n";
+    assertEqual(result, expected, testName);
+}
+
+// Тестирование Pancake Sort
+void testPancakeSort(const std::vector<int>& input, const std::vector<int>& expected, const std::string& testName) {
+    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<int> result = pancakeSort(input);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << testName << " - Execution time: " << duration.count() << " seconds\n";
+    assertEqual(result, expected, testName);
+}
+// Функция для чтения массива из файла
+std::vector<int> readArrayFromFile(const std::string& filename) {
+    std::vector<int> arr;
+    std::ifstream file(filename);
+    int num;
+    while (file >> num) {
+        arr.push_back(num);
+    }
+    return arr;
+}
+
+void sortAndMeasureTime(const std::vector<int>& arr, const std::string& algorithmName, std::vector<int>(*sortFunc)(const std::vector<int>&)) {
+    // Копируем входной массив, чтобы сортировать его
+    std::vector<int> copyArr = arr;
+    // Замеряем время работы
+    auto start = std::chrono::high_resolution_clock::now();
+    sortFunc(copyArr); // Сортировка
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+
+    // Выводим результаты
+    std::cout << algorithmName << " took: " << duration.count() << " seconds" << std::endl;
+}
+int main() {
+    // Тесты для Radix Sort (только неотрицательные целые числа)
+    testRadixSort({170, 45, 75, 90, 802, 24, 2, 66}, {2, 24, 45, 66, 75, 90, 170, 802}, "RadixSort Test 1");
+    testRadixSort({1, 3, 2, 3, 1}, {1, 1, 2, 3, 3}, "RadixSort Test 2");
+    testRadixSort({}, {}, "RadixSort Test 3 (Empty Array)");
+    testRadixSort({10, 5, 2, 100, 50}, {2, 5, 10, 50, 100}, "RadixSort Test 4");
+
+    // Тесты для Heap Sort (целые числа)
+    testHeapSort({4, 6, -3, 1, 0}, {-3, 0, 1, 4, 6}, "HeapSort Test 1");
+    testHeapSort({10, 10, 10}, {10, 10, 10}, "HeapSort Test 2");
+    testHeapSort({}, {}, "HeapSort Test 3 (Empty Array)");
+    testHeapSort({5, 4, 3, 2, 1}, {1, 2, 3, 4, 5}, "HeapSort Test 4");
+
+    // Тесты для Pancake Sort (целые числа)
+    testPancakeSort({3, 6, 1, 5, 4, 2}, {1, 2, 3, 4, 5, 6}, "PancakeSort Test 1");
+    testPancakeSort({5, 5, 5, 5}, {5, 5, 5, 5}, "PancakeSort Test 2");
+    testPancakeSort({}, {}, "PancakeSort Test 3 (Empty Array)");
+    testPancakeSort({9, 7, 5, 3, 1}, {1, 3, 5, 7, 9}, "PancakeSort Test 4");
+
+    // Отчёт
+    std::cout << "\nTotal tests passed: " << test_passed << "\n";
+    std::cout << "Total tests failed: " << test_failed << "\n";
+
+
+    // Список файлов для обработки
+    std::vector<std::string> filenames = {"unsorted_array_2000.txt", "unsorted_array_4000.txt", "unsorted_array_6000.txt","unsorted_array_8000.txt","unsorted_array_10000.txt"};
+
+
+    // Обрабатываем каждый файл
+    for (const std::string& filename : filenames) {
+        std::cout << "Processing file: " << filename << std::endl;
+        // Читаем массив из файла
+        std::vector<int> arr = readArrayFromFile(filename);
+        // Замеряем время работы для каждой сортировки
+        sortAndMeasureTime(arr, "Radix Sort", radixSort);
+        sortAndMeasureTime(arr, "Heap Sort", heapSort);
+        sortAndMeasureTime(arr, "Pancake Sort", pancakeSort);
+        std::cout << std::endl; // Печатаем пустую строку для разделения результатов
+    }
+    return 0;
+}
+
