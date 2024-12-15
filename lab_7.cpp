@@ -7,17 +7,17 @@ using namespace std;
 
 
 int earliestFullBloom(vector<int>& plantTime, vector<int>& growTime) {
-    int n = growTime.size();
-    vector<pair<int, int>> times(n);
-    for (int i = 0; i < n; i++) {
+    int n = growTime.size(); // 4 байта
+    vector<pair<int, int>> times(n); // 24 + 8*n байт
+    for (int i = 0; i < n; i++) { // О(n)
         times[i].first = -growTime[i];
         times[i].second = plantTime[i];
     }
-    sort(times.begin(), times.end());
+    sort(times.begin(), times.end()); // О(n*log(n))
 
-    int current = 0;
-    int total = 0;
-    for (int i = 0; i < n; i++) {
+    int current = 0; // 4 байта
+    int total = 0; // 4 байта
+    for (int i = 0; i < n; i++) { // О(n)
         total = max(current + times[i].second - times[i].first, total);
         current += times[i].second;
     }
