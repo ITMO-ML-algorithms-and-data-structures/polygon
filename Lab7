@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int maxSatisfaction(vector<int>& satisfaction) {
+        // Сортируем массив в порядке убывания
+        // Временная сложность: O(n log n)
+        // Память: O(1)
+        sort(satisfaction.begin(), satisfaction.end(), greater<int>());
+        
+        int totalSatisfaction = 0; // Итоговая максимальная сумма удовлетворенности
+        int cumulativeSum = 0;     // Промежуточная сумма, чтобы учитывать влияние предыдущих блюд
+
+        // Проходим по отсортированному массиву и выбираем блюда жадным методом
+        // Временная сложность: O(n), где n - количество элементов
+        for (int value : satisfaction) {
+            if (cumulativeSum + value > 0) {
+                cumulativeSum += value;         // Добавляем текущее значение удовлетворенности
+                totalSatisfaction += cumulativeSum; // "like-time" коэффициент
+            } else {
+                break; // Прерываем цикл, если дальнейшее добавление не улучшает результат
+            }
+        }
+
+        return totalSatisfaction;
+    }
+};
+
+/*
+Общая оценка по памяти и сложности:
+
+1. Временная сложность:
+   - Сортировка: O(n log n)
+   - Проход по массиву: O(n)
+   - ИТОГО: O(n log n)
+
+2. Пространственная сложность:
+   - Сортировка: O(log n)
+   - Дополнительные переменные: O(1)
+   - ИТОГО: O(log n) дополнительной памяти
+*/
