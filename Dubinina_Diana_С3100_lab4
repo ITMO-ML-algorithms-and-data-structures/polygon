@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <chrono>
+#include <random>
+
+using namespace std;
+using namespace std::chrono;
+
+
+// Функция для проверки всех подмассивов размера K с суммой 0
+vector<vector<int>> findSubarraysWithZeroSum(const vector<int>& arr, int N, int K) {
+    vector<vector<int>> result;
+
+    // Генерация всех возможных комбинаций индексов размера K
+    int totalCombinations = pow(N, K); // Общее количество комбинаций (N^K)
+
+    for (int mask = 0; mask < totalCombinations; ++mask) {
+        vector<int> indices;
+        int currentMask = mask;
+
+        // Генерация индексов на основе текущей комбинации
+        for (int i = 0; i < K; ++i) {
+            int index = currentMask % N; // Получаем индекс из диапазона [0, N-1]
+            indices.push_back(index);
+            currentMask /= N;
+        }
+
+        // Проверка на порядок индексов (они должны быть последовательными)
+        bool isValid = true;
+        for (int i = 1; i < K; ++i) {
+            if (indices[i] <= indices[i - 1]) {
+                isValid = false;
+                break;
+            }
+        }
+
+        // Если индексы неупорядочены, переходим к следующей комбинации
+        if (!isValid) continue;
+
+        // Подсчитываем сумму элементов для текущей комбинации индексов
+        int sum = 0;
+        for (int index : indices) {
+            sum += arr[index];
+        }
+
+        // Если сумма равна 0, добавляем индексы в результат
+        if (sum == 0) {
+            result.push_back(indices);
+        }
+    }
+
+    return result;
+}
+
+
+// Функция для генерации случайного массива
+vector<int> generateRandomArray(int size, int minValue, int maxValue) {
+    vector<int> arr(size);
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dis(minValue, maxValue);
+
+    for (int i = 0; i < size; ++i) {
+        arr[i] = dis(gen);
+    }
+    return arr;
+}
+
+int main() {
+    const int K = 5; // Размер подмассива
+    vector<int> testSizes = {0, 5, 10, 15, 20, 25}; // Размеры массива для тестирования
+    int minValue = -10, maxValue = 10; // Диапазон значений элементов массива
+
+    cout << "N (размер массива) | Время (мс)\n";
+    cout << "----------------------------------\n";
+
+    for (int N : testSizes) {
+        // Генерация случайного массива
+        vector<int> arr = generateRandomArray(N, minValue, maxValue);
+
+        // Замер времени
+        auto start = high_resolution_clock::now();
+        findSubarraysWithZeroSum(arr, N, K);
+        auto end = high_resolution_clock::now();
+
+        // Вычисление времени в миллисекундах
+        auto duration = duration_cast<milliseconds>(end - start).count();
+
+        cout << N << "                   | " << duration << " мс" << endl;
+    }
+
+    return 0;
+}
