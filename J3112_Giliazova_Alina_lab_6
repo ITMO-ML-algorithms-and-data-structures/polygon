@@ -1,0 +1,41 @@
+#include <iostream>
+
+using namespace std;
+
+class Solution {
+public:
+    int countDigitOne(int n) {
+        int count = 0;
+        long long factor = 1;
+
+        while (factor <= n) {
+            int high = n / (factor * 10);
+            int current = (n / factor) % 10;
+            int low = n % factor;
+
+            if (current > 1) {
+                count += (high + 1) * factor;
+            } else if (current == 1) {
+                count += high * factor + (low + 1);
+            } else {
+                count += high * factor;
+            }
+
+            factor *= 10;
+        }
+
+        return count;
+    }
+};
+
+int main() {
+    Solution solution;
+    int n;
+
+    cout << "n = ";
+    cin >> n;
+
+    cout << solution.countDigitOne(n) << endl;
+
+    return 0;
+}
