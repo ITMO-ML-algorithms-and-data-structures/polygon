@@ -1,11 +1,12 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <chrono>
 std::vector<std::vector<char>> generate_all_masks(const int size, const char k) {
     std::vector<std::vector<char>> all_masks(std::pow(k, size));
     std::vector<char> mask(size, 0);
-    if (size > 20){
-        throw "Size is above 20";
+    if (size > 25){
+        throw "Size is above 25";
     }
     for (int i = 0; i < std::pow(k, size); i++){
         std::vector<char> mask_to_add(mask);
@@ -43,13 +44,14 @@ float calculate_metric(std::vector<float> cluster1, std::vector<float> cluster2)
 }
 int main(){
     const char k = 2;
-    float arr1[] = {1, 2, 3, 4, 5, 6};
+    float arr1[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
     float arr2[] = {1, 2, 3,10, 9, 8};
     float arr3[] = {99.5, 101, -1.1};
     const int size1 = sizeof(arr1) / sizeof(arr1[0]);
     const int size2 = sizeof(arr2) / sizeof(arr2[0]);
     const int size3 = sizeof(arr3) / sizeof(arr3[0]);
-    std::vector<std::vector<char>> masks = generate_all_masks(size3, k);
+    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<std::vector<char>> masks = generate_all_masks(size1, k);
     float min_rate = 9999999;
     for (int i = 0; i < masks.size(); i++){
         std::vector<char> mask = masks[i];
@@ -68,5 +70,8 @@ int main(){
         }
     }
     std::cout << min_rate;
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_time = end - start;
+    std::cout << "Время выполнения: " << elapsed_time.count() << " секунд" << std::endl;
     return 0;
 }
