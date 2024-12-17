@@ -1,0 +1,128 @@
+#include <iostream>
+#include <vector>
+#include <cassert>
+using namespace std;
+
+void BubbleSort(vector<int>& arr1) {
+    for (int i = 0; i < arr1.size() - 1; i++) {
+        for (int j = 0; j < arr1.size() - 1; j++) {
+            if (arr1[j] > arr1[j + 1]) {
+                swap(arr1[j], arr1[j + 1]);
+            }
+        }
+    }
+}
+
+void QuickSort(vector<int>& arr2) {
+    if (arr2.size() <= 1) return;
+
+    int pivot = arr2[0];
+    vector<int> low, high;
+
+    for (int i = 1; i < arr2.size(); i++) {
+        if (arr2[i] < pivot) low.push_back(arr2[i]);
+        else high.push_back(arr2[i]);
+    }
+
+    QuickSort(low);
+    QuickSort(high);
+
+    arr2 = low;
+    arr2.push_back(pivot);
+    arr2.insert(arr2.end(), high.begin(), high.end());
+}
+
+void CountingSort(vector<int>& array, int exp) {
+    vector<int> output(array.size());
+    vector<int> count(10, 0);
+
+    for (int i = 0; i < array.size(); i++)
+        count[(array[i] / exp) % 10]++;
+
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    for (int i = array.size() - 1; i >= 0; i--) {
+        output[count[(array[i] / exp) % 10] - 1] = array[i];
+        count[(array[i] / exp) % 10]--;
+    }
+
+    for (int i = 0; i < array.size(); i++)
+        array[i] = output[i];
+}
+
+int getMax(const vector<int>& arr3) {
+    return *max_element(arr3.begin(), arr3.end());
+}
+
+void RadixSort(vector<int>& arr3) {
+    int maxValue = getMax(arr3);
+    for (int exp = 1; maxValue / exp > 0; exp *= 10)
+        CountingSort(arr3, exp);
+}
+
+//функция проверки на отсортированность
+bool isSorted(const vector<int>& arr) {
+    for (int i = 1; i < arr.size(); i++) {
+        if (arr[i] < arr[i - 1]) return false;
+    }
+    return true;
+}
+
+
+//тесты
+void testBubbleSort() {
+    vector<int> best_case = {1, 2, 3, 4, 5};
+    BubbleSort(best_case);
+    assert(isSorted(best_case) && "BubbleSort: Best case failed");
+
+    vector<int> average_case = {5, 3, 1, 4, 2};
+    BubbleSort(average_case);
+    assert(isSorted(average_case) && "BubbleSort: Average case failed");
+
+    vector<int> worst_case = {5, 4, 3, 2, 1};
+    BubbleSort(worst_case);
+    assert(isSorted(worst_case) && "BubbleSort: Worst case failed");
+}
+
+void testQuickSort() {
+    vector<int> best_case = {1, 2, 3, 4, 5};
+    QuickSort(best_case);
+    assert(isSorted(best_case) && "QuickSort: Best case failed");
+
+    vector<int> average_case = {5, 1, 3, 4, 2};
+    QuickSort(average_case);
+    assert(isSorted(average_case) && "QuickSort: Average case failed");
+
+    vector<int> worst_case = {5, 4, 3, 2, 1};
+    QuickSort(worst_case);
+    assert(isSorted(worst_case) && "QuickSort: Worst case failed");
+}
+
+void testRadixSort() {
+    vector<int> best_case = {1, 2, 3, 4, 5};
+    RadixSort(best_case);
+    assert(isSorted(best_case) && "RadixSort: Best case failed");
+
+    vector<int> average_case = {170, 45, 75, 90, 802, 24, 2, 66};
+    RadixSort(average_case);
+    assert(isSorted(average_case) && "RadixSort: Average case failed");
+
+    vector<int> worst_case = {999, 888, 777, 666, 555, 444, 333, 222, 111};
+    RadixSort(worst_case);
+    assert(isSorted(worst_case) && "RadixSort: Worst case failed");
+}
+
+
+int main() {
+    testBubbleSort();
+    cout << "BubbleSort tests passed!\n";
+
+    testQuickSort();
+    cout << "QuickSort tests passed!\n";
+
+    testRadixSort();
+    cout << "RadixSort tests passed!\n";
+
+    return 0;
+}
