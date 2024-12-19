@@ -1,0 +1,1 @@
+python generate_dataset.py --mode text --num-rows 1 --min-unique 1 --max-length 100000 --charset default --delimiter ';' --output-file dataset.txt
